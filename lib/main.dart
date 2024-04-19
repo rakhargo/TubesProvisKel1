@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'home.dart';
+import 'booking.dart';
+import 'activity.dart';
+import 'account.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,38 +16,50 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+  @override
+  MyAppState createState() {
+    return MyAppState();
+  }
+}
+
+class MyAppState extends State<MyApp> {
+  int selectedIndex = 0;
+
+  void onItemTapped(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        appBar: AppBar(
-          title: const Text("Booking"),
+        body: case2(selectedIndex),
+        bottomNavigationBar: MyBottomNavigationBar(
+          selectedIndex: selectedIndex,
+          onItemTapped: onItemTapped,
         ),
-        body: const Center(
-          child: Text("Hello World!"),
-        ),
-        bottomNavigationBar: MyBottomNavigationBar(),
       ),
     );
   }
 }
 
 class MyBottomNavigationBar extends StatefulWidget {
+  final int selectedIndex;
+  final ValueChanged<int> onItemTapped;
+
+  MyBottomNavigationBar({required this.selectedIndex, required this.onItemTapped});
+
   @override
   _MyBottomNavigationBarState createState() => _MyBottomNavigationBarState();
 }
 
 class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,11 +82,35 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
           label: 'Account',
         ),
       ],
-      currentIndex: _selectedIndex,
+      currentIndex: widget.selectedIndex,
       selectedItemColor: const Color(0xff0F1035), // Change this to your preferred color
       unselectedItemColor: Colors.grey, // Set the unselected item color here
       showUnselectedLabels: true,
-      onTap: _onItemTapped,
+      onTap: widget.onItemTapped,
     );
   }
 }
+
+case2(int idx) {
+    switch (idx) {
+      case 0:
+        {
+          return const HomePage();
+        }
+
+      case 1:
+        {
+          return const BookingPage();
+        }
+
+      case 2:
+        {
+          return const ActivityPage();
+        }
+
+      case 3:
+        {
+          return const AccountPage();
+        }
+    }
+  }

@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 void main() 
 {
-  runApp(const Activity());
+  runApp(const ActivityPage());
 }
 
-class Activity extends StatefulWidget {
-  const Activity({super.key});
+class ActivityPage extends StatefulWidget {
+  const ActivityPage({super.key});
 
   @override
-  State<Activity> createState() => _ActivityState();
+  State<ActivityPage> createState() => _ActivityState();
 }
 
-class _ActivityState extends State<Activity>
+class _ActivityState extends State<ActivityPage>
 {
   int idx = 2;
   void onItemTap(int index) {
@@ -312,21 +312,6 @@ class _ActivityState extends State<Activity>
             ),
           ),
           
-        ),
-        bottomNavigationBar: BottomNavigationBar
-        (
-          currentIndex: idx,
-          selectedItemColor: const Color.fromARGB(255, 9, 15, 71),
-          selectedLabelStyle: const  TextStyle(color: Color.fromARGB(180, 9, 15, 71), fontWeight: FontWeight.bold),
-          unselectedItemColor: const Color.fromARGB(180, 9, 15, 71),
-          onTap: onItemTap,
-          items: const <BottomNavigationBarItem>
-          [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-            BottomNavigationBarItem(icon: Icon(Icons.content_paste), label: "Booking"),
-            BottomNavigationBarItem(icon: Icon(Icons.monitor_heart), label: "Activity"),
-            BottomNavigationBarItem(icon: Icon(Icons.account_circle_outlined), label: "Account"),
-          ],
         ),
       ),
     );
