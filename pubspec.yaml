@@ -61,8 +61,18 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-  - assets/images/
-  #   - images/a_dot_ham.jpeg
+    - assets/images/Booking/Icon/cardiologist.png
+    - assets/images/Booking/Icon/pulmonologist.png
+    - assets/images/Booking/Icon/dermatologist.png
+    - assets/images/Booking/Icon/gynecologist.png
+    - assets/images/Booking/Icon/pediatric.png
+    - assets/images/Booking/Icon/orthopedist.png
+    - assets/images/Booking/Icon/urologist.png
+    - assets/images/Booking/Icon/neurologist.png
+    - assets/images/Booking/Icon/dentist.png
+    - assets/images/Booking/Icon/Oncologist.png
+    - assets/images/Booking/Icon/Otolaryngologist.png
+    - assets/images/Booking/Icon/Immunogologist.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
