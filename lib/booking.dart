@@ -26,6 +26,33 @@ class BookingPage extends StatelessWidget {
             fontWeight: FontWeight.bold,
             color: Color(0xFF091547),
           ),
+          bottom: PreferredSize
+          (
+            preferredSize: const Size.fromHeight(2.0), //Set the height of the border
+            child: Container
+            (
+              decoration: const BoxDecoration
+              (
+                border: Border
+                (
+                  bottom: BorderSide
+                  (
+                    color: Colors.grey, // Set the color of the border
+                    width: 0.5, // Set the width of the border
+                  ),
+                ),
+                boxShadow: 
+                [
+                  BoxShadow
+                  (
+                    color: Colors.grey, // Set the color of the shadow
+                    blurRadius: 2.0, // Set the blur radius of the shadow
+                    offset: Offset(0.0, 2.0), // Set the offset of the shadow
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
       body: Padding(
