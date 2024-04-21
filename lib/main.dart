@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'constant.dart'; 
+import '../Screens/Welcome/welcome_screen.dart';
 import 'home.dart';
 import 'booking.dart';
 import 'activity.dart';
@@ -14,7 +16,23 @@ void main() async {
     Duration(seconds: 1),
   );
   FlutterNativeSplash.remove();
-  runApp(MyApp());
+  runApp(Login());
+}
+
+
+class Login extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Medimate',
+      theme: ThemeData(
+        primaryColor: kPrimaryColor,
+        scaffoldBackgroundColor: Colors.white,
+      ),
+      home: WelcomeScreen(),
+    );
+  }
 }
 
 class MyApp extends StatefulWidget {
