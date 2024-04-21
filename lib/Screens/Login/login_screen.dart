@@ -86,8 +86,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               _isPasswordVisible = !_isPasswordVisible;
                             });
                           },
-                          child: SvgPicture.asset(
-                            _isPasswordVisible ? "assets/icons/visible.svg" : "assets/icons/password.svg",
+                          child: Icon(
+                            _isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                            color: const Color(0xFF090F47).withOpacity(0.45), // Change the color as needed
+                            size: 24, // Adjust the size as needed
                           ),
                         ),
                         focusedBorder: UnderlineInputBorder(
@@ -126,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: ElevatedButton(
                     onPressed: _loginButtonColor == Colors.grey ? null : _login,
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 28, horizontal: 60),
+                      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 60), // Adjust vertical padding here
                       backgroundColor: _loginButtonColor,
                     ),
                     child: Text(
@@ -178,7 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             Positioned(
-              bottom: 160,
+              top: 690,
               width: size.width,
               child: Center(
                 child: Text(
@@ -191,7 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             Positioned(
-              bottom: 80,
+              top: 720,
               width: size.width,
               child: Center(
                 child: Padding(
@@ -203,7 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: ElevatedButton.icon(
                           onPressed: () {},
                           style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 28, horizontal: 60), 
+                            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 60), 
                             backgroundColor: Colors.white,
                           ),
                           icon: SvgPicture.asset(
