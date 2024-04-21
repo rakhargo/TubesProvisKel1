@@ -26,7 +26,7 @@ class WelcomeScreen extends StatelessWidget {
                 "Welcome To Medimate",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 22,
+                  fontSize: 30,
                   color: Color(0xFF090F47),
                 ),
               ),
@@ -37,8 +37,8 @@ class WelcomeScreen extends StatelessWidget {
                 "Do you want some help with your\nhealth to get better life?",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF090F47),
+                  fontSize: 18,
+                  color: Color(0xFF202157).withOpacity(0.45),
                 ),
               ),
             ),
@@ -67,7 +67,7 @@ class WelcomeScreen extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     padding:
-                        EdgeInsets.symmetric(vertical: 28, horizontal: 45),
+                        EdgeInsets.symmetric(vertical: 20, horizontal: 60),
                     backgroundColor: kPrimaryColor,
                   ),
                   child: SizedBox(
@@ -97,13 +97,13 @@ class WelcomeScreen extends StatelessWidget {
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
                           padding:
-                              EdgeInsets.symmetric(vertical: 28, horizontal: 60),
+                              EdgeInsets.symmetric(vertical: 20, horizontal: 60),
                           backgroundColor: Colors.white,
                         ),
                         icon: SvgPicture.asset(
                           "assets/icons/google.svg",
-                          height: 24,
-                          width: 24,
+                          height: 18,
+                          width: 18,
                         ),
                         label: Text(
                           "CONTINUE WITH GMAIL",

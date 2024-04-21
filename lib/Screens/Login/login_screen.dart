@@ -88,8 +88,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           child: Icon(
                             _isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                            color: const Color(0xFF090F47).withOpacity(0.45), // Change the color as needed
-                            size: 24, // Adjust the size as needed
+                            color: const Color(0xFF090F47).withOpacity(0.45), 
+                            size: 24, 
                           ),
                         ),
                         focusedBorder: UnderlineInputBorder(
@@ -107,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             Positioned(
               top: 305,
-              left: 150,
+              left: 160,
               child: GestureDetector(
                 onTap: () {},
                 child: Text(
@@ -128,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: ElevatedButton(
                     onPressed: _loginButtonColor == Colors.grey ? null : _login,
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 60), // Adjust vertical padding here
+                      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 60), 
                       backgroundColor: _loginButtonColor,
                     ),
                     child: Text(

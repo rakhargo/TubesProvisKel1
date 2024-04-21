@@ -123,8 +123,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               _isPasswordVisible = !_isPasswordVisible;
                             });
                           },
-                          child: SvgPicture.asset(
-                            _isPasswordVisible ? "assets/icons/visible.svg" : "assets/icons/password.svg",
+                          child: Icon(
+                            _isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                            color: const Color(0xFF090F47).withOpacity(0.45), 
+                            size: 24, 
                           ),
                         ),
                         focusedBorder: UnderlineInputBorder(
@@ -149,7 +151,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: ElevatedButton(
                     onPressed: _signupButtonColor == Colors.grey ? null : _signup,
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 28, horizontal: 60),
+                      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 60),
                       backgroundColor: _signupButtonColor,
                     ),
                     child: Text(
@@ -201,7 +203,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
             Positioned(
-              bottom: 160,
+              top: 690,
               width: size.width,
               child: Center(
                 child: Text(
@@ -214,7 +216,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
             Positioned(
-              bottom: 80,
+              top: 720,
               width: size.width,
               child: Center(
                 child: Padding(
@@ -226,11 +228,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: ElevatedButton.icon(
                           onPressed: () {},
                           style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 28, horizontal: 60), 
+                            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 60), 
                             backgroundColor: Colors.white,
                           ),
                           icon: SvgPicture.asset(
                             "assets/icons/google.svg",
+                            height: 24,
+                            width: 24,
                           ),
                           label: Text(
                             "CONTINUE WITH GMAIL",
