@@ -28,18 +28,27 @@ class _HomeState extends State<HomePage>
     {"servicesName": "More Services", "image": "more.png", "linkTo": ""},
   ];
 
-  // String _selectedTopic = "All";
-  List<Map> topics = 
+
+  List<Map> profiles = 
   [
-    {"topicName": "All", "linkTo": ""},
-    {"topicName": "Nutrition & Diet", "linkTo": ""},
-    {"topicName": "Lifestyle", "linkTo": ""},
-    {"topicName": "Beauty", "linkTo": ""},
+    // {"profileName": "John Doe", "profilePicture": ""},
+    {"profileName": "Christian Buehner", "profilePicture": "2-christian_buehner.jpg"},
+    {"profileName": "Alicia Claire", "profilePicture": "3-alicia_claire.jpg"},
   ];
-  String namaUser = "John Doe";
+
+  int idxProfiles = 0;
+  Map<dynamic, dynamic> chosenProfile = {};
+
+  List<String> topics = 
+  [
+    "All", "Nutrition & Diet", "Lifestyle", "Beauty",
+  ];
+  String selectedTopic = "All";
+
   @override
   Widget build(BuildContext context) 
   {
+    chosenProfile = profiles[idxProfiles];
     return MaterialApp
     (
       debugShowCheckedModeBanner: false,
@@ -48,25 +57,28 @@ class _HomeState extends State<HomePage>
       (
         appBar: AppBar
         (
-          leading: GestureDetector
+          leading: Builder
           (
-            onTap: ()
-            {
-
-            },
-            child: const Padding
+            builder: (context) => GestureDetector
             (
-              padding: EdgeInsets.only(left: 15.0, top: 3.0, bottom: 3.0),
-              child: CircleAvatar
+              onTap: ()
+              {
+                Scaffold.of(context).openDrawer();
+              },
+              child: Padding
               (
-                radius: 20,
-                backgroundImage: AssetImage("images/orang/noah-clark.jpg"),
+                padding: const EdgeInsets.only(left: 15.0, top: 3.0, bottom: 3.0),
+                child: CircleAvatar
+                (
+                  radius: 20,
+                  backgroundImage: AssetImage("images/orang/${chosenProfile['profilePicture']}"),
+                ),
               ),
             ),
           ),
           title: Text
           (
-            'Hi, $namaUser!',
+            'Hi, ${chosenProfile['profileName']}!',
             style: const TextStyle
             (
               fontWeight: FontWeight.bold,
@@ -114,30 +126,76 @@ class _HomeState extends State<HomePage>
             ),
           ),
         ),
-        drawer: Drawer
+        drawer: Builder
         (
-          child: ListView
-          (
-            padding: EdgeInsets.zero,
-            children: const 
-            [
-              Padding
+          builder: (context) 
+          {
+            return Drawer
+            (
+              child: ListView
               (
-                padding: EdgeInsets.only(left: 15, top: 15, bottom: 15),
-                child: BackButton(),
+                children: 
+                [
+                  Padding
+                  (
+                    padding: const EdgeInsets.fromLTRB(8.0, 8.0, 0.0, 0.0),
+                    child: Align
+                    (
+                      alignment: Alignment.centerLeft,
+                      child: IconButton
+                      (
+                        onPressed: ()
+                        {
+                          Navigator.of(context).pop();
+                        },
+                        icon: const Icon(Icons.arrow_back_ios)
+                      ),
+                    ),
+                  ),
+                  const DrawerHeader
+                  (
+                    child: Text
+                    (
+                      'Select Profile',
+                      style: TextStyle
+                      (
+                        color: Color.fromARGB(255, 9, 15, 71),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  ListView.builder
+                  (
+                    shrinkWrap: true,
+                    // physics: const NeverScrollableScrollPhysics(),
+                    itemCount: profiles.length,
+                    itemBuilder: (context, index)
+                    {
+                      final profile = profiles[index];
+                      return ListTile
+                      (
+                        leading: CircleAvatar
+                        (
+                          radius: 20,
+                          backgroundImage: AssetImage("images/orang/${profile['profilePicture']}"),
+                        ),
+                        title: Text(profile['profileName']),
+                        onTap: () 
+                        {
+                          // Handle onTap event
+                          setState(() 
+                          {
+                            // chosenProfile = profile;
+                            idxProfiles = index;
+                          });
+                        }
+                      );
+                    }
+                  )
+                ],
               ),
-              DrawerHeader
-              (
-                child: Text('Select Profile')
-              ),
-              ListTile
-              (
-                title: Text('Profile 1'),
-                // onTap: () {},
-              ),
-
-            ],
-          ),
+            );
+          }
         ),
         body: SingleChildScrollView
         (
@@ -253,7 +311,7 @@ class _HomeState extends State<HomePage>
                     );
                   },
                 ),
-                const SizedBox(height: 10,),
+                const SizedBox(height: 10),
                 const Text
                 (
                   'Health Article',
@@ -264,51 +322,55 @@ class _HomeState extends State<HomePage>
                     fontWeight: FontWeight.bold
                   ),
                 ),
-                // SizedBox
-                // (
-                //   height: 20,
-                //   child: Builder
-                //   (
-                //     builder: (context) 
-                //     {
-                //       List<Map> topics = 
-                //       [
-                //         {"topicName": "All", "linkTo": ""},
-                //         {"topicName": "Nutrition & Diet", "linkTo": ""},
-                //         {"topicName": "Lifestyle", "linkTo": ""},
-                //         {"topicName": "Beauty", "linkTo": ""},
-                //       ];
-                //       return ListView.builder
-                //       (
-                //         shrinkWrap: true,
-                //         itemCount: topics.length,
-                //         scrollDirection: Axis.horizontal,
-                //         itemBuilder: (context, index) 
-                //         {
-                //           var item = topics[index];
-                //           return Container
-                //           (
-                //             padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
-                //             decoration: const BoxDecoration
-                //             (
-                //                 borderRadius: BorderRadius.all(Radius.circular(12)),
-                //                 color: Color.fromARGB(255, 53, 55, 121)
-                //             ),
-                //             margin: const EdgeInsets.only(right: 15),
-                //             child: Text
-                //             (
-                //               item["topicName"],
-                //               style: const TextStyle
-                //               (
-                //                 color: Colors.white,
-                //               ),
-                //             )
-                //           );
-                //         },
-                //       );
-                //     }
-                //   )
-                // )
+                const SizedBox(height: 10),
+                SingleChildScrollView
+                (
+                  scrollDirection: Axis.horizontal,
+                  child: Row
+                  (
+                    children: topics
+                        .map((topic) => Padding
+                        (
+                          padding: const EdgeInsets.only(right: 20),
+                          child: ChoiceChip
+                          (
+                            showCheckmark: false,
+                            label: Text
+                            (
+                              topic,
+                              style: TextStyle
+                              (
+                                color: topic == selectedTopic
+                                    ? Colors.white
+                                    : const Color.fromARGB(255, 53, 55, 121),
+                              ),
+                            ),
+                            shape: RoundedRectangleBorder
+                            (
+                              borderRadius: BorderRadius.circular(13),
+                              // side: BorderSide.none
+                            ),
+                            selected: topic == selectedTopic, // Ubah ini untuk membuat selected sesuai dengan kondisi Anda
+                            selectedColor: const Color.fromARGB(255, 53, 55, 121),
+                            backgroundColor: const Color.fromARGB(255, 235, 235, 255),
+                            onSelected: (selected) 
+                            {
+                              // Tambahkan fungsi untuk menangani pemilihan chip
+                              setState(() {
+                                selectedTopic = selected ? topic : "All";
+                              });
+
+                              if (selected) 
+                              {
+                                // Lakukan sesuatu ketika chip dipilih
+                              }
+                            },
+                          ),
+                        ))
+                        .toList(),
+                  ),
+                ),
+                const SizedBox(height: 10),
               ],
             ),
           ),

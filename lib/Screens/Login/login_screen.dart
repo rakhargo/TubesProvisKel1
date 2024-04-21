@@ -249,7 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _passwordController.text.trim() == 'admin') {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => MyApp()),
+        MaterialPageRoute(builder: (context) => MainApp()),
       );
     } else {
       showDialog(

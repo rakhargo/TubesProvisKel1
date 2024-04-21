@@ -17,7 +17,7 @@ void main() async {
   );
   FlutterNativeSplash.remove();
   // runApp(Login());
-  runApp(MyApp());
+  runApp(MainApp());
 }
 
 
@@ -36,15 +36,15 @@ class Login extends StatelessWidget {
   }
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MainApp extends StatefulWidget {
+  const MainApp({Key? key}) : super(key: key);
   @override
-  MyAppState createState() {
-    return MyAppState();
+  MainAppState createState() {
+    return MainAppState();
   }
 }
 
-class MyAppState extends State<MyApp> {
+class MainAppState extends State<MainApp> {
   int selectedIndex = 0;
 
   void onItemTapped(int index) {
@@ -66,6 +66,31 @@ class MyAppState extends State<MyApp> {
         ),
       ),
     );
+  }
+  
+  case2(int idx) 
+  {
+    switch (idx) {
+      case 0:
+        {
+          return const HomePage();
+        }
+
+      case 1:
+        {
+          return const BookingPage();
+        }
+
+      case 2:
+        {
+          return const ActivityPage();
+        }
+
+      case 3:
+        {
+          return const AccountPage();
+        }
+    }
   }
 }
 
@@ -109,28 +134,6 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
       onTap: widget.onItemTapped,
     );
   }
+  
 }
 
-case2(int idx) {
-    switch (idx) {
-      case 0:
-        {
-          return const HomePage();
-        }
-
-      case 1:
-        {
-          return const BookingPage();
-        }
-
-      case 2:
-        {
-          return const ActivityPage();
-        }
-
-      case 3:
-        {
-          return const AccountPage();
-        }
-    }
-  }
