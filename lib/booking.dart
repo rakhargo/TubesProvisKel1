@@ -159,7 +159,6 @@ class _BookingState extends State<BookingPage>
                     'Immunogologist',
                   ],
                 ),
-                const SizedBox(height: 10),
                 _buildButton("View All"),
               ],
             ),
@@ -340,7 +339,7 @@ class _BookingState extends State<BookingPage>
       children: List.generate(
         assetPaths.length,
         (index) => SizedBox(
-          width: 91,
+          width: 89,
           height: 115,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
