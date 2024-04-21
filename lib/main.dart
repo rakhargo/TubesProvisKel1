@@ -101,7 +101,7 @@ case2(int idx) {
 
       case 1:
         {
-          return BookingPage();
+          return const BookingPage();
         }
 
       case 2:
