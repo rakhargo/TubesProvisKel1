@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:medimate/booking.dart';
 
 void main() 
 {
@@ -47,13 +48,20 @@ class _HomeState extends State<HomePage>
       (
         appBar: AppBar
         (
-          leading: const Padding
+          leading: GestureDetector
           (
-            padding: EdgeInsets.only(left: 15.0, top: 3.0, bottom: 3.0),
-            child: CircleAvatar
+            onTap: ()
+            {
+
+            },
+            child: const Padding
             (
-              radius: 20,
-              backgroundImage: AssetImage("images/orang/noah-clark.jpg"),
+              padding: EdgeInsets.only(left: 15.0, top: 3.0, bottom: 3.0),
+              child: CircleAvatar
+              (
+                radius: 20,
+                backgroundImage: AssetImage("images/orang/noah-clark.jpg"),
+              ),
             ),
           ),
           title: Text
@@ -104,6 +112,31 @@ class _HomeState extends State<HomePage>
                 ],
               ),
             ),
+          ),
+        ),
+        drawer: Drawer
+        (
+          child: ListView
+          (
+            padding: EdgeInsets.zero,
+            children: const 
+            [
+              Padding
+              (
+                padding: EdgeInsets.only(left: 15, top: 15, bottom: 15),
+                child: BackButton(),
+              ),
+              DrawerHeader
+              (
+                child: Text('Select Profile')
+              ),
+              ListTile
+              (
+                title: Text('Profile 1'),
+                // onTap: () {},
+              ),
+
+            ],
           ),
         ),
         body: SingleChildScrollView
