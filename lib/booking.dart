@@ -1,30 +1,48 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
+void main() 
+{
+  runApp(BookingPage());
 }
 
-class MyApp extends StatelessWidget {
+// class BookingPage extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       home: BookingPage(),
+//     );
+//   }
+// }
+
+class BookingPage extends StatefulWidget 
+{
+  const BookingPage({super.key});
+
+  @override
+  State<BookingPage> createState() => _BookingState();
+}
+
+class _BookingState extends State<BookingPage>
+{
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp
+    (      
       debugShowCheckedModeBanner: false,
-      home: BookingPage(),
-    );
-  }
-}
-
-class BookingPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text(
-          'Booking',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF091547),
+      title: 'Booking Page',
+      home: Scaffold
+      (
+        appBar: AppBar
+        (
+          title: const Text
+          (
+            'Booking',
+            style: TextStyle
+            (
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF091547),
+            ),
           ),
           bottom: PreferredSize
           (
@@ -54,97 +72,97 @@ class BookingPage extends StatelessWidget {
             ),
           ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 5),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search services or health clinic',
-                  hintStyle: const TextStyle(
-                    color: Color(0x99353779),
-                    fontSize: 16,
-                    fontStyle: FontStyle.italic,
-                  ),
-                  prefixIcon: const Icon(
-                    Icons.search,
-                    color: Color(0xFF202157),
-                    size: 24,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: const BorderSide(
-                      color: Color(0xff353779),
-                      width: 3.0,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 5),
+                TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search services or health clinic',
+                    hintStyle: const TextStyle(
+                      color: Color(0x99353779),
+                      fontSize: 16,
+                      fontStyle: FontStyle.italic,
                     ),
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      color: Color(0xFF202157),
+                      size: 24,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: const BorderSide(
+                        color: Color(0xff353779),
+                        width: 3.0,
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.only(top: 0),
                   ),
-                  contentPadding: const EdgeInsets.only(top: 0),
                 ),
-              ),
-              const SizedBox(height: 10),
-              _buildTitle("Hospital & Health Clinic"),
-              _buildImageListView(
-                imageUrls: [
-                  'https://blu-djpb.kemenkeu.go.id/images/5_1624092610504da276891e5453b002c784f824f582.jpg',
-                  'https://rsgm.unpad.ac.id/wp-content/uploads/2021/03/LOGO-RSGM-UNPAD.png',
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSigPOs6PJiwnZH0Vg77SU7gwYIHUmSgRQVCJzxQ4iN71dfUhp9jJpZ2ywezbfKSwBLng&usqp=CAU',
-                  'https://rsborromeus.com/wp-content/uploads/2017/02/IMG_0076.jpg',
-                ],
-                imageTexts: [
-                  'Rumah Sakit\nHasan Sadikin',
-                  'RSGM Universitas\nPajajaran',
-                  'Klinik AVA\nDental Aesthetic',
-                  'Rumah Sakit\nSanto Borromeus',
-                ],
-                additionalTexts: [
-                  'General Hospital',
-                  'Specialty Hospital',
-                  'Clinic',
-                  'General Hospital',
-                ],
-                distances: ['1.2', '2.5', '3.8', '4.1'],
-              ),
-              const SizedBox(height: 15),
-              _buildButton("View All"),
-              const SizedBox(height: 10),
-              _buildTitle("Hospital & Health Clinic"),
-              _buildImageTextListView(
-                assetPaths: [
-                  'assets/images/Booking/Icon/cardiologist.png',
-                  'assets/images/Booking/Icon/pulmonologist.png',
-                  'assets/images/Booking/Icon/dermatologist.png',
-                  'assets/images/Booking/Icon/gynecologist.png',
-                  'assets/images/Booking/Icon/pediatric.png',
-                  'assets/images/Booking/Icon/orthopedist.png',
-                  'assets/images/Booking/Icon/urologist.png',
-                  'assets/images/Booking/Icon/neurologist.png',
-                  'assets/images/Booking/Icon/dentist.png',
-                  'assets/images/Booking/Icon/Oncologist.png',
-                  'assets/images/Booking/Icon/Otolaryngologist.png',
-                  'assets/images/Booking/Icon/Immunogologist.png',
-                ],
-                imageTexts: [
-                  'Cardiologist',
-                  'Pulmonologist',
-                  'Dermatologist',
-                  'Obgyn',
-                  'Pediatric',
-                  'Orthopedist',
-                  'Urologist',
-                  'Neurologist',
-                  'Dentist',
-                  'Oncologist',
-                  'Otolaryngologist',
-                  'Immunogologist',
-                ],
-              ),
-              const SizedBox(height: 10),
-              _buildButton("View All"),
-            ],
+                const SizedBox(height: 10),
+                _buildTitle("Hospital & Health Clinic"),
+                _buildImageListView(
+                  imageUrls: [
+                    'https://blu-djpb.kemenkeu.go.id/images/5_1624092610504da276891e5453b002c784f824f582.jpg',
+                    'https://rsgm.unpad.ac.id/wp-content/uploads/2021/03/LOGO-RSGM-UNPAD.png',
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSigPOs6PJiwnZH0Vg77SU7gwYIHUmSgRQVCJzxQ4iN71dfUhp9jJpZ2ywezbfKSwBLng&usqp=CAU',
+                    'https://rsborromeus.com/wp-content/uploads/2017/02/IMG_0076.jpg',
+                  ],
+                  imageTexts: [
+                    'Rumah Sakit\nHasan Sadikin',
+                    'RSGM Universitas\nPajajaran',
+                    'Klinik AVA\nDental Aesthetic',
+                    'Rumah Sakit\nSanto Borromeus',
+                  ],
+                  additionalTexts: [
+                    'General Hospital',
+                    'Specialty Hospital',
+                    'Clinic',
+                    'General Hospital',
+                  ],
+                  distances: ['1.2', '2.5', '3.8', '4.1'],
+                ),
+                const SizedBox(height: 15),
+                _buildButton("View All"),
+                const SizedBox(height: 10),
+                _buildTitle("Hospital & Health Clinic"),
+                _buildImageTextListView(
+                  assetPaths: [
+                    'assets/images/Booking/Icon/cardiologist.png',
+                    'assets/images/Booking/Icon/pulmonologist.png',
+                    'assets/images/Booking/Icon/dermatologist.png',
+                    'assets/images/Booking/Icon/gynecologist.png',
+                    'assets/images/Booking/Icon/pediatric.png',
+                    'assets/images/Booking/Icon/orthopedist.png',
+                    'assets/images/Booking/Icon/urologist.png',
+                    'assets/images/Booking/Icon/neurologist.png',
+                    'assets/images/Booking/Icon/dentist.png',
+                    'assets/images/Booking/Icon/Oncologist.png',
+                    'assets/images/Booking/Icon/Otolaryngologist.png',
+                    'assets/images/Booking/Icon/Immunogologist.png',
+                  ],
+                  imageTexts: [
+                    'Cardiologist',
+                    'Pulmonologist',
+                    'Dermatologist',
+                    'Obgyn',
+                    'Pediatric',
+                    'Orthopedist',
+                    'Urologist',
+                    'Neurologist',
+                    'Dentist',
+                    'Oncologist',
+                    'Otolaryngologist',
+                    'Immunogologist',
+                  ],
+                ),
+                const SizedBox(height: 10),
+                _buildButton("View All"),
+              ],
+            ),
           ),
         ),
       ),
