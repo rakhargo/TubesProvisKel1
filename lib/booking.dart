@@ -115,10 +115,10 @@ class _BookingState extends State<BookingPage>
                     'rs_mayapada.png',
                   ],
                   imageUrls: [
-                    'https://blu-djpb.kemenkeu.go.id/images/5_1624092610504da276891e5453b002c784f824f582.jpg',
-                    'https://rsgm.unpad.ac.id/wp-content/uploads/2021/03/LOGO-RSGM-UNPAD.png',
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSigPOs6PJiwnZH0Vg77SU7gwYIHUmSgRQVCJzxQ4iN71dfUhp9jJpZ2ywezbfKSwBLng&usqp=CAU',
-                    'https://rsborromeus.com/wp-content/uploads/2017/02/IMG_0076.jpg',
+                    'assets/images/Booking/Logo/logo rs mayapada.png',
+                    'assets/images/Booking/Logo/logo rsgm unpad.png',
+                    'images/Booking/Logo/logo_ava1.png',
+                    'assets/images/Booking/Logo/logo rshs.png',
                   ],
                   imageTexts: [
                     'Mayapada Hospital\nBandung',
@@ -300,14 +300,15 @@ class _BookingState extends State<BookingPage>
                         child: ClipOval(
                           child: Transform.scale(
                             scale: 0.7,
-                            child: Image.network(
+                            child: Image.asset
+                            (
                               imageUrls[index],
-                              fit: BoxFit.fitWidth,
-                              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                                return Container(
-                                  color: Colors.grey,
-                                );
-                              },
+                              // fit: BoxFit.fitWidth,
+                              // errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                              //   return Container(
+                              //     color: Colors.grey,
+                              //   );
+                              // },
                             ),
                           ),
                         ),
