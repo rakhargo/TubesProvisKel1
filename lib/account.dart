@@ -1,6 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:medimate/Account/edit_profile.dart';
+import 'package:medimate/Account/add_family.dart';
+import 'package:medimate/Account/orders.dart';
+import 'package:medimate/Account/settings.dart';
+import 'package:medimate/Account/support.dart';
+import 'package:medimate/Screens/Login/login_screen.dart';
 
 void main() 
 {
@@ -8,53 +14,39 @@ void main()
 }
 
 class AccountPage extends StatefulWidget {
-  const AccountPage({super.key});
+  const AccountPage({Key? key}) : super(key: key);
 
   @override
   State<AccountPage> createState() => _AccountState();
 }
 
-class _AccountState extends State<AccountPage>
-{
+class _AccountState extends State<AccountPage> {
   @override
-  Widget build(BuildContext context) 
-  {
-    return MaterialApp
-    (
+  Widget build(BuildContext context) {
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Account Page',
-      home: Scaffold
-      (
-        appBar: AppBar
-        (
-          title: const Text
-          (
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text(
             'My Profile',
-            style: TextStyle
-            (
+            style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Color.fromARGB(255, 9, 15, 71),
             ),
           ),
-          bottom: PreferredSize
-          (
+          bottom: PreferredSize(
             preferredSize: const Size.fromHeight(2.0), //Set the height of the border
-            child: Container
-            (
-              decoration: const BoxDecoration
-              (
-                border: Border
-                (
-                  bottom: BorderSide
-                  (
+            child: Container(
+              decoration: const BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
                     color: Colors.grey, // Set the color of the border
                     width: 0.5, // Set the width of the border
                   ),
                 ),
-                boxShadow: 
-                [
-                  BoxShadow
-                  (
+                boxShadow: [
+                  BoxShadow(
                     color: Colors.grey, // Set the color of the shadow
                     blurRadius: 2.0, // Set the blur radius of the shadow
                     offset: Offset(0.0, 2.0), // Set the offset of the shadow
@@ -64,7 +56,6 @@ class _AccountState extends State<AccountPage>
             ),
           ),
         ),
-
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 35),
           child: Column(
@@ -114,19 +105,43 @@ class _AccountState extends State<AccountPage>
                   ),
                 ),
               ),
-
+              
               const SizedBox(height: 40),
-              const TextButtonWithIcon(icon: Icons.edit_outlined, text: "Edit Profile"),
+              const InkWellButtonWithIcon(
+                icon: Icons.edit_outlined,
+                text: "Edit Profile",
+                route: EditProfilePage(),
+              ),
               const SizedBox(height: 15),
-              const TextButtonWithIcon(icon: Icons.receipt_long_outlined, text: "My Orders"),
+              const InkWellButtonWithIcon(
+                icon: Icons.receipt_long_outlined,
+                text: "My Orders",
+                route: MyOrdersPage(),
+              ),
               const SizedBox(height: 15),
-              const TextButtonWithIcon(icon: Icons.support_agent_outlined, text: "Help and Support"),
+              const InkWellButtonWithIcon(
+                icon: Icons.support_agent_outlined,
+                text: "Help and Support",
+                route: HelpSupportPage(),
+              ),
               const SizedBox(height: 15),
-              const TextButtonWithIcon(icon: Icons.settings_outlined, text: "Settings"),
+              const InkWellButtonWithIcon(
+                icon: Icons.settings_outlined,
+                text: "Settings",
+                route: SettingsPage(),
+              ),
               const SizedBox(height: 15),
-              const TextButtonWithIcon(icon: Icons.group_outlined, text: "Add Family Member"),
+              const InkWellButtonWithIcon(
+                icon: Icons.group_outlined,
+                text: "Add Family Member",
+                route: AddFamilyMemberPage(),
+              ),
               const SizedBox(height: 15),
-              const TextButtonWithIcon(icon: Icons.logout_outlined, text: "Logout"),
+              InkWellButtonWithIcon(
+                icon: Icons.logout_outlined,
+                text: "Logout",
+                route: LoginScreen(), // Assuming LoginPage is your login page route
+              ),
             ],
           ),
         ),
@@ -135,15 +150,17 @@ class _AccountState extends State<AccountPage>
   }
 }
 
-class TextButtonWithIcon extends StatelessWidget {
+
+class InkWellButtonWithIcon extends StatelessWidget {
   final IconData icon;
   final String text;
+  final Widget route;
 
-  const TextButtonWithIcon({
-    Key? key,
+  const InkWellButtonWithIcon({
     required this.icon,
     required this.text,
-  }) : super(key: key);
+    required this.route,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -151,41 +168,43 @@ class TextButtonWithIcon extends StatelessWidget {
     final iconColor1 = isLogout ? const Color(0xFFD84339) : const Color(0xFF51539B);
     final iconColor2 = isLogout ? const Color(0xFFD84339) : const Color(0xFF202157);
 
-    return TextButton(
-      onPressed: () {
-        // Add functionality here
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => route),
+        );
       },
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(const Color(0xFFEBEBFF)),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFFEBEBFF),
+          borderRadius: BorderRadius.circular(10.0),
         ),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            size: 24,
-            color: iconColor1,
-          ),
-          const SizedBox(width: 10),
-          Text(
-            text,
-            style: const TextStyle(
-              color: Color(0xFF202157),
-              fontWeight: FontWeight.normal,
-              fontSize: 15,
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              size: 24,
+              color: iconColor1,
             ),
-          ),
-          const Spacer(),
-          Icon(
-            Icons.arrow_forward,
-            size: 20,
-            color: iconColor2,
-          ),
-        ],
+            const SizedBox(width: 10),
+            Text(
+              text,
+              style: const TextStyle(
+                color: Color(0xFF202157),
+                fontWeight: FontWeight.normal,
+                fontSize: 15,
+              ),
+            ),
+            const Spacer(),
+            Icon(
+              Icons.arrow_forward,
+              size: 20,
+              color: iconColor2,
+            ),
+          ],
+        ),
       ),
     );
   }
