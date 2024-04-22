@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:medimate/hospitalProfile.dart';
+import 'package:medimate/doctor_profile.dart';
 
 void main() 
 {
@@ -396,19 +398,28 @@ class _BookingState extends State<BookingPage>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                width: 70,
-                height: 70,
-                decoration: const BoxDecoration(
-                  color: Color(0xffEBEBFF),
-                  shape: BoxShape.circle,
-                ),
-                child: ClipOval(
-                  child: Transform.scale(
-                    scale: 0.6,
-                    child: Image.asset(
-                      assetPaths[index],
-                      fit: BoxFit.cover,
+              GestureDetector
+              (
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => DoctorProfilePage()),
+                  );
+                },
+                child: Container(
+                  width: 70,
+                  height: 70,
+                  decoration: const BoxDecoration(
+                    color: Color(0xffEBEBFF),
+                    shape: BoxShape.circle,
+                  ),
+                  child: ClipOval(
+                    child: Transform.scale(
+                      scale: 0.6,
+                      child: Image.asset(
+                        assetPaths[index],
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),

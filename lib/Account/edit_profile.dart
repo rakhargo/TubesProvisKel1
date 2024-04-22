@@ -82,7 +82,7 @@ class _EditProfileState extends State<EditProfilePage>
                   ),
                   child: ClipOval(
                     child: Image.asset(
-                      'images/orang/noah-clark.jpg', // Replace with your image asset path
+                      'assets/images/orang/1-John_Doe.jpg', // Replace with your image asset path
                       fit: BoxFit.cover, // Ensure the image covers the entire circle
                       width: 130, // Set width to match container width
                       height: 130, // Set height to match container height
