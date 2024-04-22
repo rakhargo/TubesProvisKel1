@@ -1,6 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:medimate/booking.dart';
 
 void main() 
 {
@@ -24,14 +24,14 @@ class _HomeState extends State<HomePage>
     {"servicesName": "Dentist", "image": "dentist.png", "linkTo": ""},
     {"servicesName": "Medical Check Up", "image": "medical-check.png", "linkTo": ""},
     {"servicesName": "Home Lab Services", "image": "clean-house.png", "linkTo": ""},
-    {"servicesName": "Pregnancy Consultation", "image": "pregnant.png", "linkTo": ""},
+    {"servicesName": "Book an Appointment", "image": "appointment.png", "linkTo": ""},
     {"servicesName": "More Services", "image": "more.png", "linkTo": ""},
   ];
 
 
   List<Map> profiles = 
   [
-    // {"profileName": "John Doe", "profilePicture": ""},
+    {"profileName": "John Doe", "profilePicture": "1-john_doe.jpg"},
     {"profileName": "Christian Buehner", "profilePicture": "2-christian_buehner.jpg"},
     {"profileName": "Alicia Claire", "profilePicture": "3-alicia_claire.jpg"},
   ];
@@ -41,9 +41,31 @@ class _HomeState extends State<HomePage>
 
   List<String> topics = 
   [
-    "All", "Nutrition & Diet", "Lifestyle", "Beauty",
+    "All", "Nutrition & Diet", "Lifestyle", "Beauty", "Exercise"
   ];
+
   String selectedTopic = "All";
+
+  List<Map> articles = 
+  [
+    {
+      "articleTitle": "Plant-based Protein: The Best, the Worst, and Everything In Between", 
+      "topics": ["Nutrition & Diet", "Lifestyle"],
+      "image": "1.jpg",
+    },
+
+    {
+      "articleTitle": "Exercise may Reduce Heart Disease Risk by Changing How the Brain Reacts to Stress", 
+      "topics": ["Exercise", "Lifestyle"],
+      "image": "2.jpg",
+    },
+
+    {
+      "articleTitle": "Why Wearing Makeup During Workouts May Be Bad for Your Skin", 
+      "topics": ["Beauty"],
+      "image": "3.jpg",
+    },
+  ];
 
   @override
   Widget build(BuildContext context) 
@@ -370,7 +392,193 @@ class _HomeState extends State<HomePage>
                         .toList(),
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
+
+                // Menampilkan daftar artikel yang telah difilter
+                Column
+                (
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: selectedTopic == "All"
+                      ? articles.map<Widget>((article) 
+                      {
+                          return Column
+                          (
+                            children: 
+                            [
+                              Container
+                              (
+                                decoration: BoxDecoration
+                                (
+                                  border: Border.all(color: const Color.fromARGB(255, 113, 115, 189)),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Padding
+                                (
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: LayoutBuilder
+                                  (
+                                    builder: (context, constraints) 
+                                    {
+                                      // Menghitung lebar gambar (setengah dari lebar widget induk)
+                                      double imageWidth = constraints.maxWidth / 2.5;
+                              
+                                      return Row
+                                      (
+                                        children: 
+                                        [
+                                          Expanded
+                                          (
+                                            child: Padding
+                                            (
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Column
+                                              (
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: 
+                                                [
+                                                  Text
+                                                  (
+                                                    article['articleTitle'],
+                                                    style: const TextStyle
+                                                    (
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Color.fromARGB(255, 32, 33, 87),
+                                                      fontSize: 15
+                                                    ),
+                                                    // max
+                                                  ),
+                                                  const SizedBox(height: 5),
+                                                  Wrap
+                                                  (
+                                                    spacing: 5, // Spasi antara setiap widget dalam Wrap
+                                                    children: article['topics'].map<Widget>((topic) 
+                                                    {
+                                                      return Chip
+                                                      (
+                                                        label: Text(topic),
+                                                        backgroundColor: const Color.fromARGB(255, 53, 55, 121),
+                                                        labelStyle: const TextStyle(color: Colors.white),
+                                                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                                                        
+                                                      );
+                                                    }).toList(),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          ClipRRect
+                                          (
+                                            borderRadius: BorderRadius.circular(12), // Set border circular
+                                            child: Image
+                                            (
+                                              image: AssetImage("images/article/${article['image']}"),
+                                              width: imageWidth,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    }
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 15)
+                            ],
+                          );
+                        }).toList()
+                      : articles
+                          .where((article) => article["topics"].contains(selectedTopic))
+                          .map<Widget>((article) 
+                          {
+                          return Column
+                          (
+                            children: 
+                            [
+                              Container
+                              (
+                                decoration: BoxDecoration
+                                (
+                                  border: Border.all(color: const Color.fromARGB(255, 113, 115, 189)),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Padding
+                                (
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: LayoutBuilder
+                                  (
+                                    builder: (context, constraints) 
+                                    {
+                                      // Menghitung lebar gambar (setengah dari lebar widget induk)
+                                      double imageWidth = constraints.maxWidth / 2.5;
+                              
+                                      return Row
+                                      (
+                                        children: 
+                                        [
+                                          Expanded
+                                          (
+                                            child: Padding
+                                            (
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Column
+                                              (
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: 
+                                                [
+                                                  Text
+                                                  (
+                                                    article['articleTitle'],
+                                                    style: const TextStyle
+                                                    (
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Color.fromARGB(255, 32, 33, 87),
+                                                      fontSize: 15
+                                                    ),
+                                                    // max
+                                                  ),
+                                                  const SizedBox(height: 5),
+                                                  Wrap
+                                                  (
+                                                    spacing: 5, // Spasi antara setiap widget dalam Wrap
+                                                    children: article['topics'].map<Widget>((topic) 
+                                                    {
+                                                      return Chip
+                                                      (
+                                                        label: Text(topic),
+                                                        backgroundColor: const Color.fromARGB(255, 53, 55, 121),
+                                                        labelStyle: const TextStyle(color: Colors.white),
+                                                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                                                        
+                                                      );
+                                                    }).toList(),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          ClipRRect
+                                          (
+                                            borderRadius: BorderRadius.circular(12), // Set border circular
+                                            child: Image
+                                            (
+                                              image: AssetImage("images/article/${article['image']}"),
+                                              width: imageWidth,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    }
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 15),
+                            ],
+                          );
+                        }).toList()
+                ),
+
               ],
             ),
           ),
