@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'constant.dart'; 
 import '../Screens/Welcome/welcome_screen.dart';
 import 'home.dart';
 import 'booking.dart';
@@ -28,7 +27,7 @@ class Login extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Medimate',
       theme: ThemeData(
-        primaryColor: kPrimaryColor,
+        primaryColor: Color(0xFF090F47),
         scaffoldBackgroundColor: Colors.white,
       ),
       home: WelcomeScreen(),

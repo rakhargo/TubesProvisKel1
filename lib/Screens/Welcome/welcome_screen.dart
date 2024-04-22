@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:medimate/constant.dart';
 import '../Login/login_screen.dart'; 
 import '../Signup/signup_screen.dart'; 
 import 'package:flutter/gestures.dart';
@@ -68,7 +67,7 @@ class WelcomeScreen extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     padding:
                         EdgeInsets.symmetric(vertical: 20, horizontal: 60),
-                    backgroundColor: kPrimaryColor,
+                    backgroundColor: Color (0xFF202157),
                   ),
                   child: SizedBox(
                     width: double.infinity,
