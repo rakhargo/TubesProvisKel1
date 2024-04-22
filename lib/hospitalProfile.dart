@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:medimate/doctor_profile.dart';
 
 class HospitalPage extends StatefulWidget {
   final Map<String, String> hospitalDetails;
@@ -12,6 +13,11 @@ class HospitalPage extends StatefulWidget {
 
 class _HospitalState extends State<HospitalPage>
 {
+  List<Map> services = 
+  [
+    {"servicesName": "Cardiologist", "image": "cardiologist.png", "linkTo": ""},
+    {"servicesName": "Dentist", "image": "dentist.png", "linkTo": ""},
+  ];
   @override
   Widget build(BuildContext context) 
   {
@@ -45,19 +51,27 @@ class _HospitalState extends State<HospitalPage>
                     ),
                     // Back button
                   ),
-                  Container
+                  Padding
                   (
-                    decoration: BoxDecoration
+                    padding: const EdgeInsets.fromLTRB(5.0, 5.0, 0, 0),
+                    child: Container
                     (
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(100)
-                    ),
-                    child: IconButton
-                    (
-                      icon: const Icon(Icons.arrow_back_ios),
-                      onPressed: () {
-                        Navigator.pop(context); // Kembali ke layar sebelumnya
-                      },
+                      decoration: BoxDecoration
+                      (
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(100)
+                      ),
+                      child: IconButton
+                      (
+                        icon: const Icon
+                        (
+                          Icons.arrow_back_ios, 
+                          color: Color.fromARGB(255, 54, 84, 134),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context); // Kembali ke layar sebelumnya
+                        },
+                      ),
                     ),
                   ),
                 ]
@@ -184,15 +198,80 @@ class _HospitalState extends State<HospitalPage>
                 (
                   children:
                   [
-                    const Text("Content for Information tab"),
                     Padding
                     (
                       padding: const EdgeInsets.all(12.0),
-                      child: Column
+                      child: GridView.builder
                       (
-                        children: 
-                        [
-                          Row
+                         shrinkWrap: true,
+                          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent
+                          (
+                            maxCrossAxisExtent: 125, // Lebar maksimum setiap item
+                            mainAxisExtent: 150,
+                            crossAxisSpacing: 50
+                          ),
+                          itemCount: services.length,
+                          itemBuilder: (context, index)
+                          {  
+                            var item = services[index];
+                            return GestureDetector
+                            (
+                              onTap: () 
+                              {
+                                Navigator.push
+                                (
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const DoctorProfilePage()),
+                                );
+                              },
+                              child: Container
+                              (
+                                width: 70,
+                                height: 70,
+                                decoration: BoxDecoration
+                                (
+                                  // shape: BoxShape.circle,
+                                  borderRadius: BorderRadius.circular(14),
+                                  border: Border.all(color: const Color.fromARGB(255, 9, 15, 71),),
+                                  color: const Color.fromARGB(255, 235, 235, 255),
+                                ),
+                                child: Column
+                                (
+                                  children: 
+                                  [
+                                    Padding
+                                    (
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: Image
+                                      (
+                                        image: AssetImage("images/Booking/Icon/${item['image']}"),
+                                      ),
+                                    ),
+                                    Text
+                                    (
+                                      item['servicesName'],
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle
+                                      (
+                                        color: Color.fromARGB(255, 9, 15, 71),
+                                        fontWeight: FontWeight.bold
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                      ),
+                    ),
+                    Column
+                    (
+                      children: 
+                      [
+                        Padding
+                        (
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row
                           (
                             children: 
                             [
@@ -246,8 +325,46 @@ class _HospitalState extends State<HospitalPage>
                               )
                             ],
                           ),
-                        ],
-                      ),
+                        ),
+                        Container
+                        (
+                          decoration: const BoxDecoration
+                          (
+                            border: Border
+                            (
+                              bottom: BorderSide(color: Color(0xFFD9D9D9), width: 2.5),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Column
+                          (
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: 
+                            [
+                              const Text
+                              (
+                                'Hospital Profile',
+                                style: TextStyle
+                                (
+                                  color: Color.fromARGB(255, 9, 15, 71),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold
+                                ),
+                              ),
+                              Text
+                              (
+                                widget.hospitalDetails['profile']!,
+                                style: const TextStyle
+                                (
+                                  color: Color.fromARGB(255, 143, 143, 143),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ] 
                 ),

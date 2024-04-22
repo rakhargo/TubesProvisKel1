@@ -143,7 +143,7 @@ class _BookingState extends State<BookingPage>
                   ],
                   profile: 
                   [
-                    'Rumah sakit gadung',
+                    'Mayapada Hospital is one of the best private hospitals founded by Mayapada Healthcare Group on June 1 2008.',
                     'Rumah sakit',
                     'RS',
                     'Rafie'

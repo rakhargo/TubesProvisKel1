@@ -11,12 +11,12 @@ void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Future.delayed(
-    // Duration(seconds: 4), // ini yang aslinya
-    Duration(seconds: 1),
+    Duration(seconds: 4), // ini yang aslinya
+    // Duration(seconds: 1),
   );
   FlutterNativeSplash.remove();
-  // runApp(Login());
-  runApp(MainApp());
+  runApp(Login());
+  // runApp(MainApp());
 }
 
 

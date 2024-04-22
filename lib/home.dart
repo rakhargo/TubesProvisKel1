@@ -210,6 +210,10 @@ class _HomeState extends State<HomePage>
                             // chosenProfile = profile;
                             idxProfiles = index;
                           });
+                        //   onPressed: ()
+                        // {
+                          Navigator.of(context).pop();
+                        // },
                         }
                       );
                     }
