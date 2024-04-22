@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medimate/hospitalProfile.dart';
 
 void main() 
 {
@@ -105,6 +106,12 @@ class _BookingState extends State<BookingPage>
                 const SizedBox(height: 10),
                 _buildTitle("Hospital & Health Clinic"),
                 _buildImageListView(
+                  topImage: [
+                    'rs_mayapada.png',
+                    'rs_mayapada.png',
+                    'rs_mayapada.png',
+                    'rs_mayapada.png',
+                  ],
                   imageUrls: [
                     'https://blu-djpb.kemenkeu.go.id/images/5_1624092610504da276891e5453b002c784f824f582.jpg',
                     'https://rsgm.unpad.ac.id/wp-content/uploads/2021/03/LOGO-RSGM-UNPAD.png',
@@ -112,7 +119,7 @@ class _BookingState extends State<BookingPage>
                     'https://rsborromeus.com/wp-content/uploads/2017/02/IMG_0076.jpg',
                   ],
                   imageTexts: [
-                    'Rumah Sakit\nHasan Sadikin',
+                    'Mayapada Hospital\nBandung',
                     'RSGM Universitas\nPajajaran',
                     'Klinik AVA\nDental Aesthetic',
                     'Rumah Sakit\nSanto Borromeus',
@@ -124,6 +131,21 @@ class _BookingState extends State<BookingPage>
                     'General Hospital',
                   ],
                   distances: ['1.2', '2.5', '3.8', '4.1'],
+                  rating: ['1.2', '2.5', '3.8', '4.1'],
+                  address: 
+                  [
+                    'Jl. Terusan Buah Batu No.5,\nBatununggal, Kec. Bandung Kidul, Kota\nBandung, Jawa Barat 40266',
+                    'Jl. Sekeloa Selatan No.1, Lebakgede, Kecamatan Coblong, Kota Bandung, Jawa Barat 40132',
+                    'Jl. Gatot Subroto No.91-D, Malabar, Kec. Lengkong, Kota Bandung, Jawa Barat 40262',
+                    'Jl. Ir. H. Juanda No.100, Lebakgede, Kecamatan Coblong, Kota Bandung, Jawa Barat 40132',
+                  ],
+                  profile: 
+                  [
+                    'Rumah sakit gadung',
+                    'Rumah sakit',
+                    'RS',
+                    'Rafie'
+                  ]
                 ),
                 const SizedBox(height: 15),
                 _buildButton("View All"),
@@ -211,117 +233,147 @@ class _BookingState extends State<BookingPage>
   }
 
   Widget _buildImageListView({
+    required List<String> topImage,
     required List<String> imageUrls,
     required List<String> imageTexts,
     required List<String> additionalTexts,
     required List<String> distances,
+    required List<String> rating,
+    required List<String> address,
+    required List<String> profile,
   }) {
-    return Row(
-      children: List.generate(
-        imageUrls.length,
-        (index) => Container(
-          width: 140,
-          height: 155,
-          margin: const EdgeInsets.only(right: 20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: const Color(0xffD9D9D9),
-              width: 1,
-            ),
-          ),
-          child: Stack(
-            children: [
-              Column(
+    return SingleChildScrollView
+    (
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: List.generate(
+          imageUrls.length,
+          (index) => GestureDetector
+          (
+            onTap: () 
+            {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) 
+              {
+                Map<String, String> hospitalDetails = 
+                  {
+                    "topImage": topImage[index],
+                    "logo": imageUrls[index],
+                    "nama": imageTexts[index],
+                    "jenis": additionalTexts[index],
+                    "jarak": distances[index],
+                    "rating": rating[index],
+                    "address": address[index],
+                    "profile": profile[index],
+                  }
+                ;
+                    return (HospitalPage(hospitalDetails: hospitalDetails));
+               }));
+            },
+            child: Container(
+              width: 140,
+              height: 155,
+              margin: const EdgeInsets.only(right: 20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: const Color(0xffD9D9D9),
+                  width: 1,
+                ),
+              ),
+              child: Stack(
                 children: [
-                  Container(
-                    width: 140,
-                    height: 60,
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
+                  Column(
+                    children: [
+                      Container(
+                        width: 140,
+                        height: 60,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                          ),
+                          color: Color(0xBF7173BD),
+                        ),
+                        child: ClipOval(
+                          child: Transform.scale(
+                            scale: 0.7,
+                            child: Image.network(
+                              imageUrls[index],
+                              fit: BoxFit.fitWidth,
+                              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                return Container(
+                                  color: Colors.grey,
+                                );
+                              },
+                            ),
+                          ),
+                        ),
                       ),
-                      color: Color(0xBF7173BD),
-                    ),
-                    child: ClipOval(
-                      child: Transform.scale(
-                        scale: 0.7,
-                        child: Image.network(
-                          imageUrls[index],
-                          fit: BoxFit.fitWidth,
-                          errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                            return Container(
-                              color: Colors.grey,
-                            );
-                          },
+                    ],
+                  ),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 60.0, left: 10),
+                      child: Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 5),
+                              Text(
+                                imageTexts[index],
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: Color(0xFF0F1035),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                additionalTexts[index],
+                                style: const TextStyle(
+                                  fontSize: 9,
+                                  color: Color(0xD8353779),
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: const Color(0x7FD9D9D9),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    const Icon(
+                                      Icons.location_on_outlined, 
+                                      size: 10,
+                                      color: Color(0xFF353779),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      '${distances[index]} km',
+                                      style: const TextStyle(
+                                        fontSize: 8, 
+                                        color: Color(0xFF353779),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ],
               ),
-              Align(
-                alignment: Alignment.topCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 60.0, left: 10),
-                  child: Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 5),
-                          Text(
-                            imageTexts[index],
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: Color(0xFF0F1035),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            additionalTexts[index],
-                            style: const TextStyle(
-                              fontSize: 9,
-                              color: Color(0xD8353779),
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0x7FD9D9D9),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const Icon(
-                                  Icons.location_on_outlined, 
-                                  size: 10,
-                                  color: Color(0xFF353779),
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  '${distances[index]} km',
-                                  style: const TextStyle(
-                                    fontSize: 8, 
-                                    color: Color(0xFF353779),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
