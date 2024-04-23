@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:medimate/qrCodeScanner.dart';
 
 // void main() 
 // {
@@ -235,14 +236,14 @@ class _HomeState extends State<HomePage>
               [
                 GestureDetector
                 (
-                  // onTap: () 
-                  // {
-                  //   Navigator.push
-                  //   (
-                  //     context,
-                  //     MaterialPageRoute(builder: (context) => const AccountPage()),
-                  //   );
-                  // },
+                  onTap: () 
+                  {
+                    Navigator.push
+                    (
+                      context,
+                      MaterialPageRoute(builder: (context) => QRCodeScannerApp()),
+                    );
+                  },
                   child: Container
                   (
                     decoration: BoxDecoration
