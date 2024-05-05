@@ -15,8 +15,8 @@ void main() async {
     // Duration(seconds: 1),
   );
   FlutterNativeSplash.remove();
-  runApp(Login());
-  // runApp(MainApp());
+  // runApp(Login());
+  runApp(MainApp());
 }
 
 

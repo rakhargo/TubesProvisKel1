@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:medimate/detailDoctor.dart';
 
 void main() {
   runApp(const DoctorProfilePage());
@@ -15,7 +16,7 @@ class DoctorProfilePage extends StatefulWidget {
 
 List<Map<dynamic, dynamic>> doctorsData = [
   {
-    "name": "Dr. Sisca Amartha",
+    "name": "Dr. Sisca Amartha, Sp. J.P.",
     "category": "Cardiologist",
     "exp": "5",
     "rating": "4.9",
@@ -24,7 +25,7 @@ List<Map<dynamic, dynamic>> doctorsData = [
     "image": "assets/images/orang/dokter/dr_sisca.png" // Add image asset path here
   },
   {
-    "name": "Dr. Saeful Baskori",
+    "name": "Dr. Saeful Baskori, Sp. J.P.",
     "category": "Cardiologist",
     "exp": "5",
     "rating": "4.9",
@@ -33,7 +34,7 @@ List<Map<dynamic, dynamic>> doctorsData = [
     "image": "assets/images/orang/dokter/dr_saeful.png" // Add image asset path here
   },
   {
-    "name": "Dr. Rizky Pratama",
+    "name": "Dr. Rizky Pratama, Sp. J.P.",
     "category": "Cardiologist",
     "exp": "5",
     "rating": "4.9",
@@ -42,7 +43,7 @@ List<Map<dynamic, dynamic>> doctorsData = [
     "image": "assets/images/orang/dokter/dr_rizky.png" // Add image asset path here
   },
   {
-    "name": "Dr. Syahid Alamsyah",
+    "name": "Dr. Syahid Alamsyah, Sp. J.P.",
     "category": "Cardiologist",
     "exp": "5",
     "rating": "4.9",
@@ -51,7 +52,7 @@ List<Map<dynamic, dynamic>> doctorsData = [
     "image": "assets/images/orang/dokter/dr_alamsyah.png" // Add image asset path here
   },
   {
-    "name": "Dr. Surya Abadi",
+    "name": "Dr. Surya Abadi, Sp. J.P.",
     "category": "Cardiologist",
     "exp": "5",
     "rating": "4.9",
@@ -240,7 +241,41 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
                           ),
                         ),
                       ),
-                      buildButton('Book'),
+                      GestureDetector
+                      (
+                        onTap: () 
+                        {
+                          // Navigator.push
+                          // (
+                          //   context,
+                          //   MaterialPageRoute(builder: (context) => DoctorDetailPage()),
+                          // );
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) 
+                          {
+                            Map<dynamic, dynamic> hospitalDetails = 
+                              {
+                                // "topImage": topImage[index],
+                                // "logo": imageUrls[index],
+                                // "nama": imageTexts[index],
+                                // "jenis": additionalTexts[index],
+                                // "jarak": distances[index],
+                                // "rating": rating[index],
+                                // "address": address[index],
+                                // "profile": profile[index],
+                                "name": item["name"],
+                                "category": item["category"],
+                                "exp": item["exp"],
+                                "rating": item["rating"],
+                                "schedule": item["schedule"],
+                                "price": item["price"],
+                                "image": item["image"]
+                              }
+                            ;
+                                return (DetailDoctorPage(doctorDetails: hospitalDetails));
+                          }));
+                        },
+                        child: buildButton('Book')
+                      ),
                     ],
                   ),
                   const SizedBox(height: 8),

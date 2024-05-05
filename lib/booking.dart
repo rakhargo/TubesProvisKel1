@@ -133,7 +133,7 @@ class _BookingState extends State<BookingPage>
                     'General Hospital',
                   ],
                   distances: ['1.2', '2.5', '3.8', '4.1'],
-                  rating: ['1.2', '2.5', '3.8', '4.1'],
+                  rating: ['5.0', '2.5', '3.8', '4.1'],
                   address: 
                   [
                     'Jl. Terusan Buah Batu No.5,\nBatununggal, Kec. Bandung Kidul, Kota\nBandung, Jawa Barat 40266',
@@ -266,8 +266,7 @@ class _BookingState extends State<BookingPage>
                     "rating": rating[index],
                     "address": address[index],
                     "profile": profile[index],
-                  }
-                ;
+                  };
                     return (HospitalPage(hospitalDetails: hospitalDetails));
                }));
             },

@@ -41,11 +41,11 @@ class _HospitalState extends State<HospitalPage>
                   Container
                   (
                     height: 200,
-                    decoration: const BoxDecoration
+                    decoration: BoxDecoration
                     (
                       image: DecorationImage
                       (
-                        image: AssetImage('images/Booking/Logo/rs_mayapada.png'),
+                        image: AssetImage('images/Booking/Logo/${widget.hospitalDetails['topImage']}'),
                         fit: BoxFit.cover,
                       ),
                     ),
