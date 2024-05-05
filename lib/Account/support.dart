@@ -16,6 +16,8 @@ class HelpSupportPage extends StatefulWidget {
 
 class _HelpSupportState extends State<HelpSupportPage>
 {
+  bool isExpanded = false;
+
   @override
   Widget build(BuildContext context) 
   {
@@ -27,7 +29,7 @@ class _HelpSupportState extends State<HelpSupportPage>
       (
         appBar: AppBar(
           title: const Text(
-            'Edit Profile',
+            'Help and Support',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Color.fromARGB(255, 9, 15, 71),
@@ -69,15 +71,139 @@ class _HelpSupportState extends State<HelpSupportPage>
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 35),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                child: (const Text("hallo World")),
+              SizedBox(height: 25),
+              Row(
+                children: [
+                  Text(
+                    "Urgent problem?\nContact us now",
+                    style: TextStyle(
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF202157),
+                    ),
+                  ),
+                ],
               ),
+
+              SizedBox(height: 30), // Added SizedBox for spacing
+              Center( // Wrap the Row with Center widget
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Aligns the containers evenly
+                  children: [
+                    _buildGradientContainer(Icons.phone_outlined, "Call"), // First container with icon and text
+                    _buildGradientContainer(Icons.email_outlined, "Email"), // Second container with icon and text
+                  ],
+                ),
+              ),
+              
+              SizedBox(height: 30),
+              Row(
+                children: [
+                  Text(
+                    "Popular Questions",
+                    style: TextStyle(
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF202157),
+                    ),
+                  ),
+                ],
+              ),
+              
+              SizedBox(height: 10), // Added SizedBox for spacing
+              Divider( // Divider under "Popular Questions" text
+                color: Color(0xFF9799DF).withOpacity(0.5),
+                thickness: 1,
+              ),
+              
+              SizedBox(height: 10), // Added SizedBox for spacing
+              
+              // Dropdowns
+              // More items revealed when the box is clicked
+              if (isExpanded) ...[
+                Text("Additional item 1"),
+                Text("Additional item 2"),
+                // Add more items here
+              ],
+              
             ],
           ),
         ),
       ),
     );
   }
+  
+  Widget _buildClickableBox() {
+      return GestureDetector(
+        onTap: () {
+          setState(() {
+            isExpanded = !isExpanded; // Toggle expanded state
+          });
+        },
+        child: Container(
+          padding: EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            color: Colors.grey[200], // Background color of the box
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Clickable Box",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              Icon(
+                isExpanded ? Icons.remove : Icons.add,
+                size: 30,
+                color: Colors.black,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+  Widget _buildGradientContainer(IconData iconData, String text) {
+    return Container(
+      width: 130,
+      height: 90,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        gradient: LinearGradient(
+          colors: [Color(0xFF7173BD), Color(0xFF51539B)], // Gradient colors
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(15.0), // Add padding here
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center, // Center the content horizontally
+          children: [
+            Icon(
+              iconData,
+              color: Colors.white,
+              size: 30,
+            ),
+            SizedBox(width: 10), // Adjusted spacing between icon and text
+            Text(
+              text,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 22,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
+

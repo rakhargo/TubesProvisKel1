@@ -11,7 +11,7 @@ void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Future.delayed(
-    Duration(seconds: 4), // ini yang aslinya
+    const Duration(seconds: 4), // ini yang aslinya
     // Duration(seconds: 1),
   );
   FlutterNativeSplash.remove();
@@ -27,7 +27,7 @@ class Login extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Medimate',
       theme: ThemeData(
-        primaryColor: Color(0xFF090F47),
+        primaryColor: const Color(0xFF090F47),
         scaffoldBackgroundColor: Colors.white,
       ),
       home: WelcomeScreen(),
