@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:medimate/qrCodeScanner.dart';
+import 'package:medimate/bottomNavBar.dart';
+import 'package:medimate/page/qrCodeScanner.dart';
 
 // void main() 
 // {
@@ -587,7 +588,7 @@ class _HomeState extends State<HomePage>
               ],
             ),
           ),
-        )
+        ),
       ),
     );
   }

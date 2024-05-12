@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:medimate/detailDoctor.dart';
+import 'package:medimate/page/detailDoctor.dart';
 
 void main() {
   runApp(const DoctorProfilePage());

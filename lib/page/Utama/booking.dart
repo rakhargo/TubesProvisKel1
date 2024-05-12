@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:medimate/hospitalProfile.dart';
-import 'package:medimate/doctor_profile.dart';
+import 'package:medimate/page/hospitalProfile.dart';
+import 'package:medimate/page/doctor_profile.dart';
+import 'package:medimate/bottomNavBar.dart';
 
 void main() 
 {
@@ -28,6 +29,71 @@ class BookingPage extends StatefulWidget
 
 class _BookingState extends State<BookingPage>
 {
+  List<Map<String, dynamic>> faskes = 
+  [
+    {
+      "topImage": 'rs_mayapada.png',
+      "logo"    : 'assets/images/Booking/Logo/logo rs mayapada.png',
+      "nama"    : 'Mayapada Hospital\nBandung',
+      "jenis"   : 'General Hospital',
+      "jarak"   : '1.2',
+      "rating"  : '5.0',
+      "address" : 'Jl. Terusan Buah Batu No.5,\nBatununggal, Kec. Bandung Kidul, Kota\nBandung, Jawa Barat 40266',
+      "profile" : 'Mayapada Hospital is one of the best private hospitals founded by Mayapada Healthcare Group on June 1 2008.',
+    },
+
+    {
+      "topImage": 'rs_mayapada.png',
+      "logo"    : 'assets/images/Booking/Logo/logo rsgm unpad.png',
+      "nama"    : 'RSGM Universitas\nPajajaran',
+      "jenis"   : 'Specialty Hospital',
+      "jarak"   : '2.5', 
+      "rating"  : '2.5', 
+      "address" : 'Jl. Sekeloa Selatan No.1, Lebakgede, Kecamatan Coblong, Kota Bandung, Jawa Barat 40132',
+      "profile" : 'Rumah sakit',
+    },
+
+    {
+      "topImage": 'rs_mayapada.png',
+      "logo"    : 'images/Booking/Logo/logo_ava1.png',
+      "nama"    : 'Klinik AVA\nDental Aesthetic',
+      "jenis"   : 'Clinic',
+      "jarak"   : '3.8',
+      "rating"  : '3.8',
+      "address" : 'Jl. Gatot Subroto No.91-D, Malabar, Kec. Lengkong, Kota Bandung, Jawa Barat 40262',
+      "profile" : 'RS',
+    },
+
+    {
+      "topImage": 'rs_mayapada.png',
+      "logo"    : 'assets/images/Booking/Logo/logo rshs.png',
+      "nama"    : 'Rumah Sakit\nSanto Borromeus',
+      "jenis"   : 'General Hospital',
+      "jarak"   : '4.1',
+      "rating"  : '4.1',
+      "address" : 'Jl. Ir. H. Juanda No.100, Lebakgede, Kecamatan Coblong, Kota Bandung, Jawa Barat 40132',
+      "profile" : 'Rafie'
+    },
+
+  ];
+
+  List<Map<String, dynamic>> specialist = 
+  [
+    {'assetPath': 'images/Booking/Icon/cardiologist.png', 'imageText': 'Cardiologist'},
+    {'assetPath': 'images/Booking/Icon/pulmonologist.png', 'imageText': 'Pulmonologist'},
+    {'assetPath': 'images/Booking/Icon/dermatologist.png', 'imageText': 'Dermatologist'},
+    {'assetPath': 'images/Booking/Icon/gynecologist.png', 'imageText': 'Obgyn'},
+    {'assetPath': 'images/Booking/Icon/pediatric.png', 'imageText': 'Pediatric'},
+    {'assetPath': 'images/Booking/Icon/orthopedist.png', 'imageText': 'Orthopedist'},
+    {'assetPath': 'images/Booking/Icon/urologist.png', 'imageText': 'Urologist'},
+    {'assetPath': 'images/Booking/Icon/neurologist.png', 'imageText': 'Neurologist'},
+    {'assetPath': 'images/Booking/Icon/dentist.png', 'imageText': 'Dentist'},
+    {'assetPath': 'images/Booking/Icon/Oncologist.png', 'imageText': 'Oncologist'},
+    {'assetPath': 'images/Booking/Icon/Otolaryngologist.png', 'imageText': 'Otolaryngologist'},
+    {'assetPath': 'images/Booking/Icon/Immunogologist.png', 'imageText': 'Immunogologist'},
+  ];
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp
@@ -75,29 +141,39 @@ class _BookingState extends State<BookingPage>
             ),
           ),
         ),
-        body: Padding(
+        body: Padding
+        (
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SingleChildScrollView(
-            child: Column(
+          child: SingleChildScrollView
+          (
+            child: Column
+            (
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: 
+              [
                 const SizedBox(height: 5),
-                TextField(
-                  decoration: InputDecoration(
+                TextField
+                (
+                  decoration: InputDecoration
+                  (
                     hintText: 'Search services or health clinic',
-                    hintStyle: const TextStyle(
+                    hintStyle: const TextStyle
+                    (
                       color: Color(0x99353779),
                       fontSize: 16,
                       fontStyle: FontStyle.italic,
                     ),
-                    prefixIcon: const Icon(
+                    prefixIcon: const Icon
+                    (
                       Icons.search,
                       color: Color(0xFF202157),
                       size: 24,
                     ),
-                    border: OutlineInputBorder(
+                    border: OutlineInputBorder
+                    (
                       borderRadius: BorderRadius.circular(30),
-                      borderSide: const BorderSide(
+                      borderSide: const BorderSide
+                      (
                         color: Color(0xff353779),
                         width: 3.0,
                       ),
@@ -256,7 +332,7 @@ class _BookingState extends State<BookingPage>
             {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) 
               {
-                Map<String, String> hospitalDetails = 
+                Map<String, dynamic> hospitalDetails = 
                   {
                     "topImage": topImage[index],
                     "logo": imageUrls[index],
@@ -302,12 +378,6 @@ class _BookingState extends State<BookingPage>
                             child: Image.asset
                             (
                               imageUrls[index],
-                              // fit: BoxFit.fitWidth,
-                              // errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                              //   return Container(
-                              //     color: Colors.grey,
-                              //   );
-                              // },
                             ),
                           ),
                         ),

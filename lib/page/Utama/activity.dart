@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medimate/bottomNavBar.dart';
 
 void main() 
 {
@@ -14,12 +15,12 @@ class ActivityPage extends StatefulWidget {
 
 class _ActivityState extends State<ActivityPage>
 {
-  int idx = 2;
-  void onItemTap(int index) {
-     setState(() {
-       idx = index;
-     });
-  }
+  // int idx = 2;
+  // void onItemTap(int index) {
+  //    setState(() {
+  //      idx = index;
+  //    });
+  // }
 
   List<Map> onGoing = 
   [

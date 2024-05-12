@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:medimate/Account/edit_profile.dart';
-import 'package:medimate/Account/add_family.dart';
-import 'package:medimate/Account/orders.dart';
-import 'package:medimate/Account/settings.dart';
-import 'package:medimate/Account/support.dart';
-import 'package:medimate/Screens/Login/login_screen.dart';
+import 'package:medimate/page/Account/edit_profile.dart';
+import 'package:medimate/page/Account/add_family.dart';
+import 'package:medimate/page/Account/orders.dart';
+import 'package:medimate/page/Account/settings.dart';
+import 'package:medimate/page/Account/support.dart';
+import 'package:medimate/page/Screens/Login/login_screen.dart';
+import 'package:medimate/bottomNavBar.dart';
 
 void main() 
 {
@@ -21,6 +22,7 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountState extends State<AccountPage> {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

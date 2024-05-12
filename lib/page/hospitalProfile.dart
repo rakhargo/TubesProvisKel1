@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:medimate/doctor_profile.dart';
+import 'package:medimate/page/doctor_profile.dart';
 
 class HospitalPage extends StatefulWidget {
-  final Map<String, String> hospitalDetails;
+  final Map<String, dynamic> hospitalDetails;
   const HospitalPage({Key? key, required this.hospitalDetails}) : super(key: key);
 
   @override

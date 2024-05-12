@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:medimate/Screens/Signup/signup_screen.dart';
+import 'package:medimate/page/Screens/Signup/signup_screen.dart';
 import 'package:medimate/main.dart';
 import 'package:flutter/gestures.dart';
 

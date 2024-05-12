@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import '../Screens/Welcome/welcome_screen.dart';
-import 'home.dart';
-import 'booking.dart';
-import 'activity.dart';
-import 'account.dart';
+import 'page/Screens/Welcome/welcome_screen.dart';
+import 'page/Utama/home.dart';
+import 'page/Utama/booking.dart';
+import 'page/Utama/activity.dart';
+import 'page/Utama/account.dart';
+import 'bottomNavBar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,7 +44,8 @@ class MainApp extends StatefulWidget {
   }
 }
 
-class MainAppState extends State<MainApp> {
+class MainAppState extends State<MainApp> 
+{
   int selectedIndex = 0;
 
   void onItemTapped(int index) {
@@ -58,8 +60,10 @@ class MainAppState extends State<MainApp> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        body: case2(selectedIndex),
-        bottomNavigationBar: MyBottomNavigationBar(
+        // body: const HomePage(),
+        body: linkPageUtama(selectedIndex),
+        bottomNavigationBar: MyBottomNavigationBar
+        (
           selectedIndex: selectedIndex,
           onItemTapped: onItemTapped,
         ),
@@ -67,7 +71,7 @@ class MainAppState extends State<MainApp> {
     );
   }
   
-  case2(int idx) 
+  linkPageUtama(int idx) 
   {
     switch (idx) {
       case 0:
@@ -92,47 +96,3 @@ class MainAppState extends State<MainApp> {
     }
   }
 }
-
-class MyBottomNavigationBar extends StatefulWidget {
-  final int selectedIndex;
-  final ValueChanged<int> onItemTapped;
-
-  MyBottomNavigationBar({required this.selectedIndex, required this.onItemTapped});
-
-  @override
-  _MyBottomNavigationBarState createState() => _MyBottomNavigationBarState();
-}
-
-class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
-
-  @override
-  Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined, size: 24),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.book_outlined, size: 24),
-          label: 'Booking',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.browse_gallery_outlined, size: 24),
-          label: 'Activity',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.account_circle_outlined, size: 24),
-          label: 'Account',
-        ),
-      ],
-      currentIndex: widget.selectedIndex,
-      selectedItemColor: const Color(0xff0F1035), // Change this to your preferred color
-      unselectedItemColor: Colors.grey, // Set the unselected item color here
-      showUnselectedLabels: true,
-      onTap: widget.onItemTapped,
-    );
-  }
-  
-}
-
