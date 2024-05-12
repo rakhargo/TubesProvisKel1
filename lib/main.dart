@@ -8,6 +8,7 @@ import 'page/Utama/activity.dart';
 import 'page/Utama/account.dart';
 import 'bottomNavBar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 void boarding() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -90,16 +91,25 @@ class MainAppState extends State<MainApp>
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        // body: const HomePage(),
-        body: linkPageUtama(selectedIndex),
-        bottomNavigationBar: MyBottomNavigationBar
-        (
-          selectedIndex: selectedIndex,
-          onItemTapped: onItemTapped,
+    return MultiProvider
+    (
+      providers: 
+      [
+        // ChangeNotifierProvider(create: (_) => AuthAPI()),
+        // ChangeNotifierProvider(create: (_) => ItemList()),
+        // ChangeNotifierProvider(create: (_) => CartList()),
+        // ChangeNotifierProvider(create: (_) => Pembayaran()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+          body: linkPageUtama(selectedIndex),
+          bottomNavigationBar: MyBottomNavigationBar
+          (
+            selectedIndex: selectedIndex,
+            onItemTapped: onItemTapped,
+          ),
         ),
       ),
     );
