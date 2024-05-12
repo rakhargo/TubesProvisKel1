@@ -32,7 +32,7 @@ class MyBoarding extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: onboarding ? const HomePage() : const OnboardingView(),
+        home: onboarding ? const MainApp() : const OnboardingView(),
       ),
     );
   }
@@ -54,10 +54,6 @@ void main() async {
   final onboarding = prefs.getBool("onboarding") ?? false;
   runApp(MyBoarding(onboarding: onboarding));
 }
-
-
-
-
 
 class Login extends StatelessWidget {
   @override
