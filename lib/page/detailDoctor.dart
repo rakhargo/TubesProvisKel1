@@ -1,4 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
+import 'bookingSummary.dart';
 
 class DetailDoctorPage extends StatefulWidget {
   final Map<dynamic, dynamic> doctorDetails;
@@ -14,11 +18,13 @@ class _DetailDoctorState extends State<DetailDoctorPage>
   {
     "topImage": 'rs_mayapada.png',
     "logo": 'assets/images/Booking/Logo/logo rs mayapada.png',
-    "nama": 'Mayapada Hospital\nBandung',
+    // "nama": 'Mayapada Hospital\nBandung',
+    "nama": 'Mayapada Hospital Bandung',
     "jenis": 'General Hospital',
     "jarak": '1.2',
     "rating": '5.0',
-    "address": 'Jl. Terusan Buah Batu No.5,\nBatununggal, Kec. Bandung Kidul, Kota\nBandung, Jawa Barat 40266',
+    // "address": 'Jl. Terusan Buah Batu No.5,\nBatununggal, Kec. Bandung Kidul, Kota\nBandung, Jawa Barat 40266',
+    "address": 'Jl. Terusan Buah Batu No.5, Batununggal, Kec. Bandung Kidul, Kota Bandung, Jawa Barat 40266',
     "profile": 'Mayapada Hospital is one of the best private hospitals founded by Mayapada Healthcare Group on June 1 2008.',
   };
 
@@ -62,6 +68,21 @@ class _DetailDoctorState extends State<DetailDoctorPage>
     "tanggal": "18",
     "availableTime": ["09:00", "10:00"],
   };
+
+  // String thisMonth = "April";
+
+  Map<dynamic, dynamic> selectedForAppointment = 
+  {
+    "tahun": "2024",
+    "bulan": "April",
+    "hari": "Thu", 
+    "tanggal": "18",
+    "selectedTime": ""
+  };
+
+  // int harga = 200000;
+  
+  // String dateTimeFix = "";
 
   @override
   Widget build(BuildContext context) 
@@ -404,7 +425,7 @@ class _DetailDoctorState extends State<DetailDoctorPage>
           
                 Container
                 (
-                  height: 250,
+                  height: 200,
                   color: const Color.fromARGB(255, 221, 222, 255),
                   child: Column
                   (
@@ -435,58 +456,201 @@ class _DetailDoctorState extends State<DetailDoctorPage>
                       //   ),
                       // ),
                       const SizedBox(height: 10), // Add some space between text and choice chips
-                      Row
+                      SingleChildScrollView
                       (
-                        children: jadwalDokter.map<Widget>
+                        scrollDirection: Axis.horizontal,
+                        child: Row
                         (
-                          (itemJadwal) 
-                          {
-                            return Padding
-                            (
-                              padding: const EdgeInsets.only(right: 20),
-                              child: ChoiceChip
+                          children: jadwalDokter.map<Widget>
+                          (
+                            (itemJadwal) 
+                            {
+                              return Padding
                               (
-                                showCheckmark: false,
-                                label: Text
+                                padding: const EdgeInsets.only(right: 20),
+                                child: ChoiceChip
                                 (
-                                  '${itemJadwal["hari"]} | ${itemJadwal["tanggal"]}',
-                                  style: TextStyle
+                                  showCheckmark: false,
+                                  label: Text
                                   (
-                                    color: itemJadwal == selectedJadwalDokter
-                                        ? Colors.white
-                                        : const Color.fromARGB(255, 53, 55, 121),
+                                    '${itemJadwal["hari"]} | ${itemJadwal["tanggal"]}',
+                                    style: TextStyle
+                                    (
+                                      color: itemJadwal == selectedJadwalDokter
+                                          ? Colors.white
+                                          : const Color.fromARGB(255, 53, 55, 121),
+                                    ),
                                   ),
-                                ),
-                                shape: RoundedRectangleBorder
-                                (
-                                  borderRadius: BorderRadius.circular(13),
-                                  // side: BorderSide.none
-                                ),
-                                selected: itemJadwal == selectedJadwalDokter,
-                                selectedColor: const Color.fromARGB(255, 53, 55, 121),
-                                backgroundColor: const Color.fromARGB(255, 235, 235, 255),
-                                onSelected: (selected) 
-                                {
-                                  // Tambahkan fungsi untuk menangani pemilihan chip
-                                  setState(() {
-                                    selectedJadwalDokter = selected ? itemJadwal : defaultSelectedJadwal;
-                                  });
-                              
-                                  if (selected) 
+                                  shape: RoundedRectangleBorder
+                                  (
+                                    borderRadius: BorderRadius.circular(13),
+                                  ),
+                                  selected: itemJadwal == selectedJadwalDokter,
+                                  selectedColor: const Color.fromARGB(255, 53, 55, 121),
+                                  backgroundColor: const Color.fromARGB(255, 235, 235, 255),
+                                  onSelected: (selected) 
                                   {
-                                    // Lakukan sesuatu ketika chip dipilih
-                                  }
-                                },
-                              ),
-                            );
-                          },
-                        ).toList(),
+                                    // Tambahkan fungsi untuk menangani pemilihan chip
+                                    setState(() {
+                                      selectedJadwalDokter = selected ? itemJadwal : defaultSelectedJadwal;
+                                    });
+                                
+                                    if (selected) 
+                                    {
+                                      selectedForAppointment["hari"] = itemJadwal["hari"];
+                                      selectedForAppointment["tanggal"] = itemJadwal["tanggal"];
+                                      selectedForAppointment["selectedTime"] = "";
+                                    }
+                                  },
+                                ),
+                              );
+                            },
+                          ).toList(),
+                        ),
                       ),
+                      const SizedBox(height: 10),
+                      Padding
+                      (
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        child: Center
+                        (
+                          child: Container
+                          (
+                            height: 100,
+                            decoration: BoxDecoration
+                            (
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(13),
+                            ),
+                            child: Padding
+                            (
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column
+                              (
+                                // mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: 
+                                [
+                                  const Text
+                                  (
+                                    "Available Time",
+                                    style: TextStyle(color: Color.fromARGB(255, 62, 62, 62)),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Row
+                                  (
+                                    children: selectedJadwalDokter['availableTime'].map<Widget>((time) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(right: 20),
+                                        child: ChoiceChip
+                                        (
+                                          label: Text
+                                          (
+                                            time,
+                                            style: TextStyle(color: Color.fromARGB(255, 62, 62, 62))
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(13),
+                                          ),
+                                          // showCheckmark: false,
+                                          selected: time == selectedForAppointment["selectedTime"],
+                                          selectedColor: const Color.fromARGB(255, 221, 222, 255),
+                                          backgroundColor: const Color.fromARGB(255, 217, 217, 217),
+                                          onSelected: (selected) {
+                                            // Tambahkan fungsi untuk menangani pemilihan chip
+                                            setState(() {
+                                              selectedForAppointment["selectedTime"] = time;
+                                            });
+                                        
+                                            if (selected) 
+                                            {
+                                              // print(selectedForAppointment);
+                                            }
+                                          },
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),
               ],
             ),
+          ),
+        ),
+        bottomNavigationBar: BottomAppBar
+        (
+          height: 50,
+          color: Colors.white,
+          child: Row
+          (
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: 
+            [
+              // Tambahkan widget-row di sini sesuai kebutuhan
+              Expanded
+              (
+                child: Text
+                (
+                  selectedForAppointment["selectedTime"] == "" ? "Select visit time to continue" : "${selectedForAppointment["tanggal"]} ${selectedForAppointment["bulan"]} ${selectedForAppointment["tahun"]}, ${selectedForAppointment["selectedTime"]}",
+                  style: const TextStyle
+                  (
+                    color: Color.fromARGB(255, 62, 62, 62),
+                  ),
+                ),
+              ),
+              GestureDetector
+              (
+                  onTap: selectedForAppointment["selectedTime"] != ""
+                  ? ()  
+                  {
+                    Navigator.push
+                    (
+                      context,
+                      MaterialPageRoute
+                      (
+                        builder: (context) 
+                        { 
+                          Map<String, dynamic> bookingDetails = 
+                          {
+                            "doctorName": widget.doctorDetails['name'],
+                            "specialist": widget.doctorDetails['category'],
+                            "hospital": hospitalDetails['nama'],
+                            // "alamat": hospitalDetails['address'],
+                            "price": "Rp200.000",
+                            "dateTime": "${selectedForAppointment["tanggal"]} ${selectedForAppointment["bulan"]} ${selectedForAppointment["tahun"]}, ${selectedForAppointment["selectedTime"]}",
+                          };
+                          return BookingSummaryPage(bookingDetails: bookingDetails);
+                        }
+                      ),
+                    );
+                  }
+                  : null,
+                child: Container
+                (
+                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  decoration: BoxDecoration
+                  (
+                    borderRadius: BorderRadius.circular(13),
+                    color: selectedForAppointment["selectedTime"] == "" ? const Color.fromARGB(255, 219, 219, 219) : const Color.fromARGB(255, 15, 16, 53),
+                  ),
+                  child: Text
+                  (
+                    'Continue',
+                    style: TextStyle
+                    (
+                      color: selectedForAppointment["selectedTime"] == "" ? const Color.fromARGB(255, 62, 62, 62) : Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

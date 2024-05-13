@@ -202,6 +202,7 @@ class _BookingState extends State<BookingPage>
                     color: Color(0xFF090F47),
                   ),
                 ),
+                const SizedBox(height: 5),
                 SingleChildScrollView
                 (
                   scrollDirection: Axis.horizontal,
@@ -349,6 +350,7 @@ class _BookingState extends State<BookingPage>
                     color: Color(0xFF090F47),
                   ),
                 ),
+                const SizedBox(height: 5),
                 Consumer<SpecialistAndPolyclinicList>
                 (
                   builder: (context, item, child) 
