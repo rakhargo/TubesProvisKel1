@@ -89,27 +89,24 @@ class MainAppState extends State<MainApp>
     });
   }
 
+// providers: 
+//       [
+//         // ChangeNotifierProvider(create: (_) => AuthAPI()),
+//         // ChangeNotifierProvider(create: (_) => ItemList()),
+//         // ChangeNotifierProvider(create: (_) => CartList()),
+//         // ChangeNotifierProvider(create: (_) => Pembayaran()),
+//       ],
   @override
   Widget build(BuildContext context) {
-    return MultiProvider
-    (
-      providers: 
-      [
-        // ChangeNotifierProvider(create: (_) => AuthAPI()),
-        // ChangeNotifierProvider(create: (_) => ItemList()),
-        // ChangeNotifierProvider(create: (_) => CartList()),
-        // ChangeNotifierProvider(create: (_) => Pembayaran()),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-          body: linkPageUtama(selectedIndex),
-          bottomNavigationBar: MyBottomNavigationBar
-          (
-            selectedIndex: selectedIndex,
-            onItemTapped: onItemTapped,
-          ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        body: linkPageUtama(selectedIndex),
+        bottomNavigationBar: MyBottomNavigationBar
+        (
+          selectedIndex: selectedIndex,
+          onItemTapped: onItemTapped,
         ),
       ),
     );
