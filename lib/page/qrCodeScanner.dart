@@ -8,10 +8,10 @@ class QRCodeScannerApp extends StatefulWidget {
   _QRCodeScannerAppState createState() => _QRCodeScannerAppState();
 }
 
-class _QRCodeScannerAppState extends State<QRCodeScannerApp> 
-{
+class _QRCodeScannerAppState extends State<QRCodeScannerApp> {
   QRViewController? _controller;
   final GlobalKey _qrKey = GlobalKey(debugLabel: 'QR');
+  String scannedData = ""; // Variable to hold the scanned data
 
   @override
   void dispose() {
@@ -25,11 +25,9 @@ class _QRCodeScannerAppState extends State<QRCodeScannerApp>
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          leading: IconButton
-          (
+          leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
-            onPressed: ()
-            {
+            onPressed: () {
               Navigator.of(context).pop();
             },
           ),
@@ -47,7 +45,7 @@ class _QRCodeScannerAppState extends State<QRCodeScannerApp>
             Expanded(
               flex: 1,
               child: Center(
-                child: Text('Scan a QR code'),
+                child: Text(scannedData.isEmpty ? 'Scan a QR code' : 'Scanned Data: $scannedData'),
               ),
             ),
           ],
@@ -57,12 +55,19 @@ class _QRCodeScannerAppState extends State<QRCodeScannerApp>
   }
 
   void _onQRViewCreated(QRViewController controller) {
-    setState(() {
-      _controller = controller;
-      _controller!.scannedDataStream.listen((scanData) {
-        print('Scanned data: ${scanData.code}');
-        // Handle the scanned data as desired
+  setState(() {
+    _controller = controller;
+    _controller!.scannedDataStream.listen((scanData) {
+      // Update the UI with the scanned data
+      setState(() {
+        if (scanData.code != null) {
+          scannedData = scanData.code!;
+        } else {
+          scannedData = "No data found";
+        }
       });
     });
-  }
+  });
+}
+
 }
