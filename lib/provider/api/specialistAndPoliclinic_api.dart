@@ -31,7 +31,6 @@ class SpecialistAndPolyclinicList with ChangeNotifier {
         // 'Authorization': token,
       },
     );
-    print(response.headers);
     if (response.statusCode == 200) {
       return setFromJson(jsonDecode(response.body));
     } else {
