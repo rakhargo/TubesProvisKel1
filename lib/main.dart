@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:medimate/Onboboarding/onboarding_view.dart';
+import 'package:medimate/provider/api/specialistAndPoliclinic_api.dart';
+import 'package:medimate/provider/model/specialistAndPolyclinic_model.dart';
 import 'page/Screens/Welcome/welcome_screen.dart';
 import 'page/Utama/home.dart';
 import 'page/Utama/booking.dart';
@@ -89,24 +91,28 @@ class MainAppState extends State<MainApp>
     });
   }
 
-// providers: 
-//       [
-//         // ChangeNotifierProvider(create: (_) => AuthAPI()),
-//         // ChangeNotifierProvider(create: (_) => ItemList()),
-//         // ChangeNotifierProvider(create: (_) => CartList()),
-//         // ChangeNotifierProvider(create: (_) => Pembayaran()),
-//       ],
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        body: linkPageUtama(selectedIndex),
-        bottomNavigationBar: MyBottomNavigationBar
-        (
-          selectedIndex: selectedIndex,
-          onItemTapped: onItemTapped,
+    return MultiProvider
+    (
+      providers: 
+      [
+        ChangeNotifierProvider(create: (_) => SpecialistAndPolyclinicList()),
+        // ChangeNotifierProvider(create: (_) => ItemList()),
+        // ChangeNotifierProvider(create: (_) => CartList()),
+        // ChangeNotifierProvider(create: (_) => Pembayaran()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+          body: linkPageUtama(selectedIndex),
+          bottomNavigationBar: MyBottomNavigationBar
+          (
+            selectedIndex: selectedIndex,
+            onItemTapped: onItemTapped,
+          ),
         ),
       ),
     );

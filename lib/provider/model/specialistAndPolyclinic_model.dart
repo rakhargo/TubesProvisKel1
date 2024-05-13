@@ -1,11 +1,11 @@
 class SpecialistAndPolyclinic {
-  final int id;
+  final String id;
   final String icon;
-  final String nama;
+  final String name;
 
   SpecialistAndPolyclinic({
   required this.id,
   required this.icon,
-  required this.nama,
+  required this.name,
   }); 
 }
