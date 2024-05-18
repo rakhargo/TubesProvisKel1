@@ -4,22 +4,17 @@ import 'package:flutter/widgets.dart';
 import 'package:medimate/bottomNavBar.dart';
 import 'package:medimate/page/qrCodeScanner.dart';
 
-// void main() 
-// {
-//   runApp(const HomePage());
-// }
-
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  // final String token; // Add the token parameter
+
+  const HomePage({super.key}); // Require the token parameter
 
   @override
   State<HomePage> createState() => _HomeState();
 }
 
-class _HomeState extends State<HomePage>
-{
-  List<Map> services = 
-  [
+class _HomeState extends State<HomePage> {
+  List<Map> services = [
     {"servicesName": "Mental Health", "image": "mental-health.png", "linkTo": ""},
     {"servicesName": "Dermatologist", "image": "dermatologist.png", "linkTo": ""},
     {"servicesName": "Vaccination Services", "image": "vaccine.png", "linkTo": ""},
@@ -30,9 +25,7 @@ class _HomeState extends State<HomePage>
     {"servicesName": "More Services", "image": "more.png", "linkTo": ""},
   ];
 
-
-  List<Map> profiles = 
-  [
+  List<Map> profiles = [
     {"profileName": "John Doe", "profilePicture": "1-john_doe.jpg"},
     {"profileName": "Christian Buehner", "profilePicture": "2-christian_buehner.jpg"},
     {"profileName": "Alicia Claire", "profilePicture": "3-alicia_claire.jpg"},
@@ -41,27 +34,23 @@ class _HomeState extends State<HomePage>
   int idxProfiles = 0;
   Map<dynamic, dynamic> chosenProfile = {};
 
-  List<String> topics = 
-  [
+  List<String> topics = [
     "All", "Nutrition & Diet", "Lifestyle", "Beauty", "Exercise"
   ];
 
   String selectedTopic = "All";
 
-  List<Map> articles = 
-  [
+  List<Map> articles = [
     {
       "articleTitle": "Plant-based Protein: The Best, the Worst, and Everything In Between", 
       "topics": ["Nutrition & Diet", "Lifestyle"],
       "image": "1.jpg",
     },
-
     {
       "articleTitle": "Exercise may Reduce Heart Disease Risk by Changing How the Brain Reacts to Stress", 
       "topics": ["Exercise", "Lifestyle"],
       "image": "2.jpg",
     },
-
     {
       "articleTitle": "Why Wearing Makeup During Workouts May Be Bad for Your Skin", 
       "topics": ["Beauty"],
@@ -70,77 +59,56 @@ class _HomeState extends State<HomePage>
   ];
 
   @override
-  Widget build(BuildContext context) 
-  {
+  Widget build(BuildContext context) {
     chosenProfile = profiles[idxProfiles];
-    return MaterialApp
-    (
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Home Page',
-      home: Scaffold
-      (
-        appBar: AppBar
-        (
-          leading: Builder
-          (
-            builder: (context) => GestureDetector
-            (
-              onTap: ()
-              {
+      home: Scaffold(
+        appBar: AppBar(
+          leading: Builder(
+            builder: (context) => GestureDetector(
+              onTap: () {
                 Scaffold.of(context).openDrawer();
               },
-              child: Padding
-              (
+              child: Padding(
                 padding: const EdgeInsets.only(left: 15.0, top: 3.0, bottom: 3.0),
-                child: CircleAvatar
-                (
+                child: CircleAvatar(
                   radius: 20,
                   backgroundImage: AssetImage("images/orang/${chosenProfile['profilePicture']}"),
                 ),
               ),
             ),
           ),
-          title: Text
-          (
+          title: Text(
             'Hi, ${chosenProfile['profileName']}!',
-            style: const TextStyle
-            (
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: Color.fromARGB(255, 9, 15, 71),
               fontSize: 18
             ),
           ),
-          actions: 
-          [
-            IconButton
-            (
+          actions: [
+            IconButton(
               onPressed: () {},
-              icon: const Icon
-              (
+              icon: const Icon(
                 Icons.notifications_outlined,
                 color: Color.fromARGB(255, 9, 15, 71)
               )
             )
           ],
-          bottom: PreferredSize
-          (
+          bottom: PreferredSize(
             preferredSize: const Size.fromHeight(2.0), //Set the height of the border
-            child: Container
-            (
-              decoration: const BoxDecoration
-              (
-                border: Border
-                (
-                  bottom: BorderSide
-                  (
+            child: Container(
+              decoration: const BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
                     color: Colors.grey, // Set the color of the border
                     width: 0.5, // Set the width of the border
                   ),
                 ),
-                boxShadow: 
-                [
-                  BoxShadow
-                  (
+                boxShadow: [
+                  BoxShadow(
                     color: Colors.grey, // Set the color of the shadow
                     blurRadius: 2.0, // Set the blur radius of the shadow
                     offset: Offset(0.0, 2.0), // Set the offset of the shadow
@@ -150,72 +118,48 @@ class _HomeState extends State<HomePage>
             ),
           ),
         ),
-        drawer: Builder
-        (
-          builder: (context) 
-          {
-            return Drawer
-            (
-              child: ListView
-              (
-                children: 
-                [
-                  Padding
-                  (
+        drawer: Builder(
+          builder: (context) {
+            return Drawer(
+              child: ListView(
+                children: [
+                  Padding(
                     padding: const EdgeInsets.fromLTRB(8.0, 8.0, 0.0, 0.0),
-                    child: Align
-                    (
+                    child: Align(
                       alignment: Alignment.centerLeft,
-                      child: IconButton
-                      (
-                        onPressed: ()
-                        {
+                      child: IconButton(
+                        onPressed: () {
                           Navigator.of(context).pop();
                         },
                         icon: const Icon(Icons.arrow_back_ios)
                       ),
                     ),
                   ),
-                  const DrawerHeader
-                  (
-                    child: Text
-                    (
+                  const DrawerHeader(
+                    child: Text(
                       'Select Profile',
-                      style: TextStyle
-                      (
+                      style: TextStyle(
                         color: Color.fromARGB(255, 9, 15, 71),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  ListView.builder
-                  (
+                  ListView.builder(
                     shrinkWrap: true,
-                    // physics: const NeverScrollableScrollPhysics(),
                     itemCount: profiles.length,
-                    itemBuilder: (context, index)
-                    {
+                    itemBuilder: (context, index) {
                       final profile = profiles[index];
-                      return ListTile
-                      (
-                        leading: CircleAvatar
-                        (
+                      return ListTile(
+                        leading: CircleAvatar(
                           radius: 20,
                           backgroundImage: AssetImage("images/orang/${profile['profilePicture']}"),
                         ),
                         title: Text(profile['profileName']),
-                        onTap: () 
-                        {
-                          // Handle onTap event
-                          setState(() 
-                          {
-                            // chosenProfile = profile;
+                        onTap: () {
+                          setState(() {
                             idxProfiles = index;
                           });
-                        //   onPressed: ()
-                        // {
                           Navigator.of(context).pop();
-                        // },
                         }
                       );
                     }
@@ -225,52 +169,37 @@ class _HomeState extends State<HomePage>
             );
           }
         ),
-        body: SingleChildScrollView
-        (
-          child: Padding
-          (
+        body: SingleChildScrollView(
+          child: Padding(
             padding: const EdgeInsets.only(top: 20, bottom: 20, left: 30, right: 30),
-            child: Column
-            (
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: 
-              [
-                GestureDetector
-                (
-                  onTap: () 
-                  {
-                    Navigator.push
-                    (
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => QRCodeScannerApp()),
                     );
                   },
-                  child: Container
-                  (
-                    decoration: BoxDecoration
-                    (
+                  child: Container(
+                    decoration: BoxDecoration(
                       color: const Color.fromARGB(255, 32, 33, 87),
                       borderRadius: BorderRadius.circular(12)
                     ),
-                    child: const Padding
-                    (
+                    child: const Padding(
                       padding: EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
-                      child: Row
-                      (
-                        children: 
-                        [
-                          Text
-                          (
+                      child: Row(
+                        children: [
+                          Text(
                             'Tap to quick registration',
-                            style: TextStyle
-                            (
+                            style: TextStyle(
                               color: Colors.white,
                               fontSize: 20
                             ),
                           ),
                           Spacer(),
-                          Icon
-                          (
+                          Icon(
                             Icons.qr_code_2,
                             color: Colors.white,
                             size: 30,
@@ -281,56 +210,42 @@ class _HomeState extends State<HomePage>
                   ),
                 ),
                 const SizedBox(height: 20),
-                GridView.builder
-                (
+                GridView.builder(
                   shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent
-                  (
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 118, // Lebar maksimum setiap item
                     mainAxisExtent: 130
                   ),
                   itemCount: services.length,
-                  itemBuilder: (context, index) 
-                  {
+                  itemBuilder: (context, index) {
                     var item = services[index];
-                    return GestureDetector
-                    (
-                      // onTap: () 
-                      // {
-                      //   Navigator.push
-                      //   (
+                    return GestureDetector(
+                      // onTap: () {
+                      //   Navigator.push(
                       //     context,
                       //     MaterialPageRoute(builder: (context) => const AccountPage()),
                       //   );
                       // },
-                      child: Column
-                      (
-                        children: 
-                        [
-                          Container
-                          (
+                      child: Column(
+                        children: [
+                          Container(
                             width: 70,
                             height: 70,
-                            decoration: const BoxDecoration
-                            (
+                            decoration: const BoxDecoration(
                               shape: BoxShape.circle,
                               color: Color.fromARGB(255, 235, 235, 255),
                             ),
-                            child: Padding
-                            (
+                            child: Padding(
                               padding: const EdgeInsets.all(15.0),
-                              child: Image
-                              (
+                              child: Image(
                                 image: AssetImage("images/service/${item['image']}"),
                               ),
                             ),
                           ),
-                          Text
-                          (
+                          Text(
                             item['servicesName'],
                             textAlign: TextAlign.center,
-                            style: const TextStyle
-                            (
+                            style: const TextStyle(
                               color: Color.fromARGB(255, 9, 15, 71),
                             ),
                           )
@@ -340,56 +255,44 @@ class _HomeState extends State<HomePage>
                   },
                 ),
                 const SizedBox(height: 10),
-                const Text
-                (
+                const Text(
                   'Health Article',
-                  style: TextStyle
-                  (
+                  style: TextStyle(
                     fontSize: 18,
                     color: Color.fromARGB(255, 9, 15, 71),
                     fontWeight: FontWeight.bold
                   ),
                 ),
                 const SizedBox(height: 10),
-                SingleChildScrollView
-                (
+                SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  child: Row
-                  (
+                  child: Row(
                     children: topics
-                        .map((topic) => Padding
-                        (
+                        .map((topic) => Padding(
                           padding: const EdgeInsets.only(right: 20),
-                          child: ChoiceChip
-                          (
+                          child: ChoiceChip(
                             showCheckmark: false,
-                            label: Text
-                            (
+                            label: Text(
                               topic,
-                              style: TextStyle
-                              (
+                              style: TextStyle(
                                 color: topic == selectedTopic
                                     ? Colors.white
                                     : const Color.fromARGB(255, 53, 55, 121),
                               ),
                             ),
-                            shape: RoundedRectangleBorder
-                            (
+                            shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(13),
                               // side: BorderSide.none
                             ),
                             selected: topic == selectedTopic, // Ubah ini untuk membuat selected sesuai dengan kondisi Anda
                             selectedColor: const Color.fromARGB(255, 53, 55, 121),
                             backgroundColor: const Color.fromARGB(255, 235, 235, 255),
-                            onSelected: (selected) 
-                            {
-                              // Tambahkan fungsi untuk menangani pemilihan chip
+                            onSelected: (selected) {
                               setState(() {
                                 selectedTopic = selected ? topic : "All";
                               });
 
-                              if (selected) 
-                              {
+                              if (selected) {
                                 // Lakukan sesuatu ketika chip dipilih
                               }
                             },
@@ -401,52 +304,35 @@ class _HomeState extends State<HomePage>
                 const SizedBox(height: 20),
 
                 // Menampilkan daftar artikel yang telah difilter
-                Column
-                (
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: selectedTopic == "All"
-                      ? articles.map<Widget>((article) 
-                      {
-                          return Column
-                          (
-                            children: 
-                            [
-                              Container
-                              (
-                                decoration: BoxDecoration
-                                (
+                      ? articles.map<Widget>((article) {
+                          return Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
                                   border: Border.all(color: const Color.fromARGB(255, 113, 115, 189)),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                child: Padding
-                                (
+                                child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: LayoutBuilder
-                                  (
-                                    builder: (context, constraints) 
-                                    {
+                                  child: LayoutBuilder(
+                                    builder: (context, constraints) {
                                       // Menghitung lebar gambar (setengah dari lebar widget induk)
                                       double imageWidth = constraints.maxWidth / 2.5;
                               
-                                      return Row
-                                      (
-                                        children: 
-                                        [
-                                          Expanded
-                                          (
-                                            child: Padding
-                                            (
+                                      return Row(
+                                        children: [
+                                          Expanded(
+                                            child: Padding(
                                               padding: const EdgeInsets.all(8.0),
-                                              child: Column
-                                              (
+                                              child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: 
-                                                [
-                                                  Text
-                                                  (
+                                                children: [
+                                                  Text(
                                                     article['articleTitle'],
-                                                    style: const TextStyle
-                                                    (
+                                                    style: const TextStyle(
                                                       fontWeight: FontWeight.bold,
                                                       color: Color.fromARGB(255, 32, 33, 87),
                                                       fontSize: 15
@@ -454,13 +340,10 @@ class _HomeState extends State<HomePage>
                                                     // max
                                                   ),
                                                   const SizedBox(height: 5),
-                                                  Wrap
-                                                  (
+                                                  Wrap(
                                                     spacing: 5, // Spasi antara setiap widget dalam Wrap
-                                                    children: article['topics'].map<Widget>((topic) 
-                                                    {
-                                                      return Chip
-                                                      (
+                                                    children: article['topics'].map<Widget>((topic) {
+                                                      return Chip(
                                                         label: Text(topic),
                                                         backgroundColor: const Color.fromARGB(255, 53, 55, 121),
                                                         labelStyle: const TextStyle(color: Colors.white),
@@ -473,11 +356,9 @@ class _HomeState extends State<HomePage>
                                               ),
                                             ),
                                           ),
-                                          ClipRRect
-                                          (
+                                          ClipRRect(
                                             borderRadius: BorderRadius.circular(12), // Set border circular
-                                            child: Image
-                                            (
+                                            child: Image(
                                               image: AssetImage("images/article/${article['image']}"),
                                               width: imageWidth,
                                               fit: BoxFit.cover,
@@ -495,48 +376,32 @@ class _HomeState extends State<HomePage>
                         }).toList()
                       : articles
                           .where((article) => article["topics"].contains(selectedTopic))
-                          .map<Widget>((article) 
-                          {
-                          return Column
-                          (
-                            children: 
-                            [
-                              Container
-                              (
-                                decoration: BoxDecoration
-                                (
+                          .map<Widget>((article) {
+                          return Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
                                   border: Border.all(color: const Color.fromARGB(255, 113, 115, 189)),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                child: Padding
-                                (
+                                child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: LayoutBuilder
-                                  (
-                                    builder: (context, constraints) 
-                                    {
+                                  child: LayoutBuilder(
+                                    builder: (context, constraints) {
                                       // Menghitung lebar gambar (setengah dari lebar widget induk)
                                       double imageWidth = constraints.maxWidth / 2.5;
                               
-                                      return Row
-                                      (
-                                        children: 
-                                        [
-                                          Expanded
-                                          (
-                                            child: Padding
-                                            (
+                                      return Row(
+                                        children: [
+                                          Expanded(
+                                            child: Padding(
                                               padding: const EdgeInsets.all(8.0),
-                                              child: Column
-                                              (
+                                              child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: 
-                                                [
-                                                  Text
-                                                  (
+                                                children: [
+                                                  Text(
                                                     article['articleTitle'],
-                                                    style: const TextStyle
-                                                    (
+                                                    style: const TextStyle(
                                                       fontWeight: FontWeight.bold,
                                                       color: Color.fromARGB(255, 32, 33, 87),
                                                       fontSize: 15
@@ -544,13 +409,10 @@ class _HomeState extends State<HomePage>
                                                     // max
                                                   ),
                                                   const SizedBox(height: 5),
-                                                  Wrap
-                                                  (
+                                                  Wrap(
                                                     spacing: 5, // Spasi antara setiap widget dalam Wrap
-                                                    children: article['topics'].map<Widget>((topic) 
-                                                    {
-                                                      return Chip
-                                                      (
+                                                    children: article['topics'].map<Widget>((topic) {
+                                                      return Chip(
                                                         label: Text(topic),
                                                         backgroundColor: const Color.fromARGB(255, 53, 55, 121),
                                                         labelStyle: const TextStyle(color: Colors.white),
@@ -563,11 +425,9 @@ class _HomeState extends State<HomePage>
                                               ),
                                             ),
                                           ),
-                                          ClipRRect
-                                          (
+                                          ClipRRect(
                                             borderRadius: BorderRadius.circular(12), // Set border circular
-                                            child: Image
-                                            (
+                                            child: Image(
                                               image: AssetImage("images/article/${article['image']}"),
                                               width: imageWidth,
                                               fit: BoxFit.cover,
@@ -593,4 +453,3 @@ class _HomeState extends State<HomePage>
     );
   }
 }
-

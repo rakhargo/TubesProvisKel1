@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../Login/login_screen.dart'; 
 import 'package:flutter/gestures.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -270,7 +273,78 @@ class _SignUpScreenState extends State<SignUpScreen> {
     });
   }
 
-  void _signup() {
-    
+  void _signup() async {
+  final String username = _emailController.text; // Assuming email is used as username
+  final String password = _passwordController.text;
+
+  final String apiUrl = 'http://127.0.0.1:8000/users/';
+
+  try {
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'token', // Corrected authentication header name
+      },
+      body: jsonEncode(<String, String>{
+        'username': username,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // Sign-up successful
+      // You can add your logic here for successful signup
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Sign-up Successful'),
+            content: Text('You have successfully signed up!'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the dialog
+                  // Add navigation to the next screen if needed
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      // Handle sign-up errors
+      if (response.body.isNotEmpty) {
+        final errorResponse = jsonDecode(response.body) as Map<String, dynamic>;
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Sign-up Error'),
+              content: Text(errorResponse['detail'] ?? 'Unknown Error'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        // Handle other errors
+        print('Failed to sign up: ${response.reasonPhrase}');
+        print('Response body: ${response.body}');
+      }
+    }
+  } catch (e) {
+    // Handle exceptions
+    print('Exception during sign-up: $e');
   }
+}
+
+
 }
