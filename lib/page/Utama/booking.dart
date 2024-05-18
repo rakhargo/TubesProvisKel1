@@ -1,22 +1,16 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:medimate/page/hospitalProfile.dart';
 import 'package:medimate/page/doctor_profile.dart';
-import 'package:medimate/bottomNavBar.dart';
-
-import 'package:provider/provider.dart';
 import 'package:medimate/provider/api/specialistAndPoliclinic_api.dart';
 import 'package:medimate/provider/model/specialistAndPolyclinic_model.dart';
 
-
-void main() 
-{
-  runApp(BookingPage());
-}
-
 class BookingPage extends StatefulWidget 
 {
-  const BookingPage({super.key});
+  final String responseBody;
+  const BookingPage({Key? key, required this.responseBody}) : super(key: key);
 
   @override
   State<BookingPage> createState() => _BookingState();
@@ -89,21 +83,29 @@ class _BookingState extends State<BookingPage>
   // ];
 
 
-  List<dynamic> specialistAndPolyclinicList = [];
+    List<dynamic> specialistAndPolyclinicList = [];
+    late String accessToken;
 
-  @override
-  void initState() {
-    super.initState();
-    _fetchSpecialistAndPolyclinic();
-  }
+    @override
+    void initState() {
+      super.initState();
+      _initializeAccessToken();
+      _fetchSpecialistAndPolyclinic();
+    }
 
-  Future<void> _fetchSpecialistAndPolyclinic() async {
-    final specialistAndPolyclinicResponse = await Provider.of<SpecialistAndPolyclinicList>(context, listen: false)
-      .fetchData();
-    setState(() {
-      specialistAndPolyclinicList = specialistAndPolyclinicResponse;
-    });
-  }
+    void _initializeAccessToken() {
+      final responseBodyMap = jsonDecode(widget.responseBody);
+      accessToken = responseBodyMap['access_token'];
+    }
+
+    Future<void> _fetchSpecialistAndPolyclinic() async {
+      final specialistAndPolyclinicResponse =
+          await Provider.of<SpecialistAndPolyclinicList>(context, listen: false)
+              .fetchData(accessToken); // Pass the access token here
+      setState(() {
+        specialistAndPolyclinicList = specialistAndPolyclinicResponse;
+      });
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -214,7 +216,7 @@ class _BookingState extends State<BookingPage>
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                             Map<String, dynamic> hospitalDetails = faskes[index];
-                            return HospitalPage(hospitalDetails: hospitalDetails);
+                            return HospitalPage(hospitalDetails: hospitalDetails, responseBody: widget.responseBody);
                           }));
                         },
                         child: Container
@@ -370,7 +372,7 @@ class _BookingState extends State<BookingPage>
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => DoctorProfilePage()),
+                              MaterialPageRoute(builder: (context) => DoctorProfilePage(responseBody: widget.responseBody)),
                             );
                           },
                           child: Column(
@@ -385,7 +387,7 @@ class _BookingState extends State<BookingPage>
                                 child: Padding(
                                   padding: const EdgeInsets.all(15.0),
                                   child: FutureBuilder<dynamic>(
-                                    future: item.fetchImage(singleItem.id),
+                                    future: item.fetchImage(singleItem.id, accessToken),
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState ==
                                           ConnectionState.waiting) {

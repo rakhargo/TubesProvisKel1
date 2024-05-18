@@ -5,7 +5,9 @@ import 'Utama/activity.dart';
 
 class BookingSummaryPage extends StatefulWidget {
   final Map<dynamic, dynamic> bookingDetails;
-  const BookingSummaryPage({Key? key, required this.bookingDetails}) : super(key: key);
+  final String responseBody;
+
+  const BookingSummaryPage({Key? key, required this.bookingDetails, required this.responseBody}) : super(key: key);
 
   @override
   State<BookingSummaryPage> createState() => _BookingSummaryState();
@@ -336,7 +338,7 @@ class _BookingSummaryState extends State<BookingSummaryPage>
                     Navigator.push
                     (
                       context,
-                      MaterialPageRoute(builder: (context) => ActivityPage()),
+                      MaterialPageRoute(builder: (context) => ActivityPage(responseBody : widget.responseBody)),
                     );
                   },
                     child: Container

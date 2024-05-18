@@ -15,9 +15,9 @@ import 'package:provider/provider.dart';
 void boarding() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
-  final onboarding = prefs.getBool("onboarding")??false;
+  final onboarding = prefs.getBool("onboarding") ?? false;
 
-  runApp( MyBoarding(onboarding: onboarding));
+  runApp(MyBoarding(onboarding: onboarding));
 }
 
 class MyBoarding extends StatelessWidget {
@@ -35,7 +35,7 @@ class MyBoarding extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: onboarding ? const MainApp() : const OnboardingView(),
+        home: onboarding ? Login() : const OnboardingView(),
       ),
     );
   }
@@ -46,13 +46,9 @@ void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   
-  // Menambahkan penundaan untuk menampilkan splash screen selama beberapa detik
-  await Future.delayed(const Duration(seconds: 4)); // Atur sesuai kebutuhan
-  
-  // Menghilangkan splash screen
+  await Future.delayed(const Duration(seconds: 4)); // Adjust as needed
   FlutterNativeSplash.remove();
-  
-  // Menampilkan halaman onboarding atau halaman utama tergantung dari kondisi onboarding
+
   final prefs = await SharedPreferences.getInstance();
   final onboarding = prefs.getBool("onboarding") ?? false;
   runApp(MyBoarding(onboarding: onboarding));
@@ -74,15 +70,15 @@ class Login extends StatelessWidget {
 }
 
 class MainApp extends StatefulWidget {
-  const MainApp({Key? key}) : super(key: key);
+  final String responseBody;
+
+  const MainApp({Key? key, required this.responseBody}) : super(key: key);
+
   @override
-  MainAppState createState() {
-    return MainAppState();
-  }
+  MainAppState createState() => MainAppState();
 }
 
-class MainAppState extends State<MainApp> 
-{
+class MainAppState extends State<MainApp> {
   int selectedIndex = 0;
 
   void onItemTapped(int index) {
@@ -91,13 +87,10 @@ class MainAppState extends State<MainApp>
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return MultiProvider
-    (
-      providers: 
-      [
+    return MultiProvider(
+      providers: [
         ChangeNotifierProvider(create: (_) => SpecialistAndPolyclinicList()),
         // ChangeNotifierProvider(create: (_) => ItemList()),
         // ChangeNotifierProvider(create: (_) => CartList()),
@@ -108,8 +101,7 @@ class MainAppState extends State<MainApp>
         home: Scaffold(
           backgroundColor: const Color.fromARGB(255, 255, 255, 255),
           body: linkPageUtama(selectedIndex),
-          bottomNavigationBar: MyBottomNavigationBar
-          (
+          bottomNavigationBar: MyBottomNavigationBar(
             selectedIndex: selectedIndex,
             onItemTapped: onItemTapped,
           ),
@@ -117,29 +109,19 @@ class MainAppState extends State<MainApp>
       ),
     );
   }
-  
-  linkPageUtama(int idx) 
-  {
+
+  Widget linkPageUtama(int idx) {
     switch (idx) {
       case 0:
-        {
-          return const HomePage();
-        }
-
+        return HomePage(responseBody: widget.responseBody);
       case 1:
-        {
-          return const BookingPage();
-        }
-
+        return BookingPage(responseBody: widget.responseBody);
       case 2:
-        {
-          return const ActivityPage();
-        }
-
+        return ActivityPage(responseBody: widget.responseBody);
       case 3:
-        {
-          return const AccountPage();
-        }
+        return AccountPage(responseBody: widget.responseBody);
+      default:
+        return HomePage(responseBody: widget.responseBody);
     }
   }
 }

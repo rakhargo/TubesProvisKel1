@@ -118,7 +118,6 @@ class _LoginScreenState extends State<LoginScreen> {
         Uri.parse('http://127.0.0.1:8000/login'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Bearer YOUR_TOKEN_HERE', // Corrected authentication header name
         },
         body: jsonEncode(<String, String>{
           'username': username,
@@ -130,10 +129,10 @@ class _LoginScreenState extends State<LoginScreen> {
       print('Login response body: ${response.body}');
 
       if (response.statusCode == 200) {
-        final token = response.body;
+        final responseBody = response.body;
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => MainApp()),
+          MaterialPageRoute(builder: (context) => MainApp(responseBody: responseBody)),
         );
       } else {
         if (response.body.isNotEmpty) {

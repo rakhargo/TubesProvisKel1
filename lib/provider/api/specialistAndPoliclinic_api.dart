@@ -5,7 +5,7 @@ import 'dart:convert';
 import '/provider/model/specialistAndPolyclinic_model.dart';
 
 class SpecialistAndPolyclinicList with ChangeNotifier {
-  final String url = 'http://127.0.0.1:8000'; 
+  final String url = 'http://127.0.0.1:8000';
   List<dynamic> _specialistAndPoliclinicList = [];
   List<dynamic> get specialistAndPoliclinicList => _specialistAndPoliclinicList;
 
@@ -23,12 +23,12 @@ class SpecialistAndPolyclinicList with ChangeNotifier {
     return _specialistAndPoliclinicList;
   }
 
-  Future<List> fetchData() async {
-    final response = await http.get(Uri.parse('$url/specialist_and_polyclinic'),
-    // final response = await http.get(Uri.parse('$url/specialist_and_polyclinic'),
+  Future<List> fetchData(String accessToken) async {
+    final response = await http.get(
+      Uri.parse('$url/specialist_and_polyclinic'),
       headers: {
         'Content-Type': 'application/json',
-        // 'Authorization': token,
+        'Authorization': 'Bearer $accessToken',
       },
     );
     if (response.statusCode == 200) {
@@ -38,12 +38,12 @@ class SpecialistAndPolyclinicList with ChangeNotifier {
     }
   }
 
-  Future<http.Response> fetchImage(String specialistAndPolyclinic_id) async {
+  Future<http.Response> fetchImage(String specialistAndPolyclinic_id, String accessToken) async {
     final response = await http.get(
       Uri.parse('$url/specialist_and_polyclinic_images/$specialistAndPolyclinic_id'),
       headers: {
         'Content-Type': 'application/json',
-        // 'Authorization': token,
+        'Authorization': 'Bearer $accessToken',
       },
     );
     if (response.statusCode == 200) {

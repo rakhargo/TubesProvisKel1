@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:medimate/bottomNavBar.dart';
 import 'package:medimate/page/qrCodeScanner.dart';
 
 class HomePage extends StatefulWidget {
-  // final String token; // Add the token parameter
+  final String responseBody;
 
-  const HomePage({super.key}); // Require the token parameter
+  const HomePage({Key? key, required this.responseBody}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomeState();
@@ -34,25 +33,23 @@ class _HomeState extends State<HomePage> {
   int idxProfiles = 0;
   Map<dynamic, dynamic> chosenProfile = {};
 
-  List<String> topics = [
-    "All", "Nutrition & Diet", "Lifestyle", "Beauty", "Exercise"
-  ];
+  List<String> topics = ["All", "Nutrition & Diet", "Lifestyle", "Beauty", "Exercise"];
 
   String selectedTopic = "All";
 
   List<Map> articles = [
     {
-      "articleTitle": "Plant-based Protein: The Best, the Worst, and Everything In Between", 
+      "articleTitle": "Plant-based Protein: The Best, the Worst, and Everything In Between",
       "topics": ["Nutrition & Diet", "Lifestyle"],
       "image": "1.jpg",
     },
     {
-      "articleTitle": "Exercise may Reduce Heart Disease Risk by Changing How the Brain Reacts to Stress", 
+      "articleTitle": "Exercise may Reduce Heart Disease Risk by Changing How the Brain Reacts to Stress",
       "topics": ["Exercise", "Lifestyle"],
       "image": "2.jpg",
     },
     {
-      "articleTitle": "Why Wearing Makeup During Workouts May Be Bad for Your Skin", 
+      "articleTitle": "Why Wearing Makeup During Workouts May Be Bad for Your Skin",
       "topics": ["Beauty"],
       "image": "3.jpg",
     },
@@ -85,7 +82,7 @@ class _HomeState extends State<HomePage> {
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: Color.fromARGB(255, 9, 15, 71),
-              fontSize: 18
+              fontSize: 18,
             ),
           ),
           actions: [
@@ -93,12 +90,12 @@ class _HomeState extends State<HomePage> {
               onPressed: () {},
               icon: const Icon(
                 Icons.notifications_outlined,
-                color: Color.fromARGB(255, 9, 15, 71)
-              )
-            )
+                color: Color.fromARGB(255, 9, 15, 71),
+              ),
+            ),
           ],
           bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(2.0), //Set the height of the border
+            preferredSize: const Size.fromHeight(2.0), // Set the height of the border
             child: Container(
               decoration: const BoxDecoration(
                 border: Border(
@@ -131,7 +128,7 @@ class _HomeState extends State<HomePage> {
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        icon: const Icon(Icons.arrow_back_ios)
+                        icon: const Icon(Icons.arrow_back_ios),
                       ),
                     ),
                   ),
@@ -160,14 +157,14 @@ class _HomeState extends State<HomePage> {
                             idxProfiles = index;
                           });
                           Navigator.of(context).pop();
-                        }
+                        },
                       );
-                    }
-                  )
+                    },
+                  ),
                 ],
               ),
             );
-          }
+          },
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -175,6 +172,10 @@ class _HomeState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Text(
+                //   'Response Body: ${widget.responseBody}',
+                //   style: TextStyle(color: Colors.black),
+                // ),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -185,7 +186,7 @@ class _HomeState extends State<HomePage> {
                   child: Container(
                     decoration: BoxDecoration(
                       color: const Color.fromARGB(255, 32, 33, 87),
-                      borderRadius: BorderRadius.circular(12)
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Padding(
                       padding: EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
@@ -193,17 +194,14 @@ class _HomeState extends State<HomePage> {
                         children: [
                           Text(
                             'Tap to quick registration',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20
-                            ),
+                            style: TextStyle(color: Colors.white, fontSize: 20),
                           ),
                           Spacer(),
                           Icon(
                             Icons.qr_code_2,
                             color: Colors.white,
                             size: 30,
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -213,19 +211,13 @@ class _HomeState extends State<HomePage> {
                 GridView.builder(
                   shrinkWrap: true,
                   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 118, // Lebar maksimum setiap item
-                    mainAxisExtent: 130
+                    maxCrossAxisExtent: 118, // Maximum width of each item
+                    mainAxisExtent: 130,
                   ),
                   itemCount: services.length,
                   itemBuilder: (context, index) {
                     var item = services[index];
                     return GestureDetector(
-                      // onTap: () {
-                      //   Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(builder: (context) => const AccountPage()),
-                      //   );
-                      // },
                       child: Column(
                         children: [
                           Container(
@@ -248,7 +240,7 @@ class _HomeState extends State<HomePage> {
                             style: const TextStyle(
                               color: Color.fromARGB(255, 9, 15, 71),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     );
@@ -260,7 +252,7 @@ class _HomeState extends State<HomePage> {
                   style: TextStyle(
                     fontSize: 18,
                     color: Color.fromARGB(255, 9, 15, 71),
-                    fontWeight: FontWeight.bold
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -269,41 +261,34 @@ class _HomeState extends State<HomePage> {
                   child: Row(
                     children: topics
                         .map((topic) => Padding(
-                          padding: const EdgeInsets.only(right: 20),
-                          child: ChoiceChip(
-                            showCheckmark: false,
-                            label: Text(
-                              topic,
-                              style: TextStyle(
-                                color: topic == selectedTopic
-                                    ? Colors.white
-                                    : const Color.fromARGB(255, 53, 55, 121),
+                              padding: const EdgeInsets.only(right: 20),
+                              child: ChoiceChip(
+                                showCheckmark: false,
+                                label: Text(
+                                  topic,
+                                  style: TextStyle(
+                                    color: topic == selectedTopic
+                                        ? Colors.white
+                                        : const Color.fromARGB(255, 53, 55, 121),
+                                  ),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(13),
+                                ),
+                                selected: topic == selectedTopic,
+                                selectedColor: const Color.fromARGB(255, 53, 55, 121),
+                                backgroundColor: const Color.fromARGB(255, 235, 235, 255),
+                                onSelected: (selected) {
+                                  setState(() {
+                                    selectedTopic = selected ? topic : "All";
+                                  });
+                                },
                               ),
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(13),
-                              // side: BorderSide.none
-                            ),
-                            selected: topic == selectedTopic, // Ubah ini untuk membuat selected sesuai dengan kondisi Anda
-                            selectedColor: const Color.fromARGB(255, 53, 55, 121),
-                            backgroundColor: const Color.fromARGB(255, 235, 235, 255),
-                            onSelected: (selected) {
-                              setState(() {
-                                selectedTopic = selected ? topic : "All";
-                              });
-
-                              if (selected) {
-                                // Lakukan sesuatu ketika chip dipilih
-                              }
-                            },
-                          ),
-                        ))
+                            ))
                         .toList(),
                   ),
                 ),
                 const SizedBox(height: 20),
-
-                // Menampilkan daftar artikel yang telah difilter
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: selectedTopic == "All"
@@ -318,56 +303,52 @@ class _HomeState extends State<HomePage> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: LayoutBuilder(
-                                    builder: (context, constraints) {
-                                      // Menghitung lebar gambar (setengah dari lebar widget induk)
-                                      double imageWidth = constraints.maxWidth / 2.5;
-                              
-                                      return Row(
-                                        children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    article['articleTitle'],
-                                                    style: const TextStyle(
+                                      builder: (context, constraints) {
+                                    double imageWidth = constraints.maxWidth / 2.5;
+
+                                    return Row(
+                                      children: [
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  article['articleTitle'],
+                                                  style: const TextStyle(
                                                       fontWeight: FontWeight.bold,
                                                       color: Color.fromARGB(255, 32, 33, 87),
-                                                      fontSize: 15
-                                                    ),
-                                                    // max
-                                                  ),
-                                                  const SizedBox(height: 5),
-                                                  Wrap(
-                                                    spacing: 5, // Spasi antara setiap widget dalam Wrap
-                                                    children: article['topics'].map<Widget>((topic) {
-                                                      return Chip(
-                                                        label: Text(topic),
-                                                        backgroundColor: const Color.fromARGB(255, 53, 55, 121),
-                                                        labelStyle: const TextStyle(color: Colors.white),
-                                                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                                                        
-                                                      );
-                                                    }).toList(),
-                                                  ),
-                                                ],
-                                              ),
+                                                      fontSize: 15),
+                                                ),
+                                                const SizedBox(height: 5),
+                                                Wrap(
+                                                  spacing: 5,
+                                                  children: article['topics']
+                                                      .map<Widget>((topic) {
+                                                    return Chip(
+                                                      label: Text(topic),
+                                                      backgroundColor: const Color.fromARGB(255, 53, 55, 121),
+                                                      labelStyle: const TextStyle(color: Colors.white),
+                                                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                                                    );
+                                                  }).toList(),
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.circular(12), // Set border circular
-                                            child: Image(
-                                              image: AssetImage("images/article/${article['image']}"),
-                                              width: imageWidth,
-                                              fit: BoxFit.cover,
-                                            ),
+                                        ),
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(12),
+                                          child: Image(
+                                            image: AssetImage("images/article/${article['image']}"),
+                                            width: imageWidth,
+                                            fit: BoxFit.cover,
                                           ),
-                                        ],
-                                      );
-                                    }
-                                  ),
+                                        ),
+                                      ],
+                                    );
+                                  }),
                                 ),
                               ),
                               const SizedBox(height: 15)
@@ -387,64 +368,59 @@ class _HomeState extends State<HomePage> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: LayoutBuilder(
-                                    builder: (context, constraints) {
-                                      // Menghitung lebar gambar (setengah dari lebar widget induk)
-                                      double imageWidth = constraints.maxWidth / 2.5;
-                              
-                                      return Row(
-                                        children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    article['articleTitle'],
-                                                    style: const TextStyle(
+                                      builder: (context, constraints) {
+                                    double imageWidth = constraints.maxWidth / 2.5;
+
+                                    return Row(
+                                      children: [
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  article['articleTitle'],
+                                                  style: const TextStyle(
                                                       fontWeight: FontWeight.bold,
                                                       color: Color.fromARGB(255, 32, 33, 87),
-                                                      fontSize: 15
-                                                    ),
-                                                    // max
-                                                  ),
-                                                  const SizedBox(height: 5),
-                                                  Wrap(
-                                                    spacing: 5, // Spasi antara setiap widget dalam Wrap
-                                                    children: article['topics'].map<Widget>((topic) {
-                                                      return Chip(
-                                                        label: Text(topic),
-                                                        backgroundColor: const Color.fromARGB(255, 53, 55, 121),
-                                                        labelStyle: const TextStyle(color: Colors.white),
-                                                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                                                        
-                                                      );
-                                                    }).toList(),
-                                                  ),
-                                                ],
-                                              ),
+                                                      fontSize: 15),
+                                                ),
+                                                const SizedBox(height: 5),
+                                                Wrap(
+                                                  spacing: 5,
+                                                  children: article['topics']
+                                                      .map<Widget>((topic) {
+                                                    return Chip(
+                                                      label: Text(topic),
+                                                      backgroundColor: const Color.fromARGB(255, 53, 55, 121),
+                                                      labelStyle: const TextStyle(color: Colors.white),
+                                                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                                                    );
+                                                  }).toList(),
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.circular(12), // Set border circular
-                                            child: Image(
-                                              image: AssetImage("images/article/${article['image']}"),
-                                              width: imageWidth,
-                                              fit: BoxFit.cover,
-                                            ),
+                                        ),
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(12),
+                                          child: Image(
+                                            image: AssetImage("images/article/${article['image']}"),
+                                            width: imageWidth,
+                                            fit: BoxFit.cover,
                                           ),
-                                        ],
-                                      );
-                                    }
-                                  ),
+                                        ),
+                                      ],
+                                    );
+                                  }),
                                 ),
                               ),
                               const SizedBox(height: 15),
                             ],
                           );
-                        }).toList()
+                        }).toList(),
                 ),
-
               ],
             ),
           ),

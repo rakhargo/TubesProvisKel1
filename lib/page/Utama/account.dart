@@ -9,14 +9,11 @@ import 'package:medimate/page/Account/support.dart';
 import 'package:medimate/page/Screens/Login/login_screen.dart';
 import 'package:medimate/bottomNavBar.dart';
 
-void main() 
-{
-  runApp(const AccountPage());
-}
 
 class AccountPage extends StatefulWidget {
-  const AccountPage({Key? key}) : super(key: key);
+  final String responseBody;
 
+  const AccountPage({Key? key, required this.responseBody}) : super(key: key);
   @override
   State<AccountPage> createState() => _AccountState();
 }

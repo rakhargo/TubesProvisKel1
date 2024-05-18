@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:medimate/page/detailDoctor.dart';
 
-void main() {
-  runApp(const DoctorProfilePage());
-}
-
 class DoctorProfilePage extends StatefulWidget {
-  const DoctorProfilePage({Key? key}) : super(key: key);
+  final String responseBody;
+
+  const DoctorProfilePage({Key? key, required this.responseBody}) : super(key: key);
 
   @override
   State<DoctorProfilePage> createState() => _DoctorProfileState();
@@ -271,7 +269,7 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
                                 "image": item["image"]
                               }
                             ;
-                                return (DetailDoctorPage(doctorDetails: hospitalDetails));
+                                return (DetailDoctorPage(doctorDetails: hospitalDetails, responseBody: widget.responseBody));
                           }));
                         },
                         child: buildButton('Book')

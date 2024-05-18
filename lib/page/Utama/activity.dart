@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:medimate/bottomNavBar.dart';
 
-void main() 
-{
-  runApp(const ActivityPage());
-}
-
 class ActivityPage extends StatefulWidget {
-  const ActivityPage({super.key});
+  final String responseBody;
 
+  const ActivityPage({Key? key, required this.responseBody}) : super(key: key);
+  
   @override
   State<ActivityPage> createState() => _ActivityState();
 }
