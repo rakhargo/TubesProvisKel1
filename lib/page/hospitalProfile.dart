@@ -6,8 +6,9 @@ import 'package:medimate/page/doctor_profile.dart';
 class HospitalPage extends StatefulWidget {
   final Map<String, dynamic> hospitalDetails;
   final String responseBody;
+  final String profileId;
 
-  const HospitalPage({Key? key, required this.hospitalDetails, required this.responseBody}) : super(key: key);
+  const HospitalPage({Key? key, required this.hospitalDetails, required this.responseBody, required this.profileId}) : super(key: key);
 
   @override
   State<HospitalPage> createState() => _HospitalState();
@@ -223,7 +224,7 @@ class _HospitalState extends State<HospitalPage>
                                 Navigator.push
                                 (
                                   context,
-                                  MaterialPageRoute(builder: (context) => DoctorProfilePage(responseBody : widget.responseBody)),
+                                  MaterialPageRoute(builder: (context) => DoctorProfilePage(responseBody : widget.responseBody, profileId: widget.profileId,)),
                                 );
                               },
                               child: Container

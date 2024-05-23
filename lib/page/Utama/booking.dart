@@ -10,7 +10,8 @@ import 'package:medimate/provider/model/specialistAndPolyclinic_model.dart';
 class BookingPage extends StatefulWidget 
 {
   final String responseBody;
-  const BookingPage({Key? key, required this.responseBody}) : super(key: key);
+  final String profileId;
+  const BookingPage({Key? key, required this.responseBody, required this.profileId}) : super(key: key);
 
   @override
   State<BookingPage> createState() => _BookingState();
@@ -109,11 +110,7 @@ class _BookingState extends State<BookingPage>
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp
-    (      
-      debugShowCheckedModeBanner: false,
-      title: 'Booking Page',
-      home: Scaffold
+    return Scaffold
       (
         appBar: AppBar
         (
@@ -216,7 +213,7 @@ class _BookingState extends State<BookingPage>
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                             Map<String, dynamic> hospitalDetails = faskes[index];
-                            return HospitalPage(hospitalDetails: hospitalDetails, responseBody: widget.responseBody);
+                            return HospitalPage(hospitalDetails: hospitalDetails, responseBody: widget.responseBody, profileId: widget.profileId,);
                           }));
                         },
                         child: Container
@@ -372,7 +369,7 @@ class _BookingState extends State<BookingPage>
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => DoctorProfilePage(responseBody: widget.responseBody)),
+                              MaterialPageRoute(builder: (context) => DoctorProfilePage(responseBody: widget.responseBody, profileId: widget.profileId,)),
                             );
                           },
                           child: Column(
@@ -452,7 +449,6 @@ class _BookingState extends State<BookingPage>
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }

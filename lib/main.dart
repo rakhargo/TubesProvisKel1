@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:medimate/Onboboarding/onboarding_view.dart';
+import 'package:medimate/provider/api/profile_api.dart';
 import 'package:medimate/provider/api/specialistAndPoliclinic_api.dart';
+import 'package:medimate/provider/model/profile_model.dart';
 import 'package:medimate/provider/model/specialistAndPolyclinic_model.dart';
 import 'page/Screens/Welcome/welcome_screen.dart';
 import 'page/Utama/home.dart';
@@ -37,8 +39,9 @@ void main() async {
 class MainApp extends StatefulWidget {
   final String responseBody;
   int indexNavbar;
+  final String profileId;
 
-  MainApp({Key? key, required this.responseBody, required this.indexNavbar}) : super(key: key);
+  MainApp({Key? key, required this.responseBody, required this.indexNavbar, required this.profileId}) : super(key: key);
 
   @override
   MainAppState createState() => MainAppState();
@@ -59,6 +62,7 @@ class MainAppState extends State<MainApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SpecialistAndPolyclinicList()),
+        ChangeNotifierProvider(create: (_) => ProfileAPI()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -77,15 +81,15 @@ class MainAppState extends State<MainApp> {
   Widget linkPageUtama(int idx) {
     switch (idx) {
       case 0:
-        return HomePage(responseBody: widget.responseBody);
+        return HomePage(responseBody: widget.responseBody, profileId: widget.profileId,);
       case 1:
-        return BookingPage(responseBody: widget.responseBody);
+        return BookingPage(responseBody: widget.responseBody, profileId: widget.profileId,);
       case 2:
-        return ActivityPage(responseBody: widget.responseBody);
+        return ActivityPage(responseBody: widget.responseBody, profileId: widget.profileId);
       case 3:
-        return AccountPage(responseBody: widget.responseBody);
+        return AccountPage(responseBody: widget.responseBody, profileId: widget.profileId);
       default:
-        return HomePage(responseBody: widget.responseBody);
+        return HomePage(responseBody: widget.responseBody, profileId: widget.profileId,);
     }
   }
 }

@@ -1,3 +1,8 @@
+import 'dart:convert';
+import 'package:medimate/main.dart';
+import 'package:medimate/provider/api/profile_api.dart';
+import 'package:medimate/provider/model/profile_model.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:medimate/bottomNavBar.dart';
@@ -5,14 +10,16 @@ import 'package:medimate/page/qrCodeScanner.dart';
 
 class HomePage extends StatefulWidget {
   final String responseBody;
+  final String profileId; 
 
-  const HomePage({Key? key, required this.responseBody}) : super(key: key);
+  const HomePage({Key? key, required this.responseBody, required this.profileId}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomeState();
 }
 
 class _HomeState extends State<HomePage> {
+
   List<Map> services = [
     {"servicesName": "Mental Health", "image": "mental-health.png", "linkTo": ""},
     {"servicesName": "Dermatologist", "image": "dermatologist.png", "linkTo": ""},
@@ -24,14 +31,6 @@ class _HomeState extends State<HomePage> {
     {"servicesName": "More Services", "image": "more.png", "linkTo": ""},
   ];
 
-  List<Map> profiles = [
-    {"profileName": "John Doe", "profilePicture": "1-john_doe.jpg"},
-    {"profileName": "Christian Buehner", "profilePicture": "2-christian_buehner.jpg"},
-    {"profileName": "Alicia Claire", "profilePicture": "3-alicia_claire.jpg"},
-  ];
-
-  int idxProfiles = 0;
-  Map<dynamic, dynamic> chosenProfile = {};
 
   List<String> topics = ["All", "Nutrition & Diet", "Lifestyle", "Beauty", "Exercise"];
 
@@ -55,30 +54,122 @@ class _HomeState extends State<HomePage> {
     },
   ];
 
+  List<dynamic> profileList = [];
+  late String accessToken;
+  late String userId;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeUserId();
+    _initializeAccessToken();
+    _fetchProfileByUserId();
+    _fetchProfile(widget.profileId);
+  }
+
+  void _initializeUserId() {
+    final responseBodyMap = jsonDecode(widget.responseBody);
+    userId = responseBodyMap['user_id'].toString();
+  }
+
+  void _initializeAccessToken() {
+    final responseBodyMap = jsonDecode(widget.responseBody);
+    accessToken = responseBodyMap['access_token'];
+  }
+
+  Future<void> _fetchProfileByUserId() async {
+    final profileListResponse =
+        await Provider.of<ProfileAPI>(context, listen: false)
+            .fetchDataByUserId(userId, accessToken); // Pass the access token here
+            // print(profileListResponse);
+    setState(() {
+      profileList = profileListResponse;
+      // print(profileListResponse);
+      // print("INI PROFILE LIST");
+      // print(profileList);
+    });
+  }
+
+  // List<Map> profiles = [
+  //   {"profileName": "John Doe", "profilePicture": "1-john_doe.jpg"},
+  //   {"profileName": "Christian Buehner", "profilePicture": "2-christian_buehner.jpg"},
+  //   {"profileName": "Alicia Claire", "profilePicture": "3-alicia_claire.jpg"},
+  // ];
+
+  // Map<dynamic, dynamic> chosenProfile = {};
+  Profile chosenProfile = Profile
+  (
+    id: "",
+    userId: "",
+    nama: "",
+    tanggalLahir: "",
+    jenisKelamin: "",
+    email: "",
+    alamat: "",
+    noTelepon: "",
+    userPhoto: "",
+  );
+
+  Future<void> _fetchProfile(String profileId) async {
+    final profileResponse =
+        await Provider.of<ProfileAPI>(context, listen: false)
+            .fetchDataByProfileId(profileId, accessToken); // Pass the access token here
+            // print(profileResponse);
+    setState(() {
+      chosenProfile = profileResponse;
+      // print(profileResponse);
+      // print("INI PROFILE");
+      // print(chosenProfile);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    chosenProfile = profiles[idxProfiles];
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Home Page',
-      home: Scaffold(
+    // print(profileList);
+    return Scaffold(
         appBar: AppBar(
-          leading: Builder(
-            builder: (context) => GestureDetector(
-              onTap: () {
-                Scaffold.of(context).openDrawer();
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(left: 15.0, top: 3.0, bottom: 3.0),
-                child: CircleAvatar(
-                  radius: 20,
-                  backgroundImage: AssetImage("images/orang/${chosenProfile['profilePicture']}"),
+          leading: Consumer<ProfileAPI>
+          (
+            builder: (context, item, child) 
+            {
+              return GestureDetector
+              (
+                onTap: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 15.0, top: 3.0, bottom: 3.0),
+                  child: CircleAvatar(
+                    radius: 20,
+                    // backgroundImage: AssetImage("images/orang/${chosenProfile['userPhoto']}"),
+                    child: FutureBuilder<dynamic>(
+                      future: item.fetchImage(widget.profileId, accessToken),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return const Icon(Icons.error);
+                        } else if (snapshot.hasData) {
+                          return Image.memory(
+                            snapshot.data!.bodyBytes,
+                            // width: 50,
+                            // height: 50,
+                            fit: BoxFit.cover,
+                          );
+                        } else {
+                          // Show a placeholder if no data is available
+                          return const Placeholder();
+                        }
+                      },
+                    ),
+                  ),
                 ),
-              ),
-            ),
+              );
+            }
           ),
           title: Text(
-            'Hi, ${chosenProfile['profileName']}!',
+            'Hi, ${chosenProfile.nama}!',
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: Color.fromARGB(255, 9, 15, 71),
@@ -141,25 +232,59 @@ class _HomeState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: profiles.length,
-                    itemBuilder: (context, index) {
-                      final profile = profiles[index];
-                      return ListTile(
-                        leading: CircleAvatar(
-                          radius: 20,
-                          backgroundImage: AssetImage("images/orang/${profile['profilePicture']}"),
-                        ),
-                        title: Text(profile['profileName']),
-                        onTap: () {
-                          setState(() {
-                            idxProfiles = index;
-                          });
-                          Navigator.of(context).pop();
+                  Consumer<ProfileAPI>
+                  (
+                    builder: (context, item, child) 
+                    {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: profileList.length,
+                        itemBuilder: (context, index) {
+                          final profile = profileList[index];
+                          return ListTile(
+                            leading: CircleAvatar(
+                              radius: 20,
+                              // backgroundImage: AssetImage("images/orang/${profile['profilePicture']}"),
+                              child: FutureBuilder<dynamic>
+                              (
+                                
+                              future: item.fetchImage(profile.id, accessToken),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const CircularProgressIndicator();
+                                } else if (snapshot.hasError) {
+                                  return const Icon(Icons.error);
+                                } else if (snapshot.hasData) {
+                                  return Image.memory(
+                                    snapshot.data!.bodyBytes,
+                                    // width: 50,
+                                    // height: 50,
+                                    // fit: BoxFit.cover,
+                                  );
+                                } else {
+                                  // Show a placeholder if no data is available
+                                  return const Placeholder();
+                                }
+                              },
+                            ),
+                            ),
+                            title: Text(profile.nama),
+                            onTap: () {
+                              // setState(() {
+                              //   idxProfiles = index;
+                              // });
+                              _fetchProfile(profile.id);
+                              Navigator.of(context).pop();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => MainApp(responseBody: widget.responseBody, indexNavbar: 0, profileId: profile.id,)),
+                              );
+                            },
+                          );
                         },
                       );
-                    },
+                    }
                   ),
                 ],
               ),
@@ -425,7 +550,6 @@ class _HomeState extends State<HomePage> {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }

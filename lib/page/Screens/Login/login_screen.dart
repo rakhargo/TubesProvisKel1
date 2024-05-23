@@ -132,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
         final responseBody = response.body;
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => MainApp(responseBody: responseBody, indexNavbar: 0)),
+          MaterialPageRoute(builder: (context) => MainApp(responseBody: responseBody, indexNavbar: 0, profileId: "1",)),
         );
       } else {
         if (response.body.isNotEmpty) {

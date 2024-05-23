@@ -113,7 +113,7 @@ class _PaymentPageState extends State<PaymentPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: DropdownButtonFormField<String>(
-        decoration: InputDecoration(
+        decoration: InputDecoration( 
           border: OutlineInputBorder(),
           labelText: 'Select Bank',
         ),

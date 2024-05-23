@@ -3,8 +3,9 @@ import 'package:medimate/bottomNavBar.dart';
 
 class ActivityPage extends StatefulWidget {
   final String responseBody;
+  final String profileId;
 
-  const ActivityPage({Key? key, required this.responseBody}) : super(key: key);
+  const ActivityPage({Key? key, required this.responseBody, required this.profileId}) : super(key: key);
   
   @override
   State<ActivityPage> createState() => _ActivityState();
@@ -12,12 +13,6 @@ class ActivityPage extends StatefulWidget {
 
 class _ActivityState extends State<ActivityPage>
 {
-  // int idx = 2;
-  // void onItemTap(int index) {
-  //    setState(() {
-  //      idx = index;
-  //    });
-  // }
 
   List<Map> onGoing = 
   [
@@ -35,11 +30,7 @@ class _ActivityState extends State<ActivityPage>
   @override
   Widget build(BuildContext context) 
   {
-    return MaterialApp
-    (
-      debugShowCheckedModeBanner: false,
-      title: 'Activity Page',
-      home: Scaffold
+      return Scaffold
       (
         appBar: AppBar
         (
@@ -462,7 +453,6 @@ class _ActivityState extends State<ActivityPage>
           ),
           
         ),
-      ),
-    );
+      );
   }
 }

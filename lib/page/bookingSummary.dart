@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:medimate/main.dart';
 import 'Utama/activity.dart';
+import 'Utama/booking.dart';
 
 class BookingSummaryPage extends StatefulWidget {
   final Map<dynamic, dynamic> bookingDetails;
   final String responseBody;
+  final String profileId;
 
-  const BookingSummaryPage({Key? key, required this.bookingDetails, required this.responseBody}) : super(key: key);
+  const BookingSummaryPage({Key? key, required this.bookingDetails, required this.responseBody, required this.profileId}) : super(key: key);
 
   @override
   State<BookingSummaryPage> createState() => _BookingSummaryState();
@@ -334,14 +336,12 @@ class _BookingSummaryState extends State<BookingSummaryPage>
 
                   GestureDetector
                   (
-                    onTap: () 
-                  {
-                    Navigator.push
-                    (
-                      context,
-                      MaterialPageRoute(builder: (context) => MainApp(responseBody : widget.responseBody, indexNavbar: 2)),
-                    );
-                  },
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MainApp(responseBody: widget.responseBody, indexNavbar: 2, profileId: widget.profileId,)),
+                      );
+                    },
                     child: Container
                     (
                       padding: const EdgeInsets.all(8),

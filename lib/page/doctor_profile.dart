@@ -5,8 +5,9 @@ import 'package:medimate/page/detailDoctor.dart';
 
 class DoctorProfilePage extends StatefulWidget {
   final String responseBody;
+  final String profileId;
 
-  const DoctorProfilePage({Key? key, required this.responseBody}) : super(key: key);
+  const DoctorProfilePage({Key? key, required this.responseBody, required this.profileId}) : super(key: key);
 
   @override
   State<DoctorProfilePage> createState() => _DoctorProfileState();
@@ -269,7 +270,7 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
                                 "image": item["image"]
                               }
                             ;
-                                return (DetailDoctorPage(doctorDetails: hospitalDetails, responseBody: widget.responseBody));
+                                return (DetailDoctorPage(doctorDetails: hospitalDetails, responseBody: widget.responseBody, profileId: widget.profileId,));
                           }));
                         },
                         child: buildButton('Book')

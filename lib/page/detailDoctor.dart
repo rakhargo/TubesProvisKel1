@@ -7,8 +7,9 @@ import 'bookingSummary.dart';
 class DetailDoctorPage extends StatefulWidget {
   final Map<dynamic, dynamic> doctorDetails;
   final String responseBody;
+  final String profileId;
 
-  const DetailDoctorPage({Key? key, required this.doctorDetails, required this.responseBody}) : super(key: key);
+  const DetailDoctorPage({Key? key, required this.doctorDetails, required this.responseBody, required this.profileId}) : super(key: key);
 
   @override
   State<DetailDoctorPage> createState() => _DetailDoctorState();
@@ -628,7 +629,7 @@ class _DetailDoctorState extends State<DetailDoctorPage>
                             "price": "Rp200.000",
                             "dateTime": "${selectedForAppointment["tanggal"]} ${selectedForAppointment["bulan"]} ${selectedForAppointment["tahun"]}, ${selectedForAppointment["selectedTime"]}",
                           };
-                          return BookingSummaryPage(bookingDetails: bookingDetails, responseBody : widget.responseBody);
+                          return BookingSummaryPage(bookingDetails: bookingDetails, responseBody : widget.responseBody, profileId: widget.profileId,);
                         }
                       ),
                     );
