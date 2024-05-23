@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:medimate/main.dart';
 import 'Utama/activity.dart';
 
 class BookingSummaryPage extends StatefulWidget {
@@ -338,7 +339,7 @@ class _BookingSummaryState extends State<BookingSummaryPage>
                     Navigator.push
                     (
                       context,
-                      MaterialPageRoute(builder: (context) => ActivityPage(responseBody : widget.responseBody)),
+                      MaterialPageRoute(builder: (context) => MainApp(responseBody : widget.responseBody, indexNavbar: 2)),
                     );
                   },
                     child: Container
