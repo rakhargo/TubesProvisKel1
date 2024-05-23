@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../Login/login_screen.dart'; 
-import '../Signup/signup_screen.dart'; 
+import '../Login/login_screen.dart';
+import '../Signup/signup_screen.dart';
 import 'package:flutter/gestures.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -22,7 +22,7 @@ class WelcomeScreen extends StatelessWidget {
             SizedBox(height: 50),
             Center(
               child: Text(
-                "Welcome To Medimate",
+                "Welcome to Medimate",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
@@ -50,9 +50,9 @@ class WelcomeScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       PageRouteBuilder(
-                        transitionDuration: Duration(milliseconds: 500), 
-                        pageBuilder: (_, __, ___) => SignUpScreen(), 
-                        transitionsBuilder: (_, animation, __, child) { 
+                        transitionDuration: Duration(milliseconds: 500),
+                        pageBuilder: (_, __, ___) => SignUpScreen(),
+                        transitionsBuilder: (_, animation, __, child) {
                           return SlideTransition(
                             position: Tween<Offset>(
                               begin: Offset(1.0, 0.0),
@@ -65,9 +65,8 @@ class WelcomeScreen extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 20, horizontal: 60),
-                    backgroundColor: Color (0xFF202157),
+                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 60),
+                    backgroundColor: Color(0xFF202157),
                   ),
                   child: SizedBox(
                     width: double.infinity,
@@ -95,8 +94,8 @@ class WelcomeScreen extends StatelessWidget {
                       child: ElevatedButton.icon(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
-                          padding:
-                              EdgeInsets.symmetric(vertical: 20, horizontal: 60),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 60),
                           backgroundColor: Colors.white,
                         ),
                         icon: SvgPicture.asset(
@@ -135,9 +134,12 @@ class WelcomeScreen extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     PageRouteBuilder(
-                                      transitionDuration: Duration(milliseconds: 500), 
-                                      pageBuilder: (_, __, ___) => LoginScreen(), 
-                                      transitionsBuilder: (_, animation, __, child) { 
+                                      transitionDuration:
+                                          Duration(milliseconds: 500),
+                                      pageBuilder: (_, __, ___) =>
+                                          LoginScreen(),
+                                      transitionsBuilder:
+                                          (_, animation, __, child) {
                                         return SlideTransition(
                                           position: Tween<Offset>(
                                             begin: Offset(1.0, 0.0),
