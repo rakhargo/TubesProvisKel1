@@ -1,15 +1,20 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:medimate/provider/api/healthFacility_api.dart';
+import 'package:medimate/provider/model/healthFacility_model.dart';
 import 'bookingSummary.dart';
 
 class DetailDoctorPage extends StatefulWidget {
   final Map<dynamic, dynamic> doctorDetails;
   final String responseBody;
   final String profileId;
+  final String healthFacilityId;
 
-  const DetailDoctorPage({Key? key, required this.doctorDetails, required this.responseBody, required this.profileId}) : super(key: key);
+  const DetailDoctorPage({Key? key, required this.doctorDetails, required this.responseBody, required this.profileId, required this.healthFacilityId}) : super(key: key);
 
   @override
   State<DetailDoctorPage> createState() => _DetailDoctorState();
@@ -17,19 +22,63 @@ class DetailDoctorPage extends StatefulWidget {
 
 class _DetailDoctorState extends State<DetailDoctorPage>
 {
-  Map<String, String> hospitalDetails = 
-  {
-    "topImage": 'rs_mayapada.png',
-    "logo": 'assets/images/Booking/Logo/logo rs mayapada.png',
-    // "nama": 'Mayapada Hospital\nBandung',
-    "nama": 'Mayapada Hospital Bandung',
-    "jenis": 'General Hospital',
-    "jarak": '1.2',
-    "rating": '5.0',
-    // "address": 'Jl. Terusan Buah Batu No.5,\nBatununggal, Kec. Bandung Kidul, Kota\nBandung, Jawa Barat 40266',
-    "address": 'Jl. Terusan Buah Batu No.5, Batununggal, Kec. Bandung Kidul, Kota Bandung, Jawa Barat 40266',
-    "profile": 'Mayapada Hospital is one of the best private hospitals founded by Mayapada Healthcare Group on June 1 2008.',
-  };
+  HealthFacility healthFacility = HealthFacility
+  (
+    id: "",
+    namaFasilitas: "",
+    alamatFasilitas: "",
+    kecamatanFasilitas: "",
+    kotaKabFasilitas: "",
+    kodePosFasilitas: "",
+    tingkatFasilitas: "",
+    jumlahPoliklinik: "",
+    daftarPoliklinik: "",
+    fotoFaskes: "",
+    logoFaskes: "",
+  );
+  late String accessToken;
+  late String userId;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeUserId();
+    _initializeAccessToken();
+    _fetchHealthFacility(widget.healthFacilityId);
+  }
+
+  void _initializeUserId() {
+    final responseBodyMap = jsonDecode(widget.responseBody);
+    userId = responseBodyMap['user_id'].toString();
+  }
+
+  void _initializeAccessToken() {
+    final responseBodyMap = jsonDecode(widget.responseBody);
+    accessToken = responseBodyMap['access_token'];
+  }
+
+  Future<void> _fetchHealthFacility(String healthFacilityId) async {
+    final healthFacilityResponse =
+        await Provider.of<HealthFacilityAPI>(context, listen: false)
+            .fetchDataById(healthFacilityId, accessToken); // Pass the access token here
+            // print(healthFacilityResponse);
+    setState(() {
+      healthFacility = healthFacilityResponse;
+    });
+  }
+  // Map<String, String> hospitalDetails = 
+  // {
+  //   "topImage": 'rs_mayapada.png',
+  //   "logo": 'assets/images/Booking/Logo/logo rs mayapada.png',
+  //   // "nama": 'Mayapada Hospital\nBandung',
+  //   "nama": 'Mayapada Hospital Bandung',
+  //   "jenis": 'General Hospital',
+  //   "jarak": '1.2',
+  //   "rating": '5.0',
+  //   // "address": 'Jl. Terusan Buah Batu No.5,\nBatununggal, Kec. Bandung Kidul, Kota\nBandung, Jawa Barat 40266',
+  //   "address": 'Jl. Terusan Buah Batu No.5, Batununggal, Kec. Bandung Kidul, Kota Bandung, Jawa Barat 40266',
+  //   "profile": 'Mayapada Hospital is one of the best private hospitals founded by Mayapada Healthcare Group on June 1 2008.',
+  // };
 
   List<Map<dynamic, dynamic>> jadwalDokter = 
   [
@@ -263,128 +312,136 @@ class _DetailDoctorState extends State<DetailDoctorPage>
           
                 const SizedBox(height: 8),
           
-                Row // detail hospital
+                Consumer<HealthFacilityAPI>
                 (
-                  children: 
-                  [
-                    Expanded
+                  builder: (context, item, child) 
+                  {
+                    return Row // detail hospital
                     (
-                      child: Column
-                      (
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: 
-                        [
-                          Text
+                      children: 
+                      [
+                        Expanded
+                        (
+                          child: Column
                           (
-                            hospitalDetails['nama']!,
-                            style: const TextStyle
-                            (
-                              color: Color.fromARGB(255, 9, 15, 71),
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold
-                            ),
-                          ),
-          
-                          const SizedBox(height: 5),
-          
-                          Text
-                          (
-                            hospitalDetails['address']!,
-                            style: const TextStyle
-                            (
-                              color: Color.fromARGB(255, 143, 143, 143)
-                            ),
-                          ),
-          
-                          const SizedBox(height: 10),
-          
-                          Row // rating dan jarak hospital
-                          (
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: 
                             [
-                              Container
+                              Text
                               (
-                                decoration: BoxDecoration
+                                healthFacility.namaFasilitas,
+                                style: const TextStyle
                                 (
-                                  color: const Color.fromARGB(128, 231, 231, 231),
-                                  borderRadius: BorderRadius.circular(3)
+                                  color: Color.fromARGB(255, 9, 15, 71),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold
                                 ),
-                                child: Row
-                                ( 
-                                  children: 
-                                  [
-                                    const Icon
-                                    (
-                                      Icons.location_on_outlined,
-                                    ),
-                                    Text
-                                    (
-                                      '${hospitalDetails['jarak']} Km',
-                                      style: const TextStyle
-                                      (
-                                        color: Color.fromARGB(255, 9, 15, 71)
-                                      ),
-                                    )
-                                  ],
-                                ), 
                               ),
-          
-                              const SizedBox(width: 10),
-          
-                              Container
+                              
+                              const SizedBox(height: 5),
+                              
+                              Text
                               (
-                                decoration: BoxDecoration
+                                "${healthFacility.alamatFasilitas}, Kec. ${healthFacility.kecamatanFasilitas}, ${healthFacility.kotaKabFasilitas}, ${healthFacility.kodePosFasilitas}",
+                                style: const TextStyle
                                 (
-                                  color: const Color.fromARGB(128, 231, 231, 231),
-                                  borderRadius: BorderRadius.circular(3)
+                                  color: Color.fromARGB(255, 143, 143, 143)
                                 ),
-                                child: Row
-                                ( 
-                                  children: 
-                                  [
-                                    const Icon
-                                    (
-                                      Icons.star,
-                                      color: Colors.yellow,
-                                    ),
-                                    Text
-                                    (
-                                      hospitalDetails['rating']!,
-                                      style: const TextStyle
-                                      (
-                                        color: Color.fromARGB(255, 9, 15, 71)
-                                      ),
-                                    )
-                                  ],
-                                ), 
                               ),
+                              
+                              const SizedBox(height: 10),
+                              
+                              // Row // rating dan jarak hospital
+                              // (
+                              //   children: 
+                              //   [
+                              //     Container
+                              //     (
+                              //       decoration: BoxDecoration
+                              //       (
+                              //         color: const Color.fromARGB(128, 231, 231, 231),
+                              //         borderRadius: BorderRadius.circular(3)
+                              //       ),
+                              //       child: Row
+                              //       ( 
+                              //         children: 
+                              //         [
+                              //           const Icon
+                              //           (
+                              //             Icons.location_on_outlined,
+                              //           ),
+                              //           Text
+                              //           (
+                              //             '${healthFacility.} Km',
+                              //             style: const TextStyle
+                              //             (
+                              //               color: Color.fromARGB(255, 9, 15, 71)
+                              //             ),
+                              //           )
+                              //         ],
+                              //       ), 
+                              //     ),
+                              
+                              //     const SizedBox(width: 10),
+                              
+                              //     Container
+                              //     (
+                              //       decoration: BoxDecoration
+                              //       (
+                              //         color: const Color.fromARGB(128, 231, 231, 231),
+                              //         borderRadius: BorderRadius.circular(3)
+                              //       ),
+                              //       child: Row
+                              //       ( 
+                              //         children: 
+                              //         [
+                              //           const Icon
+                              //           (
+                              //             Icons.star,
+                              //             color: Colors.yellow,
+                              //           ),
+                              //           Text
+                              //           (
+                              //             hospitalDetails['rating']!,
+                              //             style: const TextStyle
+                              //             (
+                              //               color: Color.fromARGB(255, 9, 15, 71)
+                              //             ),
+                              //           )
+                              //         ],
+                              //       ), 
+                              //     ),
+                              //   ],
+                              // )
+
                             ],
-                          )
-                        ],
-                      ),
-                    ),
-                    Container
-                    (
-                      height: 125,
-                      width: 125,
-                      decoration: BoxDecoration
-                      (
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all
-                        (
-                          color: Colors.black
+                          ),
                         ),
-                      ),
-                      child: Image
-                      (
-                        image: AssetImage
+                        Container
                         (
-                          hospitalDetails['logo']!,
-                        ),
-                        fit: BoxFit.contain,
-                      ),
-                    )
-                  ],
+                          height: 125,
+                          width: 125,
+                          decoration: BoxDecoration
+                          (
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all
+                            (
+                              color: Colors.black
+                            ),
+                          ),
+                          child: Image
+                          (
+                            image: AssetImage
+                            (
+                              // hospitalDetails['logo']!,
+                              'assets/images/Booking/Logo/logo rs mayapada.png'
+                            ),
+                            fit: BoxFit.contain,
+                          ),
+                        )
+                      ],
+                    );
+                  }
                 ),
           
                 const SizedBox(height: 10),
@@ -624,7 +681,11 @@ class _DetailDoctorState extends State<DetailDoctorPage>
                           {
                             "doctorName": widget.doctorDetails['name'],
                             "specialist": widget.doctorDetails['category'],
-                            "hospital": hospitalDetails['nama'],
+                            // "hospital": hospitalDetails['nama'],
+                            "patientId": int.parse(widget.profileId),
+                            "doctorId": 1,
+                            "healthFacilityId": int.parse(healthFacility.id),
+                            "hospital": healthFacility.namaFasilitas,
                             // "alamat": hospitalDetails['address'],
                             "price": "Rp200.000",
                             "dateTime": "${selectedForAppointment["tanggal"]} ${selectedForAppointment["bulan"]} ${selectedForAppointment["tahun"]}, ${selectedForAppointment["selectedTime"]}",

@@ -270,7 +270,7 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
                                 "image": item["image"]
                               }
                             ;
-                                return (DetailDoctorPage(doctorDetails: hospitalDetails, responseBody: widget.responseBody, profileId: widget.profileId,));
+                                return (DetailDoctorPage(doctorDetails: hospitalDetails, responseBody: widget.responseBody, profileId: widget.profileId, healthFacilityId: "1",));
                           }));
                         },
                         child: buildButton('Book')

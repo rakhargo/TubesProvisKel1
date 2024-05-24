@@ -1,12 +1,13 @@
 class HealthFacility {
-  final int id;
+  final String id;
+
   final String namaFasilitas;
   final String alamatFasilitas;
   final String kecamatanFasilitas;
   final String kotaKabFasilitas;
   final String kodePosFasilitas;
   final String tingkatFasilitas;
-  final int jumlahPoliklinik;
+  final String jumlahPoliklinik;
   final String daftarPoliklinik;
   final String fotoFaskes;
   final String logoFaskes;

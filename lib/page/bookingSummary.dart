@@ -1,9 +1,15 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:medimate/main.dart';
 import 'Utama/activity.dart';
 import 'Utama/booking.dart';
+
+import 'package:medimate/provider/api/appointment_api.dart';
+import 'package:medimate/provider/model/appointment_model.dart';
 
 class BookingSummaryPage extends StatefulWidget {
   final Map<dynamic, dynamic> bookingDetails;
@@ -18,6 +24,39 @@ class BookingSummaryPage extends StatefulWidget {
 
 class _BookingSummaryState extends State<BookingSummaryPage>
 {
+  Appointment appointment = Appointment
+  (
+    id: "",
+    patientId: "",
+    doctorId: "",
+    facilityId: "",
+    status: "",
+    waktu: "",
+    formattedTime: "",
+    metodePembayaran: "",
+  );
+
+  late String accessToken;
+  late String userId;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeUserId();
+    _initializeAccessToken();
+    // _fetchHealthFacility(widget.healthFacilityId);
+  }
+
+  void _initializeUserId() {
+    final responseBodyMap = jsonDecode(widget.responseBody);
+    userId = responseBodyMap['user_id'].toString();
+  }
+
+  void _initializeAccessToken() {
+    final responseBodyMap = jsonDecode(widget.responseBody);
+    accessToken = responseBodyMap['access_token'];
+  }
+
   @override
   Widget build(BuildContext context) 
   {
@@ -336,10 +375,23 @@ class _BookingSummaryState extends State<BookingSummaryPage>
 
                   GestureDetector
                   (
-                    onTap: () {
+                    onTap: () async{
+                      // Dapatkan waktu saat ini dan format menjadi string
+                      DateTime now = DateTime.now();
+                      final DateFormat formatter = DateFormat('yyyy-MM-ddTHH:mm:ss.SSSZ'); // Sesuaikan format sesuai kebutuhan
+                      String formattedTime = formatter.format(now);
+
+                      await Provider.of<AppointmentAPI>(context, listen: false)
+                                    .addAppointment(widget.bookingDetails['patientId'], widget.bookingDetails['doctorId'], widget.bookingDetails['healthFacilityId'], "ongoing", formattedTime, "BCA", 'Bearer $accessToken');
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => MainApp(responseBody: widget.responseBody, indexNavbar: 2, profileId: widget.profileId,)),
+                        MaterialPageRoute
+                        (
+                          builder: (context) 
+                          {
+                            return MainApp(responseBody: widget.responseBody, indexNavbar: 2, profileId: widget.profileId,);
+                          }
+                        ),
                       );
                     },
                     child: Container
