@@ -27,7 +27,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  
+
   await Future.delayed(const Duration(seconds: 4)); // Adjust as needed
   FlutterNativeSplash.remove();
 
@@ -41,7 +41,12 @@ class MainApp extends StatefulWidget {
   int indexNavbar;
   final String profileId;
 
-  MainApp({Key? key, required this.responseBody, required this.indexNavbar, required this.profileId}) : super(key: key);
+  MainApp(
+      {Key? key,
+      required this.responseBody,
+      required this.indexNavbar,
+      required this.profileId})
+      : super(key: key);
 
   @override
   MainAppState createState() => MainAppState();
@@ -81,15 +86,26 @@ class MainAppState extends State<MainApp> {
   Widget linkPageUtama(int idx) {
     switch (idx) {
       case 0:
-        return HomePage(responseBody: widget.responseBody, profileId: widget.profileId,);
+        return HomePage(
+          responseBody: widget.responseBody,
+          profileId: widget.profileId,
+        );
       case 1:
-        return BookingPage(responseBody: widget.responseBody, profileId: widget.profileId,);
+        return BookingPage(
+          responseBody: widget.responseBody,
+          profileId: widget.profileId,
+        );
       case 2:
-        return ActivityPage(responseBody: widget.responseBody, profileId: widget.profileId);
+        return ActivityPage(
+            responseBody: widget.responseBody, profileId: widget.profileId);
       case 3:
-        return AccountPage(responseBody: widget.responseBody, profileId: widget.profileId);
+        return AccountPage(
+            responseBody: widget.responseBody, profileId: widget.profileId);
       default:
-        return HomePage(responseBody: widget.responseBody, profileId: widget.profileId,);
+        return HomePage(
+          responseBody: widget.responseBody,
+          profileId: widget.profileId,
+        );
     }
   }
 }
