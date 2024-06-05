@@ -1,10 +1,17 @@
 import 'dart:convert';
+import 'package:intl/date_symbol_data_file.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:medimate/page/Account/orders.dart';
 import 'package:provider/provider.dart';
 import 'package:medimate/bottomNavBar.dart';
 
 import 'package:medimate/provider/api/appointment_api.dart';
 import 'package:medimate/provider/model/appointment_model.dart';
+
+import 'dart:developer';
+
+import 'package:intl/date_symbol_data_local.dart';
 
 class ActivityPage extends StatefulWidget {
   final String responseBody;
@@ -20,7 +27,7 @@ class _ActivityState extends State<ActivityPage>
 {
   List<dynamic> appointmentList = [];
 
-  List<dynamic> ongoingList = [];
+  List<dynamic> onGoingList = [];
   List<dynamic> recentList = [];
 
   late String accessToken;
@@ -29,10 +36,15 @@ class _ActivityState extends State<ActivityPage>
   @override
   void initState() {
     super.initState();
+    // _initializeLocale();
     _initializeUserId();
     _initializeAccessToken();
     _fetchDataAll();
   }
+
+  // Future<void>_initializeLocale() async {
+  //   await initializeDateFormatting('id_ID', '');
+  // }
 
   void _initializeUserId() {
     final responseBodyMap = jsonDecode(widget.responseBody);
@@ -50,10 +62,29 @@ class _ActivityState extends State<ActivityPage>
             .fetchDataAll(widget.profileId, accessToken); // Pass the access token here
     setState(() {
       appointmentList = appointmentListResponse;
-      print("INI APPOINTMENT");
-      print(appointmentList);
+      // print("INI APPOINTMENT");
+      // print(inspect(appointmentList));
+
+    for (var appointment in appointmentList) 
+    {
+      if (appointment.status == "recent") {
+        recentList.add(appointment);
+      } else if (appointment.status == "ongoing") {
+        onGoingList.add(appointment);
+      }
+    }
+
+      // print(inspect(recentAppointments));
+      // print(inspect(activityAppointments));
+      print(onGoingList);
+      print(onGoingList.length);
+
+      print(recentList);
+      print(recentList.length);
+
+
       
-      // ongoingList = appointmentList.where((appointment) => appointment['status'] == 'ongoing').toList();
+      // ongoingList = appointmentList.where((apjpointment) => appointment['status'] == 'ongoing').toList();
       // recentList = appointmentList.where((appointment) => appointment['status'] == 'recent').toList();
       // print("INI ONGOING");
       // print(ongoingList);
@@ -63,18 +94,15 @@ class _ActivityState extends State<ActivityPage>
     });
   }
 
-  // List<Map> onGoing = 
-  // [
-  //   {"title": "General Medical Check-Up", "waktu": "18 April 2024, 09.00", "dokter": "dr. Sisca Amartha, Sp. J.P.", "lokasi": "Gedung Edelweiss, 5th Floor", "rs": "Mayapada Hospital Bandung"},
-  //   {"title": "General Medical Check-Up", "waktu": "18 April 2024, 09.00", "dokter": "dr. Sisca Amartha, Sp. J.P.", "lokasi": "Gedung Edelweiss, 5th Floor", "rs": "Mayapada Hospital Bandung"},
-  // ];
+  String formatDateHour(String dateTimeStr) {
+    DateTime dateTime = DateTime.parse(dateTimeStr);
+    return DateFormat('d MMMM y, HH:mm').format(dateTime);
+  }
 
-  // List<Map> recentActivity = 
-  // [
-  //   {"title": "Complete Blood Count (CBC)", "waktu": "18 February, 2024", "rs": "Mayapada Hospital Bandung"},
-  //   {"title": "PCR Swab Test for COVID-19", "waktu": "26 January, 2024", "rs": "Rumah Sakit Hasan Sadikin"},
-  //   {"title": "General Medical Check Up", "waktu": "7 December, 2023", "rs": "Rumah Sakit Hermina Arcamanik"},
-  // ];
+  String formatDateTime(String dateTimeStr) {
+    DateTime dateTime = DateTime.parse(dateTimeStr);
+    return DateFormat('d MMMM, y').format(dateTime);
+  }
 
   @override
   Widget build(BuildContext context) 
@@ -149,152 +177,151 @@ class _ActivityState extends State<ActivityPage>
                 (
                   height: 10,
                 ),
-                Consumer<AppointmentAPI>
-                (
-                  builder: (context, item, child) 
-                  {
-                    return SizedBox
-                    ( 
-                      height: appointmentList.length * 150 + 50,
-                      child: ListView.builder
+                SizedBox
+                ( 
+                  // height: appointmentList.length * 150 + 50,
+                  height: onGoingList.length * 150 + 50,
+                  child: ListView.builder
+                  (
+                    
+                    // itemCount: appointmentList.length,
+                    itemCount: onGoingList.length,
+                    itemBuilder: (context, index)
+                    {
+                      // var item = appointmentList[index];
+                      var item = onGoingList[index];
+                      // print("INI ITEM");
+                      // print(item);
+                      return Column
                       (
-                        itemCount: appointmentList.length,
-                        itemBuilder: (context, index)
-                        {
-                          var item = appointmentList[index];
-                          print("INI ITEM");
-                          print(item);
-                          return Column
+                        children: 
+                        [
+                          Container
                           (
-                            children: 
-                            [
-                              Container
-                              (
-                                // height: 100,
-                                decoration: BoxDecoration
+                            // height: 100,
+                            decoration: BoxDecoration
+                            (
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: const Color.fromARGB(255, 113, 115, 189), width: 1.1),
+                            ),
+                            padding: const EdgeInsets.only(left: 14, right: 14, top: 3.4, bottom: 3.4),
+                            child: Column
+                            (
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: 
+                              [
+                                Padding
                                 (
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: const Color.fromARGB(255, 113, 115, 189), width: 1.1),
+                                  padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                                  child: Text
+                                  (
+                                    // item["title"],
+                                    "Tes Darah",
+                                    style: const TextStyle
+                                    (
+                                      color: Color.fromARGB(255, 32, 33, 87),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
+                                  ),
                                 ),
-                                padding: const EdgeInsets.only(left: 14, right: 14, top: 3.4, bottom: 3.4),
-                                child: Column
+                                Text
                                 (
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: 
-                                  [
-                                    Padding
-                                    (
-                                      padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-                                      child: Text
-                                      (
-                                        // item["title"],
-                                        "Tes Darah",
-                                        style: const TextStyle
-                                        (
-                                          color: Color.fromARGB(255, 32, 33, 87),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                    ),
-                                    Text
-                                    (
-                                      item.waktu,
-                                      style: const TextStyle
-                                      (
-                                        color: Color.fromARGB(216, 53, 55, 121),
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 3),
-                                    Text
-                                    (
-                                      item.doctorId,
-                                      style: const TextStyle
-                                      (
-                                        color: Color.fromARGB(216, 53, 55, 121),
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 3),
-                                    Text
-                                    (
-                                      // item["lokasi"],
-                                      "bojongsoang",
-                                      style: const TextStyle
-                                      (
-                                        color: Color.fromARGB(216, 53, 55, 121),
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 3),
-                                    Text
-                                    (
-                                      item.facilityId,
-                                      // item["rs"],
-                                      style: const TextStyle
-                                      (
-                                        color: Color.fromARGB(216, 53, 55, 121),
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                    Center
-                                    (
-                                      child: Padding
-                                      (
-                                        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                                        child: LayoutBuilder
-                                        (
-                                          builder: (context, constraints) 
-                                          {
-                                            final boxWidth = constraints.maxWidth;
-                                            return Container
-                                            (
-                                              width: boxWidth / 2, // set the width to half of the parent container
-                                              decoration: BoxDecoration
-                                              (
-                                                color: const Color.fromARGB(204, 53, 55, 121),
-                                                borderRadius: BorderRadius.circular(6),
-                                              ),
-                                              padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
-                                              child: const Row
-                                              (
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: 
-                                                [
-                                                  Icon
-                                                  (
-                                                    Icons.pin_drop_outlined,
-                                                    color: Colors.white,
-                                                    size: 14,
-                                                  ),
-                                                  SizedBox(width: 6.0),
-                                                  Text
-                                                  (
-                                                    'View on maps',
-                                                    style: TextStyle
-                                                    (
-                                                      color: Colors.white,
-                                                      fontSize: 10,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      )
-                                    ),
-                                  ],
+                                  formatDateHour(item.waktu),
+                                  style: const TextStyle
+                                  (
+                                    color: Color.fromARGB(216, 53, 55, 121),
+                                    fontSize: 12,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 10),
-                            ],
-                          );
-                        },
-                      )
-                    );
-                  }
+                                const SizedBox(height: 3),
+                                Text
+                                (
+                                  item.doctorId,
+                                  style: const TextStyle
+                                  (
+                                    color: Color.fromARGB(216, 53, 55, 121),
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                const SizedBox(height: 3),
+                                Text
+                                (
+                                  // item["lokasi"],
+                                  "bojongsoang",
+                                  style: const TextStyle
+                                  (
+                                    color: Color.fromARGB(216, 53, 55, 121),
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                const SizedBox(height: 3),
+                                Text
+                                (
+                                  item.facilityId,
+                                  // item["rs"],
+                                  style: const TextStyle
+                                  (
+                                    color: Color.fromARGB(216, 53, 55, 121),
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                Center
+                                (
+                                  child: Padding
+                                  (
+                                    padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                                    child: LayoutBuilder
+                                    (
+                                      builder: (context, constraints) 
+                                      {
+                                        final boxWidth = constraints.maxWidth;
+                                        return Container
+                                        (
+                                          width: boxWidth / 2, // set the width to half of the parent container
+                                          decoration: BoxDecoration
+                                          (
+                                            color: const Color.fromARGB(204, 53, 55, 121),
+                                            borderRadius: BorderRadius.circular(6),
+                                          ),
+                                          padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
+                                          child: const Row
+                                          (
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: 
+                                            [
+                                              Icon
+                                              (
+                                                Icons.pin_drop_outlined,
+                                                color: Colors.white,
+                                                size: 14,
+                                              ),
+                                              SizedBox(width: 6.0),
+                                              Text
+                                              (
+                                                // 'View on maps',
+                                                'Done',
+                                                style: TextStyle
+                                                (
+                                                  color: Colors.white,
+                                                  fontSize: 10,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  )
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      );
+                    },
+                  )
                 ),
                 Row
                 (
@@ -331,184 +358,179 @@ class _ActivityState extends State<ActivityPage>
                 (
                   height: 10,
                 ),
-                // Consumer<AppointmentAPI>
-                // (
-                //   builder: (context, item, child) {
-                //     return SizedBox
-                //     ( 
-                //       height: recentList.length * 120 + 50,
-                //       child: Builder
-                //       (
-                //         builder: (context) 
-                //         {
-                //           return ListView.builder
-                //           (
-                //             itemCount: recentList.length,
-                //             itemBuilder: (context, index)
-                //             {
-                //               var item = recentList[index];
-                //               return Column
-                //               (
-                //                 children: 
-                //                 [
-                //                   Container
-                //                   (
-                //                     // height: 100,
-                //                     decoration: BoxDecoration
-                //                     (
-                //                       borderRadius: BorderRadius.circular(12),
-                //                       border: Border.all(color: const Color.fromARGB(255, 113, 115, 189), width: 1.1),
-                //                     ),
-                //                     padding: const EdgeInsets.only(left: 14, right: 14, top: 3.4, bottom: 3.4),
-                //                     child: Column
-                //                     (
-                //                       crossAxisAlignment: CrossAxisAlignment.start,
-                //                       children: 
-                //                       [
-                //                         Padding
-                //                         (
-                //                           padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-                //                           child: Row
-                //                           (
-                //                             children: 
-                //                             [
-                //                               Text
-                //                               (
-                //                                 // item["title"],
-                //                                 "Tes recent",
-                //                                 style: const TextStyle
-                //                                 (
-                //                                   color: Color.fromARGB(255, 32, 33, 87),
-                //                                   fontWeight: FontWeight.bold,
-                //                                   fontSize: 15,
-                //                                 ),
-                //                               ),
-                //                               const Spacer(),
-                //                               const Icon
-                //                               (
-                //                                 Icons.more_vert,
-                //                                 color: Color.fromARGB(165, 32, 33, 87),
-                //                               ),
-                //                             ],
-                //                           ),
-                //                         ),
-                //                         Text
-                //                         (
-                //                           item["waktu"],
-                //                           style: const TextStyle
-                //                           (
-                //                             color: Color.fromARGB(216, 53, 55, 121),
-                //                             fontSize: 12,
-                //                           ),
-                //                         ),
-                //                         const SizedBox(height: 3),
-                //                         Text
-                //                         (
-                //                           // item["rs"],
-                //                           item["facilityId"],
-                //                           style: const TextStyle
-                //                           (
-                //                             color: Color.fromARGB(255, 53, 55, 121),
-                //                             fontSize: 12,
-                //                           ),
-                //                         ),
-                //                         Padding
-                //                         (
-                //                           padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                //                           child: LayoutBuilder
-                //                           (
-                //                             builder: (context, constraints) 
-                //                             {
-                //                               final boxWidth = constraints.maxWidth;
-                //                               return Row
-                //                               (
-                //                                 children: 
-                //                                 [
-                //                                   Container
-                //                                   (
-                //                                     width: boxWidth / 3,
-                //                                     decoration: BoxDecoration
-                //                                     (
-                //                                       color: const Color.fromARGB(255, 53, 55, 121),
-                //                                       borderRadius: BorderRadius.circular(6),
-                //                                     ),
-                //                                     padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
-                //                                     child: const Row
-                //                                     (
-                //                                       mainAxisAlignment: MainAxisAlignment.center,
-                //                                       children: 
-                //                                       [
-                //                                         Icon
-                //                                         (
-                //                                           Icons.download,
-                //                                           color: Colors.white,
-                //                                           size: 14,
-                //                                         ),
-                //                                         SizedBox(width: 6.0),
-                //                                         Text
-                //                                         (
-                //                                           'Download',
-                //                                           style: TextStyle
-                //                                           (
-                //                                             color: Colors.white,
-                //                                             fontSize: 12,
-                //                                           ),
-                //                                         ),
-                //                                       ],
-                //                                     ),
-                //                                   ),
-                //                                   const SizedBox(width: 18),
-                //                                   Container
-                //                                   (
-                //                                     width: boxWidth / 3,
-                //                                     decoration: BoxDecoration
-                //                                     (
-                //                                       color: const Color.fromARGB(255, 53, 55, 121),
-                //                                       borderRadius: BorderRadius.circular(6),
-                //                                     ),
-                //                                     padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
-                //                                     child: const Row
-                //                                     (
-                //                                       mainAxisAlignment: MainAxisAlignment.center,
-                //                                       children: 
-                //                                       [
-                //                                         Icon
-                //                                         (
-                //                                           Icons.visibility_outlined,
-                //                                           color: Colors.white,
-                //                                           size: 14,
-                //                                         ),
-                //                                         SizedBox(width: 6.0),
-                //                                         Text
-                //                                         (
-                //                                           'View Report',
-                //                                           style: TextStyle
-                //                                           (
-                //                                             color: Colors.white,
-                //                                             fontSize: 12,
-                //                                           ),
-                //                                         ),
-                //                                       ],
-                //                                     ),
-                //                                   ),
-                //                                 ],
-                //                               );
-                //                             },
-                //                           ),
-                //                         ),
-                //                       ],
-                //                     ),
-                //                   ),
-                //                   const SizedBox(height: 10),
-                //                 ],
-                //               );
-                //             },
-                //           );
-                //         },
-                //       )
-                //     );
-                //   }
-                // ),
+                SizedBox
+                ( 
+                  height: recentList.length * 120 + 50,
+                  child: Builder
+                  (
+                    builder: (context) 
+                    {
+                      return ListView.builder
+                      (
+                        itemCount: recentList.length,
+                        itemBuilder: (context, index)
+                        {
+                          var item = recentList[index];
+                          return Column
+                          (
+                            children: 
+                            [
+                              Container
+                              (
+                                // height: 100,
+                                decoration: BoxDecoration
+                                (
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(color: const Color.fromARGB(255, 113, 115, 189), width: 1.1),
+                                ),
+                                padding: const EdgeInsets.only(left: 14, right: 14, top: 3.4, bottom: 3.4),
+                                child: Column
+                                (
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: 
+                                  [
+                                    Padding
+                                    (
+                                      padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                                      child: Row
+                                      (
+                                        children: 
+                                        [
+                                          Text
+                                          (
+                                            // item["title"],
+                                            "Swab COVID-19",
+                                            style: const TextStyle
+                                            (
+                                              color: Color.fromARGB(255, 32, 33, 87),
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          const Icon
+                                          (
+                                            Icons.more_vert,
+                                            color: Color.fromARGB(165, 32, 33, 87),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Text
+                                    (
+                                      formatDateTime(item.waktu),
+                                      style: const TextStyle
+                                      (
+                                        color: Color.fromARGB(216, 53, 55, 121),
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 3),
+                                    Text
+                                    (
+                                      // item["rs"],
+                                      item.facilityId,
+                                      style: const TextStyle
+                                      (
+                                        color: Color.fromARGB(255, 53, 55, 121),
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    Padding
+                                    (
+                                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                                      child: LayoutBuilder
+                                      (
+                                        builder: (context, constraints) 
+                                        {
+                                          final boxWidth = constraints.maxWidth;
+                                          return Row
+                                          (
+                                            children: 
+                                            [
+                                              Container
+                                              (
+                                                width: boxWidth / 3,
+                                                decoration: BoxDecoration
+                                                (
+                                                  color: const Color.fromARGB(255, 53, 55, 121),
+                                                  borderRadius: BorderRadius.circular(6),
+                                                ),
+                                                padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
+                                                child: const Row
+                                                (
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: 
+                                                  [
+                                                    Icon
+                                                    (
+                                                      Icons.download,
+                                                      color: Colors.white,
+                                                      size: 14,
+                                                    ),
+                                                    SizedBox(width: 6.0),
+                                                    Text
+                                                    (
+                                                      'Download',
+                                                      style: TextStyle
+                                                      (
+                                                        color: Colors.white,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(width: 18),
+                                              Container
+                                              (
+                                                width: boxWidth / 3,
+                                                decoration: BoxDecoration
+                                                (
+                                                  color: const Color.fromARGB(255, 53, 55, 121),
+                                                  borderRadius: BorderRadius.circular(6),
+                                                ),
+                                                padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
+                                                child: const Row
+                                                (
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: 
+                                                  [
+                                                    Icon
+                                                    (
+                                                      Icons.visibility_outlined,
+                                                      color: Colors.white,
+                                                      size: 14,
+                                                    ),
+                                                    SizedBox(width: 6.0),
+                                                    Text
+                                                    (
+                                                      'View Report',
+                                                      style: TextStyle
+                                                      (
+                                                        color: Colors.white,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  )
+                ),
               ],
             ),
           ),

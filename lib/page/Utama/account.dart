@@ -183,10 +183,10 @@ class _AccountState extends State<AccountPage> {
                     ),
                     
                     const SizedBox(height: 40),
-                    const InkWellButtonWithIcon(
+                    InkWellButtonWithIcon(
                       icon: Icons.edit_outlined,
                       text: "Edit Profile",
-                      route: EditProfilePage(),
+                      route: EditProfilePage(responseBody: widget.responseBody, profileId: widget.profileId,),
                     ),
                     const SizedBox(height: 15),
                     const InkWellButtonWithIcon(

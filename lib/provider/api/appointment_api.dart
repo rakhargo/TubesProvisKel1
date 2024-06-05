@@ -119,12 +119,40 @@ class AppointmentAPI with ChangeNotifier {
     );
     // print("yes2");
     if (response.statusCode == 200) {
-      print('appointmner added successfully');
+      print('appointment added successfully');
       return setFromJson(jsonDecode(response.body));
     } else {
       print('Failed to add appointmenr: ${response.reasonPhrase}');
       throw Exception(response.reasonPhrase);
     }
   }
+
+  // Future<Appointment> updateAppointment(int patientId, int doctorId, int facilityId, String status, String waktu, String metodePembayaran, String token) async {
+  //   // print("yes1");
+  //   final response = await http.put(Uri.parse('$url/appointment_update/'), headers: {
+  //     'Content-Type': 'application/json',
+  //     'Authorization': token,
+  //   }, 
+  //   body: jsonEncode({
+  //     "patientId": patientId, 
+  //     "doctorId": doctorId, 
+  //     "facilityId": facilityId,
+  //     "status": status,
+  //     "waktu": waktu,
+  //     "metodePembayaran": metodePembayaran,
+  //   })
+  //   // body: {
+  //   //   {"item_id": item_id, "user_id": user_id, "quantity": quantity}
+  //   // }
+  //   );
+  //   // print("yes2");
+  //   if (response.statusCode == 200) {
+  //     print('appointment added successfully');
+  //     return setFromJson(jsonDecode(response.body));
+  //   } else {
+  //     print('Failed to add appointmenr: ${response.reasonPhrase}');
+  //     throw Exception(response.reasonPhrase);
+  //   }
+  // }
 
 }

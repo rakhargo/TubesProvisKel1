@@ -1,14 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
-void main() 
-{
-  runApp(const EditProfilePage());
-}
+import 'package:provider/provider.dart';
+import 'package:medimate/provider/api/profile_api.dart';
+import 'package:medimate/provider/model/profile_model.dart';
+import 'dart:convert';
 
 class EditProfilePage extends StatefulWidget {
-  const EditProfilePage({super.key});
+  final String responseBody;
+  final String profileId;
+  const EditProfilePage({Key? key, required this.responseBody, required this.profileId}) : super(key: key);
 
   @override
   State<EditProfilePage> createState() => _EditProfileState();
@@ -16,6 +15,40 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfilePage>
 {
+  Profile profile = Profile
+  (
+    id: "",
+    userId: "",
+    nama: "",
+    tanggalLahir: "",
+    jenisKelamin: "",
+    alamat: "",
+    noTelepon: "",
+    email: "",
+    userPhoto: ""
+  );
+
+  late String accessToken;
+  late String userId;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeUserId();
+    _initializeAccessToken();
+    // _fetchHealthFacility(widget.healthFacilityId);
+  }
+
+  void _initializeUserId() {
+    final responseBodyMap = jsonDecode(widget.responseBody);
+    userId = responseBodyMap['user_id'].toString();
+  }
+
+  void _initializeAccessToken() {
+    final responseBodyMap = jsonDecode(widget.responseBody);
+    accessToken = responseBodyMap['access_token'];
+  }
+
   @override
   Widget build(BuildContext context) 
   {
