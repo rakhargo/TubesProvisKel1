@@ -1,9 +1,12 @@
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 // import 'package:medimate/provider/model/article_model.dart';
 import '/provider/model/healthFacility_model.dart';
+import '/provider/model/specialistAndPolyclinic_model.dart';
+import '/provider/api/specialistAndPoliclinic_api.dart';
 
 class HealthFacilityAPI with ChangeNotifier {
   final String url = 'http://127.0.0.1:8000';
@@ -94,7 +97,9 @@ class HealthFacilityAPI with ChangeNotifier {
         'Authorization': 'Bearer $accessToken',
       },
     );
-    // print("DATA BY PROFILE");
+    // print(response);
+    // print("INI RESPONSE");
+    // print(response);
     if (response.statusCode == 200) {
       // print(jsonDecode(response.body));
       // print(response.body);
@@ -103,6 +108,48 @@ class HealthFacilityAPI with ChangeNotifier {
       throw Exception(response.reasonPhrase);
     }
   }
+
+  Future<List<RelasiRsPoli>> fetchRelasiRsPoli(String rsId, String accessToken) async {
+    final response = await http.get(
+      Uri.parse('$url/relasi_rs_poli_rs_id/$rsId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      List<RelasiRsPoli> relasiList = data.map((e) => RelasiRsPoli.fromJson(e)).toList();
+      print("INI LIST RELASI");
+      print(relasiList);
+      return relasiList;
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
+  // Future<List> fetchPoliByRsId(String rsId, String accessToken) async {
+  //   print("SEBELUM RESPONSE");
+  //   final response = await http.get(
+  //     Uri.parse('$url/relasi_rs_poli_rs_id/$rsId'),
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Authorization': 'Bearer $accessToken',
+  //     },
+  //   );
+  //   print("INI RESPONSE");
+  //   print(response.body);
+  //   print(response.statusCode);
+  //   if (response.statusCode == 200) {
+  //     List<dynamic> data = jsonDecode(response.body);
+  //     print(data);
+  //     // List<SpecialistAndPolyclinic> poliList = data.map((e) => SpecialistAndPolyclinic.fromJson(e)).toList();
+  //     // print("POLI LIST $poliList");
+  //     return poliList;
+  //   } else {
+  //     throw Exception(response.reasonPhrase);
+  //   }
+  // }
 
   // Future<http.Response> fetchImage(String profile_id, String accessToken) async {
   //   final response = await http.get(

@@ -1,5 +1,5 @@
 class Doctor {
-  final int id;
+  final String id;
   final String nama;
   final String spesialisasi;
   final int pengalaman;

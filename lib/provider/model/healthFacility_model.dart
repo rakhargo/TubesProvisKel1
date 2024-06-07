@@ -26,3 +26,24 @@ class HealthFacility {
   required this.logoFaskes,
   }); 
 }
+
+class RelasiRsPoli 
+{
+  final String rsId;
+  final String poliId;
+  final String id;
+
+  RelasiRsPoli({
+    required this.rsId, 
+    required this.poliId, 
+    required this.id,
+    });
+
+  factory RelasiRsPoli.fromJson(Map<String, dynamic> json) {
+    return RelasiRsPoli(
+      rsId: json['rsId'].toString(),
+      poliId: json['poliId'].toString(),
+      id: json['id'].toString(),
+    );
+  }
+}

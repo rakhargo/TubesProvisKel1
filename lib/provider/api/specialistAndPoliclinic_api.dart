@@ -25,7 +25,7 @@ class SpecialistAndPolyclinicList with ChangeNotifier {
 
   Future<List> fetchData(String accessToken) async {
     final response = await http.get(
-      Uri.parse('$url/specialist_and_polyclinic'),
+      Uri.parse('$url/specialist_and_polyclinic/'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken',

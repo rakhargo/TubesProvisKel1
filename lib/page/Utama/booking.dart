@@ -1,11 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:medimate/provider/api/healthFacility_api.dart';
 import 'package:provider/provider.dart';
 import 'package:medimate/page/hospitalProfile.dart';
 import 'package:medimate/page/doctor_profile.dart';
 import 'package:medimate/provider/api/specialistAndPoliclinic_api.dart';
 import 'package:medimate/provider/model/specialistAndPolyclinic_model.dart';
+
+import 'dart:developer';
 
 class BookingPage extends StatefulWidget 
 {
@@ -19,94 +22,41 @@ class BookingPage extends StatefulWidget
 
 class _BookingState extends State<BookingPage>
 {
-  List<Map<String, dynamic>> faskes = 
-  [
-    {
-      "topImage": 'rs_mayapada.png',
-      "logo"    : 'assets/images/Booking/Logo/logo rs mayapada.png',
-      "nama"    : 'Mayapada Hospital\nBandung',
-      "jenis"   : 'General Hospital',
-      "jarak"   : '1.2',
-      "rating"  : '5.0',
-      "address" : 'Jl. Terusan Buah Batu No.5,\nBatununggal, Kec. Bandung Kidul, Kota\nBandung, Jawa Barat 40266',
-      "profile" : 'Mayapada Hospital is one of the best private hospitals founded by Mayapada Healthcare Group on June 1 2008.',
-    },
 
-    {
-      "topImage": 'rs_mayapada.png',
-      "logo"    : 'assets/images/Booking/Logo/logo rsgm unpad.png',
-      "nama"    : 'RSGM Universitas\nPajajaran',
-      "jenis"   : 'Specialty Hospital',
-      "jarak"   : '2.5', 
-      "rating"  : '2.5', 
-      "address" : 'Jl. Sekeloa Selatan No.1, Lebakgede, Kecamatan Coblong, Kota Bandung, Jawa Barat 40132',
-      "profile" : 'Rumah sakit',
-    },
+  List<dynamic> faskesList = [];
+  List<dynamic> specialistAndPolyclinicList = [];
+  late String accessToken;
 
-    {
-      "topImage": 'rs_mayapada.png',
-      "logo"    : 'images/Booking/Logo/logo_ava1.png',
-      "nama"    : 'Klinik AVA\nDental Aesthetic',
-      "jenis"   : 'Clinic',
-      "jarak"   : '3.8',
-      "rating"  : '3.8',
-      "address" : 'Jl. Gatot Subroto No.91-D, Malabar, Kec. Lengkong, Kota Bandung, Jawa Barat 40262',
-      "profile" : 'RS',
-    },
+  @override
+  void initState() {
+    super.initState();
+    _initializeAccessToken();
+    _fetchSpecialistAndPolyclinic();
+    _fetchFaskes();
+  }
 
-    {
-      "topImage": 'rs_mayapada.png',
-      "logo"    : 'assets/images/Booking/Logo/logo rshs.png',
-      "nama"    : 'Rumah Sakit\nSanto Borromeus',
-      "jenis"   : 'General Hospital',
-      "jarak"   : '4.1',
-      "rating"  : '4.1',
-      "address" : 'Jl. Ir. H. Juanda No.100, Lebakgede, Kecamatan Coblong, Kota Bandung, Jawa Barat 40132',
-      "profile" : 'Rafie'
-    },
+  void _initializeAccessToken() {
+    final responseBodyMap = jsonDecode(widget.responseBody);
+    accessToken = responseBodyMap['access_token'];
+  }
 
-  ];
+  Future<void> _fetchFaskes() async {
+    final faskesResponse =
+        await Provider.of<HealthFacilityAPI>(context, listen: false)
+            .fetchDataAll(accessToken); // Pass the access token here
+    setState(() {
+      faskesList = faskesResponse;
+    });
+  }
 
-  // List<Map<String, dynamic>> specialist = 
-  // [
-  //   {'image': 'images/Booking/Icon/cardiologist.png', 'nama': 'Cardiologist'},
-  //   {'image': 'images/Booking/Icon/pulmonologist.png', 'nama': 'Pulmonologist'},
-  //   {'image': 'images/Booking/Icon/dermatologist.png', 'nama': 'Dermatologist'},
-  //   {'image': 'images/Booking/Icon/gynecologist.png', 'nama': 'Obgyn'},
-  //   {'image': 'images/Booking/Icon/pediatric.png', 'nama': 'Pediatric'},
-  //   {'image': 'images/Booking/Icon/orthopedist.png', 'nama': 'Orthopedist'},
-  //   {'image': 'images/Booking/Icon/urologist.png', 'nama': 'Urologist'},
-  //   {'image': 'images/Booking/Icon/neurologist.png', 'nama': 'Neurologist'},
-  //   {'image': 'images/Booking/Icon/dentist.png', 'nama': 'Dentist'},
-  //   {'image': 'images/Booking/Icon/Oncologist.png', 'nama': 'Oncologist'},
-  //   {'image': 'images/Booking/Icon/Otolaryngologist.png', 'nama': 'Otolaryngologist'},
-  //   {'image': 'images/Booking/Icon/Immunogologist.png', 'nama': 'Immunogologist'},
-  // ];
-
-
-    List<dynamic> specialistAndPolyclinicList = [];
-    late String accessToken;
-
-    @override
-    void initState() {
-      super.initState();
-      _initializeAccessToken();
-      _fetchSpecialistAndPolyclinic();
-    }
-
-    void _initializeAccessToken() {
-      final responseBodyMap = jsonDecode(widget.responseBody);
-      accessToken = responseBodyMap['access_token'];
-    }
-
-    Future<void> _fetchSpecialistAndPolyclinic() async {
-      final specialistAndPolyclinicResponse =
-          await Provider.of<SpecialistAndPolyclinicList>(context, listen: false)
-              .fetchData(accessToken); // Pass the access token here
-      setState(() {
-        specialistAndPolyclinicList = specialistAndPolyclinicResponse;
-      });
-    }
+  Future<void> _fetchSpecialistAndPolyclinic() async {
+    final specialistAndPolyclinicResponse =
+        await Provider.of<SpecialistAndPolyclinicList>(context, listen: false)
+            .fetchData(accessToken); // Pass the access token here
+    setState(() {
+      specialistAndPolyclinicList = specialistAndPolyclinicResponse;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -202,116 +152,100 @@ class _BookingState extends State<BookingPage>
                   ),
                 ),
                 const SizedBox(height: 5),
-                SingleChildScrollView
+                Consumer<HealthFacilityAPI>
                 (
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: List.generate
+                  builder: (context, item, child) 
+                  {
+                    // print(inspect(faskesList.first));
+                    return SingleChildScrollView
                     (
-                      faskes.length,
-                      (index) => GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                            Map<String, dynamic> hospitalDetails = faskes[index];
-                            return HospitalPage(hospitalDetails: hospitalDetails, responseBody: widget.responseBody, profileId: widget.profileId,);
-                          }));
-                        },
-                        child: Container
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: List.generate
                         (
-                          width: 140,
-                          height: 155,
-                          margin: const EdgeInsets.only(right: 20),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: const Color(0xffD9D9D9),
-                              width: 1,
-                            ),
-                          ),
-                          child: Stack
+                          faskesList.length,
+                          (index) => GestureDetector
                           (
-                            children: [
-                              Column(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                                // Map<String, dynamic> hospitalDetails = faskesList[index];
+                                String idFaskes = faskesList[index].id;
+                                return HospitalPage(idFaskes: idFaskes, responseBody: widget.responseBody, profileId: widget.profileId,);
+                              }));
+                            },
+                            child: Container
+                            (
+                              width: 140,
+                              height: 155,
+                              margin: const EdgeInsets.only(right: 20),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: const Color(0xffD9D9D9),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Stack
+                              (
                                 children: [
-                                  Container(
-                                    width: 140,
-                                    height: 60,
-                                    decoration: const BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(20),
-                                        topRight: Radius.circular(20),
+                                  Column(
+                                    children: [
+                                      Container(
+                                        width: 140,
+                                        height: 60,
+                                        decoration: const BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(20),
+                                            topRight: Radius.circular(20),
+                                          ),
+                                          color: Color(0xBF7173BD),
+                                        ),
+                                        child: ClipOval(
+                                          child: Transform.scale(
+                                            scale: 0.7,
+                                            child: Image.asset(
+                                              "assets/images/Booking/Logo/${faskesList[index].logoFaskes}",
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                      color: Color(0xBF7173BD),
-                                    ),
-                                    child: ClipOval(
-                                      child: Transform.scale(
-                                        scale: 0.7,
-                                        child: Image.asset(
-                                          faskes[index]["logo"],
+                                      Padding(
+                                        padding: const EdgeInsets.all(5),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              faskesList[index].namaFasilitas,
+                                              style: const TextStyle(
+                                                fontSize: 13,
+                                                color: Color(0xFF0F1035),
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              faskesList[index].tingkatFasilitas,
+                                              style: const TextStyle(
+                                                fontSize: 9,
+                                                color: Color(0xD8353779),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 5)
+                                          ],
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(5),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(height: 5),
-                                        Text(
-                                          faskes[index]["nama"],
-                                          style: const TextStyle(
-                                            fontSize: 13,
-                                            color: Color(0xFF0F1035),
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 5),
-                                        Text(
-                                          faskes[index]["jenis"],
-                                          style: const TextStyle(
-                                            fontSize: 9,
-                                            color: Color(0xD8353779),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 5),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            color: const Color(0x7FD9D9D9),
-                                            borderRadius: BorderRadius.circular(5),
-                                          ),
-                                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              const Icon(
-                                                Icons.location_on_outlined,
-                                                size: 10,
-                                                color: Color(0xFF353779),
-                                              ),
-                                              const SizedBox(width: 4),
-                                              Text(
-                                                '${faskes[index]["jarak"]} km',
-                                                style: const TextStyle(
-                                                  fontSize: 8,
-                                                  color: Color(0xFF353779),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                    ],
                                   ),
                                 ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
+                    );
+                  }
                 ),
 
                 const SizedBox(height: 15),
@@ -364,7 +298,6 @@ class _BookingState extends State<BookingPage>
                       itemCount: item.specialistAndPoliclinicList.length,
                       itemBuilder: (context, index) {
                         final singleItem = item.specialistAndPoliclinicList[index];
-                        // var item = specialist[index];
                         return GestureDetector(
                           onTap: () {
                             Navigator.push(

@@ -1,14 +1,21 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/cupertino.dart';
+import 'package:medimate/provider/api/specialistAndPoliclinic_api.dart';
+import 'package:medimate/provider/model/healthFacility_model.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:medimate/page/doctor_profile.dart';
+import 'package:medimate/provider/api/healthFacility_api.dart';
 
 class HospitalPage extends StatefulWidget {
-  final Map<String, dynamic> hospitalDetails;
-  final String responseBody;
+  // final Map<String, dynamic> hospitalDetails;
   final String profileId;
+  final String idFaskes;
+  final String responseBody;
 
-  const HospitalPage({Key? key, required this.hospitalDetails, required this.responseBody, required this.profileId}) : super(key: key);
+  const HospitalPage({Key? key, required this.idFaskes, required this.responseBody, required this.profileId}) : super(key: key);
 
   @override
   State<HospitalPage> createState() => _HospitalState();
@@ -16,18 +23,104 @@ class HospitalPage extends StatefulWidget {
 
 class _HospitalState extends State<HospitalPage>
 {
-  List<Map> services = 
-  [
-    {"servicesName": "Cardiologist", "image": "cardiologist.png", "linkTo": ""},
-    {"servicesName": "Dentist", "image": "dentist.png", "linkTo": ""},
-  ];
+  HealthFacility faskesDetails = HealthFacility
+  (
+    id: "",
+    namaFasilitas: "",
+    alamatFasilitas: "",
+    kecamatanFasilitas: "",
+    kotaKabFasilitas: "",
+    kodePosFasilitas: "",
+    tingkatFasilitas: "",
+    jumlahPoliklinik: "",
+    daftarPoliklinik: "",
+    fotoFaskes: "",
+    logoFaskes: "",
+  );
+  // List<dynamic> specialistAndPolyclinicList = [];
+  List<Map<String, dynamic>> specialistAndPolyclinicList = [];
+  late String accessToken;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeAccessToken();
+    _fetchFaskesById();
+    _fetchPoliByFaskesId(widget.idFaskes);
+  }
+
+  void _initializeAccessToken() {
+    final responseBodyMap = jsonDecode(widget.responseBody);
+    accessToken = responseBodyMap['access_token'];
+  }
+
+  Future<void> _fetchFaskesById() async {
+    final faskesDetailsResponse =
+        await Provider.of<HealthFacilityAPI>(context, listen: false)
+            .fetchDataById(widget.idFaskes, accessToken); // Pass the access token here
+            // print(faskesDetailsResponse);
+    setState(() {
+      faskesDetails = faskesDetailsResponse;
+      // print(inspect(faskesDetails));
+      // print(faskesDetailsResponse);
+    });
+  }
+  
+  // Future<void> _fetchPoliByFaskesId() async {
+  //   final specialistAndPolyclinicListResponse =
+  //       await Provider.of<HealthFacilityAPI>(context, listen: false)
+  //           .getPoliByRsId(widget.idFaskes, accessToken); // Pass the access token here
+  //           // print(specialistAndPolyclinicListResponse);
+  //   print("SETELAH FETCH");
+  //   setState(() {
+  //     specialistAndPolyclinicList = specialistAndPolyclinicListResponse;
+  //     print("INI INSPECT POLI");
+  //     print(inspect(specialistAndPolyclinicList));
+  //     // print(specialistAndPolyclinicListResponse);
+  //   });
+  // }
+
+  // Future<List<Map<String, dynamic>>> getPoliByRsId(String rsId, String accessToken) async {
+  Future<void> _fetchPoliByFaskesId(String faskesId) async {
+    // await fetchDataAll(accessToken);
+    final _healthFacilityList = await Provider.of<HealthFacilityAPI>(context, listen: false).fetchDataAll(accessToken);
+    final _poliList = await Provider.of<SpecialistAndPolyclinicList>(context, listen: false).fetchData(accessToken);
+    List<RelasiRsPoli> relasiRsPoliList = await Provider.of<HealthFacilityAPI>(context, listen: false).fetchRelasiRsPoli(faskesId, accessToken);
+    List<Map<String, dynamic>> result = [];
+    // print("SEBELUM PROSES JOIN");
+    for (var relasi in relasiRsPoliList) {
+      // print("RELASI-JOIN-FOR");
+      var combinedData = {
+        'healthFacility': _healthFacilityList.firstWhere((hf) => hf.id == relasi.rsId),
+        'poli': _poliList.firstWhere((p) => p.id == relasi.poliId),
+      };
+      // print("ABIS BIKIN COMBINED");
+      result.add(combinedData);
+    }
+    // print("INI LIST JOIN");
+    //   print(result);
+    setState(() {
+      specialistAndPolyclinicList = result;
+      print("INI INSPECT POLI");
+      print(inspect(specialistAndPolyclinicList));
+      // print(specialistAndPolyclinicListResponse);
+    });
+  }
+
+  // List<Map> services = 
+  // [
+  //   {"servicesName": "Cardiologist", "image": "cardiologist.png", "linkTo": ""},
+  //   {"servicesName": "Dentist", "image": "dentist.png", "linkTo": ""},
+  // ];
+
   @override
   Widget build(BuildContext context) 
   {
     return MaterialApp
     (
       debugShowCheckedModeBanner: false,
-      title: widget.hospitalDetails['nama']!,
+      // title: widget.hospitalDetails['nama']!,
+      // title: faskesDetails.namaFasilitas,
       home: DefaultTabController
       (
         length: 2,
@@ -48,7 +141,10 @@ class _HospitalState extends State<HospitalPage>
                     (
                       image: DecorationImage
                       (
-                        image: AssetImage('images/Booking/Logo/${widget.hospitalDetails['topImage']}'),
+                        // image: AssetImage('images/Booking/Logo/${faskesDetails.fotoFaskes}'),
+                        image: AssetImage("images/Booking/Logo/${faskesDetails.fotoFaskes}"),
+
+                        // image: AssetImage('images/Booking/Logo/rs_mayapada.png'),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -96,7 +192,8 @@ class _HospitalState extends State<HospitalPage>
                         (
                           child: Text
                           (
-                            widget.hospitalDetails['nama']!,
+                            // widget.hospitalDetails['nama']!,
+                            faskesDetails.namaFasilitas,
                             style: const TextStyle
                             (
                               color: Color(0xFF090F47),
@@ -105,72 +202,74 @@ class _HospitalState extends State<HospitalPage>
                             ),
                           ),
                         ),
-                        Column
-                        (
-                          children: 
-                          [
-                            Container
-                            (
-                              decoration: BoxDecoration
-                              (
-                                color: const Color.fromARGB(128, 231, 231, 231),
-                                borderRadius: BorderRadius.circular(3)
-                              ),
-                              child: Row
-                              ( 
-                                children: 
-                                [
-                                  const Icon
-                                  (
-                                    Icons.location_on_outlined,
-                                  ),
-                                  Text
-                                  (
-                                    '${widget.hospitalDetails['jarak']} Km',
-                                    style: const TextStyle
-                                    (
-                                      color: Color.fromARGB(255, 9, 15, 71)
-                                    ),
-                                  )
-                                ],
-                              ), 
-                            ),
-                            const SizedBox(height: 5),
-                            Container
-                            (
-                              decoration: BoxDecoration
-                              (
-                                color: const Color.fromARGB(128, 231, 231, 231),
-                                borderRadius: BorderRadius.circular(3)
-                              ),
-                              child: Row
-                              ( 
-                                children: 
-                                [
-                                  const Icon
-                                  (
-                                    Icons.star,
-                                    color: Colors.yellow,
-                                  ),
-                                  Text
-                                  (
-                                    widget.hospitalDetails['rating']!,
-                                    style: const TextStyle
-                                    (
-                                      color: Color.fromARGB(255, 9, 15, 71)
-                                    ),
-                                  )
-                                ],
-                              ), 
-                            ),
-                          ],
-                        )
+                        // Column
+                        // (
+                        //   children: 
+                        //   [
+                        //     Container
+                        //     (
+                        //       decoration: BoxDecoration
+                        //       (
+                        //         color: const Color.fromARGB(128, 231, 231, 231),
+                        //         borderRadius: BorderRadius.circular(3)
+                        //       ),
+                        //       child: Row
+                        //       ( 
+                        //         children: 
+                        //         [
+                        //           const Icon
+                        //           (
+                        //             Icons.location_on_outlined,
+                        //           ),
+                        //           Text
+                        //           (
+                        //             '${widget.hospitalDetails['jarak']} Km',
+                        //             style: const TextStyle
+                        //             (
+                        //               color: Color.fromARGB(255, 9, 15, 71)
+                        //             ),
+                        //           )
+                        //         ],
+                        //       ), 
+                        //     ),
+                        //     const SizedBox(height: 5),
+                        //     Container
+                        //     (
+                        //       decoration: BoxDecoration
+                        //       (
+                        //         color: const Color.fromARGB(128, 231, 231, 231),
+                        //         borderRadius: BorderRadius.circular(3)
+                        //       ),
+                        //       child: Row
+                        //       ( 
+                        //         children: 
+                        //         [
+                        //           const Icon
+                        //           (
+                        //             Icons.star,
+                        //             color: Colors.yellow,
+                        //           ),
+                        //           Text
+                        //           (
+                        //             widget.hospitalDetails['rating']!,
+                        //             style: const TextStyle
+                        //             (
+                        //               color: Color.fromARGB(255, 9, 15, 71)
+                        //             ),
+                        //           )
+                        //         ],
+                        //       ), 
+                        //     ),
+                        //   ],
+                        // )
                       ],
                     ),
                     const SizedBox(height: 10,),
                     Text
                     (
-                      widget.hospitalDetails['jenis']!,
+                      // widget.hospitalDetails['jenis']!,
+                      faskesDetails.tingkatFasilitas,
+                      // "Tingkat",
                       style: const TextStyle
                       (
                         color: Color.fromARGB(255, 143, 143, 143)
@@ -213,10 +312,12 @@ class _HospitalState extends State<HospitalPage>
                             mainAxisExtent: 150,
                             crossAxisSpacing: 50
                           ),
-                          itemCount: services.length,
+                          // itemCount: services.length,
+                          itemCount: specialistAndPolyclinicList.length,
                           itemBuilder: (context, index)
                           {  
-                            var item = services[index];
+                            // var item = services[index];
+                            var item = specialistAndPolyclinicList[index];
                             return GestureDetector
                             (
                               onTap: () 
@@ -247,12 +348,12 @@ class _HospitalState extends State<HospitalPage>
                                       padding: const EdgeInsets.all(15.0),
                                       child: Image
                                       (
-                                        image: AssetImage("images/Booking/Icon/${item['image']}"),
+                                        image: AssetImage("images/Booking/Icon/${item['poli'].icon}"),
                                       ),
                                     ),
                                     Text
                                     (
-                                      item['servicesName'],
+                                      item['poli'].name,
                                       textAlign: TextAlign.center,
                                       style: const TextStyle
                                       (
@@ -297,7 +398,8 @@ class _HospitalState extends State<HospitalPage>
                                     ),
                                     Text
                                     (
-                                      widget.hospitalDetails['address']!,
+                                      // widget.hospitalDetails['address']!,
+                                      "${faskesDetails.alamatFasilitas}, ${faskesDetails.kecamatanFasilitas}, ${faskesDetails.kotaKabFasilitas}, ${faskesDetails.kodePosFasilitas}",
                                       style: const TextStyle
                                       (
                                         color: Color.fromARGB(255, 143, 143, 143)
@@ -358,7 +460,9 @@ class _HospitalState extends State<HospitalPage>
                               ),
                               Text
                               (
-                                widget.hospitalDetails['profile']!,
+                                // widget.hospitalDetails['profile']!,
+                                "Ini profile ${faskesDetails.namaFasilitas}",
+                                // "Profile",
                                 style: const TextStyle
                                 (
                                   color: Color.fromARGB(255, 143, 143, 143),
