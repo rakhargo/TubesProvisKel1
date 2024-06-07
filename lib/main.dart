@@ -5,11 +5,13 @@ import 'package:medimate/provider/api/profile_api.dart';
 import 'package:medimate/provider/api/specialistAndPoliclinic_api.dart';
 import 'package:medimate/provider/api/healthFacility_api.dart';
 import 'package:medimate/provider/api/appointment_api.dart';
+import 'package:medimate/provider/api/doctor_api.dart';
 
 import 'package:medimate/provider/model/profile_model.dart';
 import 'package:medimate/provider/model/specialistAndPolyclinic_model.dart';
 import 'package:medimate/provider/model/healthFacility_model.dart';
 import 'package:medimate/provider/model/appointment_model.dart';
+import 'package:medimate/provider/model/doctor_model.dart';
 
 import 'page/Screens/Welcome/welcome_screen.dart';
 import 'page/Utama/home.dart';
@@ -75,7 +77,7 @@ class MainAppState extends State<MainApp> {
         ChangeNotifierProvider(create: (_) => SpecialistAndPolyclinicAPI()),
         ChangeNotifierProvider(create: (_) => ProfileAPI()),
         ChangeNotifierProvider(create: (_) => HealthFacilityAPI()),
-        // ChangeNotifierProvider(create: (_) => DoctorAPI()),
+        ChangeNotifierProvider(create: (_) => DoctorAPI()),
         ChangeNotifierProvider(create: (_) => AppointmentAPI()),
       ],
       child: MaterialApp(

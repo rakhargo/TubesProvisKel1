@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:developer';
 
 import '/provider/model/doctor_model.dart';
 
@@ -14,7 +15,7 @@ class DoctorAPI with ChangeNotifier {
     id: "",
     nama: "",
     spesialisasi: "",
-    pengalaman: 0,
+    pengalaman: "",
     foto: "",
   );
   Doctor get doctor => _doctor;
@@ -25,7 +26,7 @@ class DoctorAPI with ChangeNotifier {
               id: e["id"].toString(),
               nama: e["nama"],
               spesialisasi: e["spesialisasi"],
-              pengalaman: e["pengalaman"],
+              pengalaman: e["pengalaman"].toString(),
               foto: e["foto"],
             ))
         .toList();
@@ -78,6 +79,25 @@ class DoctorAPI with ChangeNotifier {
       // print(jsonDecode(response.body));
       // print(response.body);
       return setFromJsonDoctor(jsonDecode(response.body));
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
+  Future<List<RelasiRsPoliDoctor>> fetchRelasiRsPoliDoctorByRelasiId(String relasiRsPoliId, String accessToken) async {
+    final response = await http.get(
+      Uri.parse('$url/relasi_dokter_rs_poli_relasirspoli_id/$relasiRsPoliId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      List<RelasiRsPoliDoctor> relasiDoctorList = data.map((e) => RelasiRsPoliDoctor.fromJson(e)).toList();
+      // print("INI LIST RELASI");
+      // print(inspect(relasiDoctorList));
+      return relasiDoctorList;
     } else {
       throw Exception(response.reasonPhrase);
     }

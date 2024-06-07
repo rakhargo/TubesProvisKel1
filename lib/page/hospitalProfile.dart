@@ -79,6 +79,9 @@ class _HospitalState extends State<HospitalPage>
       var combinedData = {
         'healthFacility': _healthFacilityList.firstWhere((hf) => hf.id == relasi.rsId),
         'poli': _poliList.firstWhere((p) => p.id == relasi.poliId),
+        // 'rsId': relasi.rsId,
+        // 'poliId': relasi.poliId,
+        'id': relasi.id
       };
       // print("ABIS BIKIN COMBINED");
       result.add(combinedData);
@@ -328,7 +331,7 @@ class _HospitalState extends State<HospitalPage>
                                 Navigator.push
                                 (
                                   context,
-                                  MaterialPageRoute(builder: (context) => DoctorProfilePage(responseBody : widget.responseBody, profileId: widget.profileId,)),
+                                  MaterialPageRoute(builder: (context) => DoctorProfilePage(responseBody : widget.responseBody, profileId: widget.profileId, relasiRsPoliId: item['id'])),
                                 );
                               },
                               child: Container

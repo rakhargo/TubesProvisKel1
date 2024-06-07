@@ -322,10 +322,10 @@ class _BookingState extends State<BookingPage>
                         final singleItem = item.specialistAndPoliclinicList[index];
                         return GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => DoctorProfilePage(responseBody: widget.responseBody, profileId: widget.profileId,)),
-                            );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(builder: (context) => DoctorProfilePage(responseBody: widget.responseBody, profileId: widget.profileId,)),
+                            // );
                           },
                           child: Column(
                             children: [
