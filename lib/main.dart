@@ -72,9 +72,10 @@ class MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => SpecialistAndPolyclinicList()),
+        ChangeNotifierProvider(create: (_) => SpecialistAndPolyclinicAPI()),
         ChangeNotifierProvider(create: (_) => ProfileAPI()),
         ChangeNotifierProvider(create: (_) => HealthFacilityAPI()),
+        // ChangeNotifierProvider(create: (_) => DoctorAPI()),
         ChangeNotifierProvider(create: (_) => AppointmentAPI()),
       ],
       child: MaterialApp(

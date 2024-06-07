@@ -120,50 +120,43 @@ class HealthFacilityAPI with ChangeNotifier {
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
       List<RelasiRsPoli> relasiList = data.map((e) => RelasiRsPoli.fromJson(e)).toList();
-      print("INI LIST RELASI");
-      print(relasiList);
+      // print("INI LIST RELASI");
+      // print(relasiList);
       return relasiList;
     } else {
       throw Exception(response.reasonPhrase);
     }
   }
 
-  // Future<List> fetchPoliByRsId(String rsId, String accessToken) async {
-  //   print("SEBELUM RESPONSE");
-  //   final response = await http.get(
-  //     Uri.parse('$url/relasi_rs_poli_rs_id/$rsId'),
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Bearer $accessToken',
-  //     },
-  //   );
-  //   print("INI RESPONSE");
-  //   print(response.body);
-  //   print(response.statusCode);
-  //   if (response.statusCode == 200) {
-  //     List<dynamic> data = jsonDecode(response.body);
-  //     print(data);
-  //     // List<SpecialistAndPolyclinic> poliList = data.map((e) => SpecialistAndPolyclinic.fromJson(e)).toList();
-  //     // print("POLI LIST $poliList");
-  //     return poliList;
-  //   } else {
-  //     throw Exception(response.reasonPhrase);
-  //   }
-  // }
+  Future<http.Response> fetchImageFoto(String health_facility_id, String accessToken) async {
+    final response = await http.get(
+      Uri.parse('$url/health_facility_picture/$health_facility_id'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    // print("DATA IMAGE" + response.statusCode);
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
 
-  // Future<http.Response> fetchImage(String profile_id, String accessToken) async {
-  //   final response = await http.get(
-  //     Uri.parse('$url/profile_picture/$profile_id'),
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Bearer $accessToken',
-  //     },
-  //   );
-  //   // print("DATA IMAGE" + response.statusCode);
-  //   if (response.statusCode == 200) {
-  //     return response;
-  //   } else {
-  //     throw Exception(response.reasonPhrase);
-  //   }
-  // }
+  Future<http.Response> fetchImageLogo(String health_facility_id, String accessToken) async {
+    final response = await http.get(
+      Uri.parse('$url/health_facility_logo/$health_facility_id'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    // print("DATA IMAGE" + response.statusCode);
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
 }

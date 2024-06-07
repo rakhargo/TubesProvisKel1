@@ -61,30 +61,16 @@ class _HospitalState extends State<HospitalPage>
             // print(faskesDetailsResponse);
     setState(() {
       faskesDetails = faskesDetailsResponse;
+      // print(faskesDetails.fotoFaskes);
       // print(inspect(faskesDetails));
       // print(faskesDetailsResponse);
     });
   }
   
-  // Future<void> _fetchPoliByFaskesId() async {
-  //   final specialistAndPolyclinicListResponse =
-  //       await Provider.of<HealthFacilityAPI>(context, listen: false)
-  //           .getPoliByRsId(widget.idFaskes, accessToken); // Pass the access token here
-  //           // print(specialistAndPolyclinicListResponse);
-  //   print("SETELAH FETCH");
-  //   setState(() {
-  //     specialistAndPolyclinicList = specialistAndPolyclinicListResponse;
-  //     print("INI INSPECT POLI");
-  //     print(inspect(specialistAndPolyclinicList));
-  //     // print(specialistAndPolyclinicListResponse);
-  //   });
-  // }
-
-  // Future<List<Map<String, dynamic>>> getPoliByRsId(String rsId, String accessToken) async {
   Future<void> _fetchPoliByFaskesId(String faskesId) async {
-    // await fetchDataAll(accessToken);
+    
     final _healthFacilityList = await Provider.of<HealthFacilityAPI>(context, listen: false).fetchDataAll(accessToken);
-    final _poliList = await Provider.of<SpecialistAndPolyclinicList>(context, listen: false).fetchData(accessToken);
+    final _poliList = await Provider.of<SpecialistAndPolyclinicAPI>(context, listen: false).fetchData(accessToken);
     List<RelasiRsPoli> relasiRsPoliList = await Provider.of<HealthFacilityAPI>(context, listen: false).fetchRelasiRsPoli(faskesId, accessToken);
     List<Map<String, dynamic>> result = [];
     // print("SEBELUM PROSES JOIN");
@@ -101,18 +87,12 @@ class _HospitalState extends State<HospitalPage>
     //   print(result);
     setState(() {
       specialistAndPolyclinicList = result;
-      print("INI INSPECT POLI");
-      print(inspect(specialistAndPolyclinicList));
+      // print("INI INSPECT POLI");
+      // print(inspect(specialistAndPolyclinicList));
       // print(specialistAndPolyclinicListResponse);
     });
   }
-
-  // List<Map> services = 
-  // [
-  //   {"servicesName": "Cardiologist", "image": "cardiologist.png", "linkTo": ""},
-  //   {"servicesName": "Dentist", "image": "dentist.png", "linkTo": ""},
-  // ];
-
+  
   @override
   Widget build(BuildContext context) 
   {
@@ -120,7 +100,7 @@ class _HospitalState extends State<HospitalPage>
     (
       debugShowCheckedModeBanner: false,
       // title: widget.hospitalDetails['nama']!,
-      // title: faskesDetails.namaFasilitas,
+      title: faskesDetails.namaFasilitas,
       home: DefaultTabController
       (
         length: 2,
@@ -130,51 +110,74 @@ class _HospitalState extends State<HospitalPage>
           (
             children: 
             [
-              Stack
-              (
-                children: 
-                [
-                  Container
+              // Consumer<HealthFacilityAPI>
+                
+                  Stack
                   (
-                    height: 200,
-                    decoration: BoxDecoration
-                    (
-                      image: DecorationImage
+                    children: 
+                    [
+                      Container
                       (
-                        // image: AssetImage('images/Booking/Logo/${faskesDetails.fotoFaskes}'),
-                        image: AssetImage("images/Booking/Logo/${faskesDetails.fotoFaskes}"),
-
-                        // image: AssetImage('images/Booking/Logo/rs_mayapada.png'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    // Back button
-                  ),
-                  Padding
-                  (
-                    padding: const EdgeInsets.fromLTRB(5.0, 5.0, 0, 0),
-                    child: Container
-                    (
-                      decoration: BoxDecoration
-                      (
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(100)
-                      ),
-                      child: IconButton
-                      (
-                        icon: const Icon
+                        height: 200,
+                        decoration: BoxDecoration
                         (
-                          Icons.arrow_back_ios, 
-                          color: Color.fromARGB(255, 54, 84, 134),
+                          image: DecorationImage
+                          (
+                            image: AssetImage("images/Booking/Foto/${faskesDetails.fotoFaskes.toString()}"),                            
+                            // image: AssetImage("images/Booking/Foto/fotoMayapada.png"), // bisa                            
+                            // image: AssetImage(pathFoto), // bisa                            
+                            fit: BoxFit.cover,
+                          ),
+                          
                         ),
-                        onPressed: () {
-                          Navigator.pop(context); // Kembali ke layar sebelumnya
-                        },
+                        // child: FutureBuilder<dynamic>(
+                        //   future: item.fetchImageFoto(faskesDetails.fotoFaskes, accessToken),
+                        //   builder: (context, snapshot) {
+                        //     if (snapshot.connectionState ==
+                        //         ConnectionState.waiting) {
+                        //       return const CircularProgressIndicator();
+                        //     } else if (snapshot.hasError) {
+                        //       return const Icon(Icons.error);
+                        //     } else if (snapshot.hasData) {
+                        //       return Image.memory(
+                        //         snapshot.data!.bodyBytes,
+                        //         // width: 50,
+                        //         // height: 50,
+                        //         fit: BoxFit.cover,
+                        //       );
+                        //     } else {
+                        //       // Show a placeholder if no data is available
+                        //       return const Placeholder();
+                        //     }
+                        //   },
+                        // ),
+                        // Back button
                       ),
-                    ),
+                      Padding
+                      (
+                        padding: const EdgeInsets.fromLTRB(5.0, 5.0, 0, 0),
+                        child: Container
+                        (
+                          decoration: BoxDecoration
+                          (
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(100)
+                          ),
+                          child: IconButton
+                          (
+                            icon: const Icon
+                            (
+                              Icons.arrow_back_ios, 
+                              color: Color.fromARGB(255, 54, 84, 134),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context); // Kembali ke layar sebelumnya
+                            },
+                          ),
+                        ),
+                      ),
+                    ]
                   ),
-                ]
-              ),
               Padding
               (
                 padding: const EdgeInsets.all(12.0),

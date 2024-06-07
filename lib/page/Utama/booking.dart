@@ -51,7 +51,7 @@ class _BookingState extends State<BookingPage>
 
   Future<void> _fetchSpecialistAndPolyclinic() async {
     final specialistAndPolyclinicResponse =
-        await Provider.of<SpecialistAndPolyclinicList>(context, listen: false)
+        await Provider.of<SpecialistAndPolyclinicAPI>(context, listen: false)
             .fetchData(accessToken); // Pass the access token here
     setState(() {
       specialistAndPolyclinicList = specialistAndPolyclinicResponse;
@@ -205,8 +205,30 @@ class _BookingState extends State<BookingPage>
                                           child: Transform.scale(
                                             scale: 0.7,
                                             child: Image.asset(
-                                              "assets/images/Booking/Logo/${faskesList[index].logoFaskes}",
+                                              "images/Booking/Logo/${faskesList[index].logoFaskes}",
+                                              fit: BoxFit.contain,
                                             ),
+                                            // child: FutureBuilder<dynamic>(
+                                            //   future: item.fetchImageLogo(faskesList[index].logoFaskes, accessToken),
+                                            //   builder: (context, snapshot) {
+                                            //     if (snapshot.connectionState ==
+                                            //         ConnectionState.waiting) {
+                                            //       return const CircularProgressIndicator();
+                                            //     } else if (snapshot.hasError) {
+                                            //       return const Icon(Icons.error);
+                                            //     } else if (snapshot.hasData) {
+                                            //       return Image.memory(
+                                            //         snapshot.data!.bodyBytes,
+                                            //         // width: 50,
+                                            //         // height: 50,
+                                            //         fit: BoxFit.cover,
+                                            //       );
+                                            //     } else {
+                                            //       // Show a placeholder if no data is available
+                                            //       return const Placeholder();
+                                            //     }
+                                            //   },
+                                            // ),
                                           ),
                                         ),
                                       ),
@@ -284,7 +306,7 @@ class _BookingState extends State<BookingPage>
                   ),
                 ),
                 const SizedBox(height: 5),
-                Consumer<SpecialistAndPolyclinicList>
+                Consumer<SpecialistAndPolyclinicAPI>
                 (
                   builder: (context, item, child) 
                   {
@@ -316,27 +338,35 @@ class _BookingState extends State<BookingPage>
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(15.0),
-                                  child: FutureBuilder<dynamic>(
-                                    future: item.fetchImage(singleItem.id, accessToken),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return const CircularProgressIndicator();
-                                      } else if (snapshot.hasError) {
-                                        return const Icon(Icons.error);
-                                      } else if (snapshot.hasData) {
-                                        return Image.memory(
-                                          snapshot.data!.bodyBytes,
-                                          // width: 50,
-                                          // height: 50,
-                                          // fit: BoxFit.cover,
-                                        );
-                                      } else {
-                                        // Show a placeholder if no data is available
-                                        return const Placeholder();
-                                      }
-                                    },
+                                  // child: Image.asset
+                                  // (
+                                  //   "images/"
+                                  // ),
+                                  child: Image.asset(
+                                    "images/Booking/Icon/${singleItem.icon}",
+                                    fit: BoxFit.contain,
                                   ),
+                                  // child: FutureBuilder<dynamic>(
+                                  //   future: item.fetchImage(singleItem.id, accessToken),
+                                  //   builder: (context, snapshot) {
+                                  //     if (snapshot.connectionState ==
+                                  //         ConnectionState.waiting) {
+                                  //       return const CircularProgressIndicator();
+                                  //     } else if (snapshot.hasError) {
+                                  //       return const Icon(Icons.error);
+                                  //     } else if (snapshot.hasData) {
+                                  //       return Image.memory(
+                                  //         snapshot.data!.bodyBytes,
+                                  //         // width: 50,
+                                  //         // height: 50,
+                                  //         // fit: BoxFit.cover,
+                                  //       );
+                                  //     } else {
+                                  //       // Show a placeholder if no data is available
+                                  //       return const Placeholder();
+                                  //     }
+                                  //   },
+                                  // ),
                                 ),
                               ),
                               Text(

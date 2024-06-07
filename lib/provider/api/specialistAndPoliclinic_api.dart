@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import '/provider/model/specialistAndPolyclinic_model.dart';
 
-class SpecialistAndPolyclinicList with ChangeNotifier {
+class SpecialistAndPolyclinicAPI with ChangeNotifier {
   final String url = 'http://127.0.0.1:8000';
   List<dynamic> _specialistAndPoliclinicList = [];
   List<dynamic> get specialistAndPoliclinicList => _specialistAndPoliclinicList;
