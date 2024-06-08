@@ -6,6 +6,9 @@ import 'package:medimate/page/Screens/Signup/signup_screen.dart';
 import 'package:medimate/main.dart';
 import 'package:flutter/gestures.dart';
 
+import 'package:medimate/provider/api/profile_api.dart';
+import 'package:medimate/provider/model/profile_model.dart';
+
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -16,6 +19,8 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   Color _loginButtonColor = Colors.grey;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -130,9 +135,28 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (response.statusCode == 200) {
         final responseBody = response.body;
+
+        final responseBodyMap = jsonDecode(responseBody);
+        final userId = responseBodyMap['user_id'].toString();
+        final accessToken = responseBodyMap['access_token'].toString();
+
+        final responseBaru = await http.get
+        (
+          Uri.parse('http://127.0.0.1:8000/profile_user_id/$userId'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $accessToken',
+          },
+        );
+        final responseBaruBodyMap = jsonDecode(responseBaru.body);
+        // print(responseBaruBodyMap);
+
+        final mainProfile = responseBaruBodyMap.firstWhere(
+          (profile) => profile['isMainProfile'] == 1);
+        // print(mainProfile);
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => MainApp(responseBody: responseBody, indexNavbar: 0, profileId: "1",)),
+          MaterialPageRoute(builder: (context) => MainApp(responseBody: responseBody, indexNavbar: 0, profileId: mainProfile['id'].toString(),)),
         );
       } else {
         if (response.body.isNotEmpty) {
