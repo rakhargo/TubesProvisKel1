@@ -36,17 +36,20 @@ class DoctorAPI with ChangeNotifier {
   }
 
   Doctor setFromJsonDoctor(Map<String, dynamic> json) {
+    // print("INI JSOn");
+    // print(json);
     _doctor = 
       Doctor(
         id: json["id"].toString(),
         nama: json["nama"],
         spesialisasi: json["spesialisasi"],
-        pengalaman: json["pengalaman"],
+        pengalaman: json["pengalaman"].toString(),
         foto: json["foto"],
-      )
-    ;
+      );
+    // print("SEBELUM NOTIFY");
     notifyListeners();
-
+    // print("DALAM SETJSON");
+    // print(_doctor);
     return _doctor;
   }
 
@@ -69,15 +72,17 @@ class DoctorAPI with ChangeNotifier {
 
   Future<dynamic> fetchDataDoctorById(String doctor_id, String accessToken) async {
     final response = await http.get(
-      Uri.parse('$url/doctor/$doctor_id'),
+      Uri.parse('$url/doctor_id/$doctor_id'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken',
       },
     );
     if (response.statusCode == 200) {
-      // print(jsonDecode(response.body));
-      // print(response.body);
+      print(response.body);
+      print(jsonDecode(response.body));
+      print("SEBELUM SETJSON");
+      print(setFromJsonDoctor(jsonDecode(response.body)));
       return setFromJsonDoctor(jsonDecode(response.body));
     } else {
       throw Exception(response.reasonPhrase);

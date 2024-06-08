@@ -9,7 +9,15 @@ class SpecialistAndPolyclinicAPI with ChangeNotifier {
   List<dynamic> _specialistAndPoliclinicList = [];
   List<dynamic> get specialistAndPoliclinicList => _specialistAndPoliclinicList;
 
-  List<dynamic> setFromJson(List<dynamic> json) {
+  SpecialistAndPolyclinic _specialistAndPoliclinic = SpecialistAndPolyclinic
+  (
+    id: "",
+    icon: "",
+    name: "",
+  );
+  SpecialistAndPolyclinic get doctor => _specialistAndPoliclinic;
+
+  List<dynamic> setFromJsonList(List<dynamic> json) {
     _specialistAndPoliclinicList = json
         .map((e) => SpecialistAndPolyclinic(
               id: e['id'].toString(),
@@ -23,6 +31,19 @@ class SpecialistAndPolyclinicAPI with ChangeNotifier {
     return _specialistAndPoliclinicList;
   }
 
+  SpecialistAndPolyclinic setFromJsonPoli(Map<String, dynamic> json) {
+    _specialistAndPoliclinic = 
+      SpecialistAndPolyclinic(
+        id: json["id"].toString(),
+        icon: json["icon"],
+        name: json["name"],
+      )
+    ;
+    notifyListeners();
+
+    return _specialistAndPoliclinic;
+  }
+
   Future<List> fetchData(String accessToken) async {
     final response = await http.get(
       Uri.parse('$url/specialist_and_polyclinic/'),
@@ -32,7 +53,22 @@ class SpecialistAndPolyclinicAPI with ChangeNotifier {
       },
     );
     if (response.statusCode == 200) {
-      return setFromJson(jsonDecode(response.body));
+      return setFromJsonList(jsonDecode(response.body));
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
+  
+  Future<dynamic> fetchDataById(String poliId, String accessToken) async {
+    final response = await http.get(
+      Uri.parse('$url/specialist_and_polyclinic/$poliId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      return setFromJsonPoli(jsonDecode(response.body));
     } else {
       throw Exception(response.reasonPhrase);
     }

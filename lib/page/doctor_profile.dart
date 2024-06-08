@@ -7,67 +7,21 @@ import 'package:provider/provider.dart';
 import 'package:medimate/page/detailDoctor.dart';
 
 import 'package:medimate/provider/api/doctor_api.dart';
+import 'package:medimate/provider/api/specialistAndPoliclinic_api.dart';
 import 'package:medimate/provider/model/doctor_model.dart';
 
 class DoctorProfilePage extends StatefulWidget {
   final String responseBody;
   final String profileId;
   final String relasiRsPoliId;
+  final String rsId;
+  final String poliId;
 
-  const DoctorProfilePage({Key? key, required this.responseBody, required this.profileId, required this.relasiRsPoliId}) : super(key: key);
+  const DoctorProfilePage({Key? key, required this.responseBody, required this.profileId, required this.relasiRsPoliId, required this.poliId, required this.rsId}) : super(key: key);
 
   @override
   State<DoctorProfilePage> createState() => _DoctorProfileState();
 }
-
-// List<Map<dynamic, dynamic>> doctorsData = [
-//   {
-//     "name": "Dr. Sisca Amartha, Sp. J.P.",
-//     "category": "Cardiologist",
-//     "exp": "5",
-//     "rating": "4.9",
-//     "schedule": "Next Schedule : Monday 08:00 - 09:00",
-//     "price": "Rp 200.000",
-//     "image": "assets/images/orang/dokter/dr_sisca.png" // Add image asset path here
-//   },
-//   {
-//     "name": "Dr. Saeful Baskori, Sp. J.P.",
-//     "category": "Cardiologist",
-//     "exp": "5",
-//     "rating": "4.9",
-//     "schedule": "Next Schedule : Monday 08:00 - 09:00",
-//     "price": "Rp 200.000",
-//     "image": "assets/images/orang/dokter/dr_saeful.png" // Add image asset path here
-//   },
-//   {
-//     "name": "Dr. Rizky Pratama, Sp. J.P.",
-//     "category": "Cardiologist",
-//     "exp": "5",
-//     "rating": "4.9",
-//     "schedule": "Next Schedule : Monday 08:00 - 09:00",
-//     "price": "Rp 200.000",
-//     "image": "assets/images/orang/dokter/dr_rizky.png" // Add image asset path here
-//   },
-//   {
-//     "name": "Dr. Syahid Alamsyah, Sp. J.P.",
-//     "category": "Cardiologist",
-//     "exp": "5",
-//     "rating": "4.9",
-//     "schedule": "Next Schedule : Monday 08:00 - 09:00",
-//     "price": "Rp 200.000",
-//     "image": "assets/images/orang/dokter/dr_alamsyah.png" // Add image asset path here
-//   },
-//   {
-//     "name": "Dr. Surya Abadi, Sp. J.P.",
-//     "category": "Cardiologist",
-//     "exp": "5",
-//     "rating": "4.9",
-//     "schedule": "Next Schedule : Monday 08:00 - 09:00",
-//     "price": "Rp 200.000",
-//     "image": "assets/images/orang/dokter/dr_surya.png" // Add image asset path here
-//   },
-// ];
-
 
 class _DoctorProfileState extends State<DoctorProfilePage> {
 
@@ -98,7 +52,7 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
   Future<void> _fetchDoctorByRelasiId(String relasiRsPoliId) async {
     
     final _doctorList = await Provider.of<DoctorAPI>(context, listen: false).fetchDataAllDoctor(accessToken);
-    // final _poliList = await Provider.of<SpecialistAndPolyclinicAPI>(context, listen: false).fetchData(accessToken);
+    final _poli = await Provider.of<SpecialistAndPolyclinicAPI>(context, listen: false).fetchDataById(widget.poliId, accessToken);
     List<RelasiRsPoliDoctor> relasiRsPoliDoctorList = await Provider.of<DoctorAPI>(context, listen: false).fetchRelasiRsPoliDoctorByRelasiId(relasiRsPoliId, accessToken);
     List<Map<String, dynamic>> result = [];
     // print("SEBELUM PROSES JOIN");
@@ -108,7 +62,8 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
         // 'healthFacility': _healthFacilityList.firstWhere((hf) => hf.id == relasi.rsId),
         'doctor': _doctorList.firstWhere((d) => d.id == relasi.doctorId),
         // 'rsId': relasi.rsId,
-        // 'poliId': relasi.poliId,
+        'poli': _poli,
+        // 'poliId': widget.poliId,
         'id': relasi.id
       };
       // print("ABIS BIKIN COMBINED");
@@ -177,7 +132,6 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
             itemCount: doctorList.length,
             itemBuilder: (context, index) {
               var item = doctorList[index];
-              print("TEST");
               return Column(
                 children: [
                   Row(
@@ -302,32 +256,13 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
                                       // Navigator.push
                                       // (
                                       //   context,
-                                      //   MaterialPageRoute(builder: (context) => DoctorDetailPage()),
+                                      //   MaterialPageRoute(builder: (context) => DetailDoctorPage()),
                                       // );
-                                      // Navigator.of(context).push(MaterialPageRoute(builder: (context) 
-                                      // {
-                                      //   Map<dynamic, dynamic> hospitalDetails = 
-                                      //     {
-                                      //       // "topImage": topImage[index],
-                                      //       // "logo": imageUrls[index],
-                                      //       // "nama": imageTexts[index],
-                                      //       // "jenis": additionalTexts[index],
-                                      //       // "jarak": distances[index],
-                                      //       // "rating": rating[index],
-                                      //       // "address": address[index],
-                                      //       // "profile": profile[index],
-                                      //       "name": item["name"],
-                                      //       "category": item["category"],
-                                      //       "exp": item["exp"],
-                                      //       "rating": item["rating"],
-                                      //       "schedule": item["schedule"],
-                                      //       "price": item["price"],
-                                      //       "image": item["image"]
-                                      //     }
-                                      //   ;
-                                      //       return (DetailDoctorPage(doctorDetails: hospitalDetails, responseBody: widget.responseBody, profileId: widget.profileId, healthFacilityId: "1",));
-                                      // }
-                                      // ));
+                                      Navigator.of(context).push(MaterialPageRoute(builder: (context) 
+                                      {
+                                        return (DetailDoctorPage(responseBody: widget.responseBody, profileId: widget.profileId, healthFacilityId: widget.rsId, doctorId: item['doctor'].id, poliId: widget.poliId,));
+                                      }
+                                      ));
                                     },
                                     child: Container(
                                       width: 70,

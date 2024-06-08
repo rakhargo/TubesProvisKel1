@@ -331,7 +331,7 @@ class _HospitalState extends State<HospitalPage>
                                 Navigator.push
                                 (
                                   context,
-                                  MaterialPageRoute(builder: (context) => DoctorProfilePage(responseBody : widget.responseBody, profileId: widget.profileId, relasiRsPoliId: item['id'])),
+                                  MaterialPageRoute(builder: (context) => DoctorProfilePage(responseBody : widget.responseBody, profileId: widget.profileId, relasiRsPoliId: item['id'], poliId: item['poli'].id, rsId: item['healthFacility'].id,)),
                                 );
                               },
                               child: Container

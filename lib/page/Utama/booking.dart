@@ -176,7 +176,7 @@ class _BookingState extends State<BookingPage>
                             child: Container
                             (
                               width: 140,
-                              height: 155,
+                              height: 170,
                               margin: const EdgeInsets.only(right: 20),
                               decoration: BoxDecoration(
                                 color: Colors.white,

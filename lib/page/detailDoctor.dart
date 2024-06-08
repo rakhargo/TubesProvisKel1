@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -6,15 +7,21 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:medimate/provider/api/healthFacility_api.dart';
 import 'package:medimate/provider/model/healthFacility_model.dart';
+import 'package:medimate/provider/api/doctor_api.dart';
+import 'package:medimate/provider/model/doctor_model.dart';
+import 'package:medimate/provider/api/specialistAndPoliclinic_api.dart';
+import 'package:medimate/provider/model/specialistAndPolyclinic_model.dart';
 import 'bookingSummary.dart';
 
 class DetailDoctorPage extends StatefulWidget {
-  final Map<dynamic, dynamic> doctorDetails;
+  // final Map<dynamic, dynamic> doctorDetails;
   final String responseBody;
   final String profileId;
   final String healthFacilityId;
+  final String doctorId;
+  final String poliId;
 
-  const DetailDoctorPage({Key? key, required this.doctorDetails, required this.responseBody, required this.profileId, required this.healthFacilityId}) : super(key: key);
+  const DetailDoctorPage({Key? key, required this.responseBody, required this.profileId, required this.healthFacilityId, required this.doctorId, required this.poliId}) : super(key: key);
 
   @override
   State<DetailDoctorPage> createState() => _DetailDoctorState();
@@ -36,6 +43,18 @@ class _DetailDoctorState extends State<DetailDoctorPage>
     fotoFaskes: "",
     logoFaskes: "",
   );
+
+  Doctor doctor = Doctor
+  (
+    id: "",
+    nama: "",
+    spesialisasi: "",
+    pengalaman: "",
+    foto: "",
+  );
+
+  List<Map<String, dynamic>> judulList = [];
+
   late String accessToken;
   late String userId;
 
@@ -45,6 +64,7 @@ class _DetailDoctorState extends State<DetailDoctorPage>
     _initializeUserId();
     _initializeAccessToken();
     _fetchHealthFacility(widget.healthFacilityId);
+    _fetchDoctor(widget.doctorId);
   }
 
   void _initializeUserId() {
@@ -64,21 +84,23 @@ class _DetailDoctorState extends State<DetailDoctorPage>
             // print(healthFacilityResponse);
     setState(() {
       healthFacility = healthFacilityResponse;
+      // print(inspect(healthFacility));
     });
   }
-  // Map<String, String> hospitalDetails = 
-  // {
-  //   "topImage": 'rs_mayapada.png',
-  //   "logo": 'assets/images/Booking/Logo/logo rs mayapada.png',
-  //   // "nama": 'Mayapada Hospital\nBandung',
-  //   "nama": 'Mayapada Hospital Bandung',
-  //   "jenis": 'General Hospital',
-  //   "jarak": '1.2',
-  //   "rating": '5.0',
-  //   // "address": 'Jl. Terusan Buah Batu No.5,\nBatununggal, Kec. Bandung Kidul, Kota\nBandung, Jawa Barat 40266',
-  //   "address": 'Jl. Terusan Buah Batu No.5, Batununggal, Kec. Bandung Kidul, Kota Bandung, Jawa Barat 40266',
-  //   "profile": 'Mayapada Hospital is one of the best private hospitals founded by Mayapada Healthcare Group on June 1 2008.',
-  // };
+
+  Future<void> _fetchDoctor(String doctorId) async {
+    // print("SEBELUM RESPONSE DOCTOR");
+    final doctorResponse =
+        await Provider.of<DoctorAPI>(context, listen: false)
+            .fetchDataDoctorById(doctorId, accessToken); // Pass the access token here
+    // print("SETELAH RESPONSE DOCTOR");
+            // print(doctorResponse);
+    setState(() {
+      doctor = doctorResponse;
+      // print(inspect(doctor));
+    });
+  }
+
 
   List<Map<dynamic, dynamic>> jadwalDokter = 
   [
@@ -177,28 +199,34 @@ class _DetailDoctorState extends State<DetailDoctorPage>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: 
               [
-                Center // foto dokter
+                Consumer<DoctorAPI>
                 (
-                  child: Container
-                  (
-                    width: 150, // Adjust the width as needed
-                    height: 150, // Adjust the height as needed 
-                    decoration: BoxDecoration
+                  builder: (context, item, child) {
+                    return Center // foto dokter
                     (
-                      shape: BoxShape.circle,
-                      image: DecorationImage
+                      child: Container
                       (
-                        // fit: BoxFit.fill,
-                        fit: BoxFit.cover,
-                        image: AssetImage(widget.doctorDetails['image']),
+                        width: 150, // Adjust the width as needed
+                        height: 150, // Adjust the height as needed 
+                        decoration: BoxDecoration
+                        (
+                          shape: BoxShape.circle,
+                          image: DecorationImage
+                          (
+                            // fit: BoxFit.fill,
+                            fit: BoxFit.cover,
+                            // image: AssetImage("assets/images/orang/dokter/${doctor.foto}"),
+                            image: AssetImage("assets/images/orang/dokter/${doctor.foto}"),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  // child: CircleAvatar
-                  // (
-                  //   radius: 35,
-                  //   backgroundImage: AssetImage(widget.doctorDetails['image']),
-                  // ),
+                      // child: CircleAvatar
+                      // (
+                      //   radius: 35,
+                      //   backgroundImage: AssetImage(widget.doctorDetails['image']),
+                      // ),
+                    );
+                  }
                 ),
           
                 SizedBox(height: 10), // jarak antar foto dan nama
@@ -211,7 +239,8 @@ class _DetailDoctorState extends State<DetailDoctorPage>
                     (
                       child: Text
                       (
-                        widget.doctorDetails['name'],
+                        // widget.doctorDetails['name'],
+                        doctor.nama,
                         style: const TextStyle
                         (
                           color: Color(0xFF090F47),
@@ -224,33 +253,33 @@ class _DetailDoctorState extends State<DetailDoctorPage>
                     (
                       children: 
                       [
-                        Container // rating
-                        (
-                          decoration: BoxDecoration
-                          (
-                            color: const Color.fromARGB(128, 231, 231, 231),
-                            borderRadius: BorderRadius.circular(3)
-                          ),
-                          child: Row // icon dan text
-                          ( 
-                            children: 
-                            [
-                              const Icon
-                              (
-                                Icons.star,
-                                color: Colors.yellow,
-                              ),
-                              Text
-                              (
-                                widget.doctorDetails['rating'],
-                                style: const TextStyle
-                                (
-                                  color: Color.fromARGB(255, 9, 15, 71)
-                                ),
-                              )
-                            ],
-                          ), 
-                        ),
+                        // Container // rating
+                        // (
+                        //   decoration: BoxDecoration
+                        //   (
+                        //     color: const Color.fromARGB(128, 231, 231, 231),
+                        //     borderRadius: BorderRadius.circular(3)
+                        //   ),
+                        //   child: Row // icon dan text
+                        //   ( 
+                        //     children: 
+                        //     [
+                        //       const Icon
+                        //       (
+                        //         Icons.star,
+                        //         color: Colors.yellow,
+                        //       ),
+                        //       Text
+                        //       (
+                        //         widget.doctorDetails['rating'],
+                        //         style: const TextStyle
+                        //         (
+                        //           color: Color.fromARGB(255, 9, 15, 71)
+                        //         ),
+                        //       )
+                        //     ],
+                        //   ), 
+                        // ),
           
                         const SizedBox(height: 5),
           
@@ -272,7 +301,7 @@ class _DetailDoctorState extends State<DetailDoctorPage>
                               ),
                               Text
                               (
-                                '${widget.doctorDetails['exp']} Year',
+                                '${doctor.pengalaman} Year',
                                 style: const TextStyle
                                 (
                                   color: Color.fromARGB(255, 9, 15, 71)
@@ -290,7 +319,7 @@ class _DetailDoctorState extends State<DetailDoctorPage>
           
                 Text // specialist
                 (
-                  widget.doctorDetails['category']!,
+                  doctor.spesialisasi,
                   style: const TextStyle
                   (
                     color: Color.fromARGB(255, 143, 143, 143)
@@ -433,8 +462,9 @@ class _DetailDoctorState extends State<DetailDoctorPage>
                           (
                             image: AssetImage
                             (
-                              // hospitalDetails['logo']!,
-                              'assets/images/Booking/Logo/logo rs mayapada.png'
+                              // 'assets/images/Booking/Logo/logo rs mayapada.png'
+                              // "assets/images/Booking/Logo/${healthFacility.logoFaskes}"
+                              "images/Booking/Logo/${healthFacility.logoFaskes}"
                             ),
                             fit: BoxFit.contain,
                           ),
@@ -670,30 +700,30 @@ class _DetailDoctorState extends State<DetailDoctorPage>
                   onTap: selectedForAppointment["selectedTime"] != ""
                   ? ()  
                   {
-                    Navigator.push
-                    (
-                      context,
-                      MaterialPageRoute
-                      (
-                        builder: (context) 
-                        { 
-                          Map<String, dynamic> bookingDetails = 
-                          {
-                            "doctorName": widget.doctorDetails['name'],
-                            "specialist": widget.doctorDetails['category'],
-                            // "hospital": hospitalDetails['nama'],
-                            "patientId": int.parse(widget.profileId),
-                            "doctorId": 1,
-                            "healthFacilityId": int.parse(healthFacility.id),
-                            "hospital": healthFacility.namaFasilitas,
-                            // "alamat": hospitalDetails['address'],
-                            "price": "Rp200.000",
-                            "dateTime": "${selectedForAppointment["tanggal"]} ${selectedForAppointment["bulan"]} ${selectedForAppointment["tahun"]}, ${selectedForAppointment["selectedTime"]}",
-                          };
-                          return BookingSummaryPage(bookingDetails: bookingDetails, responseBody : widget.responseBody, profileId: widget.profileId,);
-                        }
-                      ),
-                    );
+                    // Navigator.push
+                    // (
+                    //   context,
+                    //   MaterialPageRoute
+                    //   (
+                    //     builder: (context) 
+                    //     { 
+                    //       Map<String, dynamic> bookingDetails = 
+                    //       {
+                    //         "doctorName": widget.doctorDetails['name'],
+                    //         "specialist": widget.doctorDetails['category'],
+                    //         // "hospital": hospitalDetails['nama'],
+                    //         "patientId": int.parse(widget.profileId),
+                    //         "doctorId": 1,
+                    //         "healthFacilityId": int.parse(healthFacility.id),
+                    //         "hospital": healthFacility.namaFasilitas,
+                    //         // "alamat": hospitalDetails['address'],
+                    //         "price": "Rp200.000",
+                    //         "dateTime": "${selectedForAppointment["tanggal"]} ${selectedForAppointment["bulan"]} ${selectedForAppointment["tahun"]}, ${selectedForAppointment["selectedTime"]}",
+                    //       };
+                    //       return BookingSummaryPage(bookingDetails: bookingDetails, responseBody : widget.responseBody, profileId: widget.profileId,);
+                    //     }
+                    //   ),
+                    // );
                   }
                   : null,
                 child: Container
