@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medimate/main.dart';
-import 'package:medimate/page/Utama/home.dart';
 import 'package:medimate/provider/api/profile_api.dart';
 import 'package:medimate/provider/model/profile_model.dart';
 import 'package:provider/provider.dart';
@@ -113,6 +112,14 @@ class _CreateProfileState extends State<CreateProfilePage> {
             children: <Widget>[
               Text(
                 "Create new profile",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 28,
+                  color: Color(0xFF090F47),
+                ),
+              ),
+              Text(
+                widget.profileId,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 28,
@@ -368,10 +375,7 @@ class _CreateProfileState extends State<CreateProfilePage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => HomePage(
-                                  responseBody: widget.responseBody,
-                                  profileId: widget.profileId,
-                                ))); // Navigate to login page
+                            builder: (context) => MainApp(responseBody: widget.responseBody, indexNavbar: 0, profileId: widget.profileId.toString()))); // Navigate to login page
                   },
                   child: Text('OK'),
                 ),
