@@ -9,6 +9,7 @@ class Profile {
   final String noTelepon;
   final String email;
   final String userPhoto;
+  final String isMainProfile;
 
   Profile({
   required this.id,
@@ -20,5 +21,23 @@ class Profile {
   required this.noTelepon,
   required this.email,
   required this.userPhoto,
+  required this.isMainProfile
   }); 
+}
+
+class ProfileRelation {
+  final String id;
+  final String relation;
+
+  ProfileRelation({
+    required this.id,
+    required this.relation,
+  });
+
+  factory ProfileRelation.fromJson(Map<String, dynamic> json) {
+    return ProfileRelation(
+      id: json['id'].toString(),
+      relation: json['relation'].toString(),
+    );
+  }
 }

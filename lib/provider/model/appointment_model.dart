@@ -3,11 +3,12 @@ class Appointment {
   final String patientId;
   final String doctorId;
   final String facilityId;
-
   final String status;
   final String waktu;
-  final String formattedTime;
   final String metodePembayaran;
+  final String medicalRecordId;
+  final int antrian;
+  final String judul;
 
   Appointment({
   required this.id,
@@ -16,7 +17,9 @@ class Appointment {
   required this.facilityId,
   required this.status,
   required this.waktu,
-  required this.formattedTime,
   required this.metodePembayaran,
+  required this.medicalRecordId,
+  required this.antrian,
+  required this.judul
   }); 
 }

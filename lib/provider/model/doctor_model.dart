@@ -2,7 +2,7 @@ class Doctor {
   final String id;
   final String nama;
   final String spesialisasi;
-  final String pengalaman;
+  final int pengalaman;
   final String foto;
 
   Doctor({
@@ -12,6 +12,26 @@ class Doctor {
   required this.pengalaman,
   required this.foto,
   }); 
+}
+
+class DoctorSchedule {
+  final String id;
+  final String tanggal;
+  final String mulai;
+  final String selesai;
+  final int maxBooking;
+  final int currentBooking;
+  final String doctorId;
+
+  DoctorSchedule({
+    required this.id,
+    required this.tanggal,
+    required this.mulai,
+    required this.selesai,
+    required this.maxBooking,
+    required this.currentBooking,
+    required this.doctorId
+  });
 }
 
 class RelasiRsPoliDoctor 

@@ -318,8 +318,7 @@ class _CreateProfileState extends State<CreateProfilePage> {
   }
 
   void _createProfile() async {
-    final String username =
-        _emailController.text; // Assuming email is used as username
+    final String username = _emailController.text; // Assuming email is used as username
     final String nama = _namaController.text;
     final String tanggalLahir = _tanggallahirController.text;
     final DateTime parsedDate = DateFormat("dd-MM-yyyy").parse(tanggalLahir);
