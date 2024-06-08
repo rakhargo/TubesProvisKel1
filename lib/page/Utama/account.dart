@@ -57,6 +57,7 @@ class _AccountState extends State<AccountPage> {
     alamat: "",
     noTelepon: "",
     userPhoto: "",
+    isMainProfile: "",
   );
 
   Future<void> _fetchProfile(String profileId) async {

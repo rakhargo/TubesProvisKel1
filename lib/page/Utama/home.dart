@@ -91,13 +91,6 @@ class _HomeState extends State<HomePage> {
     });
   }
 
-  // List<Map> profiles = [
-  //   {"profileName": "John Doe", "profilePicture": "1-john_doe.jpg"},
-  //   {"profileName": "Christian Buehner", "profilePicture": "2-christian_buehner.jpg"},
-  //   {"profileName": "Alicia Claire", "profilePicture": "3-alicia_claire.jpg"},
-  // ];
-
-  // Map<dynamic, dynamic> chosenProfile = {};
   Profile chosenProfile = Profile
   (
     id: "",
@@ -109,6 +102,7 @@ class _HomeState extends State<HomePage> {
     alamat: "",
     noTelepon: "",
     userPhoto: "",
+    isMainProfile: "",
   );
 
   Future<void> _fetchProfile(String profileId) async {

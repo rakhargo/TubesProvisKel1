@@ -178,7 +178,7 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
                                         ),
                                         SizedBox(width: 5),
                                         Text(
-                                          item['doctor'].pengalaman,
+                                          item['doctor'].pengalaman.toString(),
                                           style: const TextStyle(
                                             color: Color(0xFF090F47),
                                             fontSize: 15,

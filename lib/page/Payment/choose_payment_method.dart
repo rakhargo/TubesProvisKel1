@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MediMateApp());
-}
+// void main() {
+//   runApp(MediMateApp());
+// }
 
-class MediMateApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'MediMate',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: PaymentPage(),
-    );
-  }
-}
+// class MediMateApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'MediMate',
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//       ),
+//       home: PaymentPage(),
+//     );
+//   }
+// }
 
 class PaymentPage extends StatefulWidget {
   @override

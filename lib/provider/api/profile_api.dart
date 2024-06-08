@@ -20,6 +20,7 @@ class ProfileAPI with ChangeNotifier {
     alamat: "",
     noTelepon: "",
     userPhoto: "",
+    isMainProfile: "",
   );
   Profile get profile => _profile;
 
@@ -36,6 +37,7 @@ class ProfileAPI with ChangeNotifier {
               alamat: e['alamat'],
               noTelepon: e['noTelepon'],
               userPhoto: e['userPhoto'],
+              isMainProfile: e['isMainProfile'].toString(),
             ))
         .toList();
     notifyListeners();
@@ -55,6 +57,7 @@ class ProfileAPI with ChangeNotifier {
         alamat: json['alamat'],
         noTelepon: json['noTelepon'],
         userPhoto: json['userPhoto'],
+        isMainProfile: json['isMainProfile'].toString(),
       )
     ;
     notifyListeners();

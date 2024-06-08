@@ -216,7 +216,7 @@ class _ActivityState extends State<ActivityPage>
                                   child: Text
                                   (
                                     // item["title"],
-                                    "Tes Darah",
+                                    item["judul"],
                                     style: const TextStyle
                                     (
                                       color: Color.fromARGB(255, 32, 33, 87),
@@ -227,7 +227,7 @@ class _ActivityState extends State<ActivityPage>
                                 ),
                                 Text
                                 (
-                                  formatDateHour(item.waktu),
+                                  formatDateTime(item.waktu),
                                   style: const TextStyle
                                   (
                                     color: Color.fromARGB(216, 53, 55, 121),
@@ -245,10 +245,21 @@ class _ActivityState extends State<ActivityPage>
                                   ),
                                 ),
                                 const SizedBox(height: 3),
+                                // Text
+                                // (
+                                //   // item["lokasi"],
+                                //   "bojongsoang",
+                                //   style: const TextStyle
+                                //   (
+                                //     color: Color.fromARGB(216, 53, 55, 121),
+                                //     fontSize: 12,
+                                //   ),
+                                // ),
+                                // const SizedBox(height: 3),
                                 Text
                                 (
                                   // item["lokasi"],
-                                  "bojongsoang",
+                                  "Antrian ${item["antrian"].toString()}",
                                   style: const TextStyle
                                   (
                                     color: Color.fromARGB(216, 53, 55, 121),

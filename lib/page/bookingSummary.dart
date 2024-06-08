@@ -11,8 +11,11 @@ import 'Utama/booking.dart';
 import 'package:medimate/provider/api/appointment_api.dart';
 import 'package:medimate/provider/model/appointment_model.dart';
 
+import 'package:medimate/provider/api/doctor_api.dart';
+import 'package:medimate/provider/model/doctor_model.dart';
+
 class BookingSummaryPage extends StatefulWidget {
-  final Map<dynamic, dynamic> bookingDetails;
+  final Map<String, dynamic> bookingDetails;
   final String responseBody;
   final String profileId;
 
@@ -24,17 +27,17 @@ class BookingSummaryPage extends StatefulWidget {
 
 class _BookingSummaryState extends State<BookingSummaryPage>
 {
-  Appointment appointment = Appointment
-  (
-    id: "",
-    patientId: "",
-    doctorId: "",
-    facilityId: "",
-    status: "",
-    waktu: "",
-    formattedTime: "",
-    metodePembayaran: "",
-  );
+  // Appointment appointment = Appointment
+  // (
+  //   id: "",
+  //   patientId: "",
+  //   doctorId: "",
+  //   facilityId: "",
+  //   status: "",
+  //   waktu: "",
+  //   metodePembayaran: ""
+  //   medicalRecordId: ,
+  // );
 
   late String accessToken;
   late String userId;
@@ -94,7 +97,7 @@ class _BookingSummaryState extends State<BookingSummaryPage>
             padding: const EdgeInsets.all(15.0),
             child: Container
             (
-              height: 500,
+              height: 650,
               decoration: BoxDecoration
               (
                 borderRadius: BorderRadius.circular(10),
@@ -115,6 +118,108 @@ class _BookingSummaryState extends State<BookingSummaryPage>
                     ),
                   ),
                   const SizedBox(height: 15,),
+                  Padding
+                  (
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Row
+                    (
+                      children: 
+                      [
+                        Column
+                        (
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: 
+                          [
+                            const Text
+                            (
+                              "Keperluan", 
+                              style: TextStyle
+                              (
+                                color: Color.fromARGB(204, 32, 33, 87),
+                              )
+                            ),
+                            Text
+                            (
+                              widget.bookingDetails['judul'], 
+                              style: const TextStyle
+                              (
+                                color: Color.fromARGB(204, 32, 33, 87),
+                                fontWeight: FontWeight.bold
+                              )
+                            ),
+                          ],
+                        ),
+                        const Spacer()
+                      ],
+                    ),
+                  ),
+                  Padding
+                  (
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container // garis abu
+                    (
+                      decoration: const BoxDecoration
+                      (
+                        border: Border
+                        (
+                          bottom: BorderSide(color: Color.fromARGB(128, 32, 33, 87), width: 2),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  Padding
+                  (
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Row
+                    (
+                      children: 
+                      [
+                        Column
+                        (
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: 
+                          [
+                            const Text
+                            (
+                              "Antrian", 
+                              style: TextStyle
+                              (
+                                color: Color.fromARGB(204, 32, 33, 87),
+                              )
+                            ),
+                            Text
+                            (
+                              widget.bookingDetails['antrian'].toString(), 
+                              style: const TextStyle
+                              (
+                                color: Color.fromARGB(204, 32, 33, 87),
+                                fontWeight: FontWeight.bold
+                              )
+                            ),
+                          ],
+                        ),
+                        const Spacer()
+                      ],
+                    ),
+                  ),
+                  Padding
+                  (
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container // garis abu
+                    (
+                      decoration: const BoxDecoration
+                      (
+                        border: Border
+                        (
+                          bottom: BorderSide(color: Color.fromARGB(128, 32, 33, 87), width: 2),
+                        ),
+                      ),
+                    ),
+                  ),
+
                   Padding
                   (
                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -232,7 +337,7 @@ class _BookingSummaryState extends State<BookingSummaryPage>
                           [
                             const Text
                             (
-                              "Hospital", 
+                              "Health Facility", 
                               style: TextStyle
                               (
                                 color: Color.fromARGB(204, 32, 33, 87),
@@ -240,7 +345,7 @@ class _BookingSummaryState extends State<BookingSummaryPage>
                             ),
                             Text
                             (
-                              widget.bookingDetails['hospital'], 
+                              widget.bookingDetails['facilityName'], 
                               style: const TextStyle
                               (
                                 color: Color.fromARGB(204, 32, 33, 87),
@@ -335,7 +440,7 @@ class _BookingSummaryState extends State<BookingSummaryPage>
                           [
                             const Text
                             (
-                              "Date & Time", 
+                              "Date", 
                               style: TextStyle
                               (
                                 color: Color.fromARGB(204, 32, 33, 87),
@@ -343,7 +448,58 @@ class _BookingSummaryState extends State<BookingSummaryPage>
                             ),
                             Text
                             (
-                              widget.bookingDetails['dateTime'], 
+                              "${widget.bookingDetails['waktu']}", 
+                              style: const TextStyle
+                              (
+                                color: Color.fromARGB(204, 32, 33, 87),
+                                fontWeight: FontWeight.bold
+                              )
+                            ),
+                          ],
+                        ),
+                        const Spacer()
+                      ],
+                    ),
+                  ),
+                  Padding
+                  (
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container // garis abu
+                    (
+                      decoration: const BoxDecoration
+                      (
+                        border: Border
+                        (
+                          bottom: BorderSide(color: Color.fromARGB(128, 32, 33, 87), width: 2),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  Padding
+                  (
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Row
+                    (
+                      children: 
+                      [
+                        Column
+                        (
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: 
+                          [
+                            const Text
+                            (
+                              "Payment Method", 
+                              style: TextStyle
+                              (
+                                color: Color.fromARGB(204, 32, 33, 87),
+                              )
+                            ),
+                            Text
+                            (
+                              widget.bookingDetails['metodePembayaran'], 
                               style: const TextStyle
                               (
                                 color: Color.fromARGB(204, 32, 33, 87),
@@ -377,17 +533,21 @@ class _BookingSummaryState extends State<BookingSummaryPage>
                   (
                     onTap: () async{
                       // Dapatkan waktu saat ini dan format menjadi string
-                      DateTime now = DateTime.now();
-                      final DateFormat formatter = DateFormat('yyyy-MM-ddTHH:mm:ss.SSSZ'); // Sesuaikan format sesuai kebutuhan
-                      String formattedTime = formatter.format(now);
-
+                      // DateTime now = DateTime.now();
+                      // final DateFormat formatter = DateFormat('yyyy-MM-ddTHH:mm:ss.SSSZ'); // Sesuaikan format sesuai kebutuhan
+                      // String formattedTime = formatter.format(now);
+                      
                       await Provider.of<AppointmentAPI>(context, listen: false)
-                                    .addAppointment(widget.bookingDetails['patientId'], widget.bookingDetails['doctorId'], widget.bookingDetails['healthFacilityId'], "ongoing", formattedTime, "BCA", 'Bearer $accessToken');
+                      .addAppointment(widget.bookingDetails , 'Bearer $accessToken');
+
+                      await Provider.of<DoctorAPI>(context, listen: false)
+                      .updateDoctorSchedule(widget.bookingDetails['doctorSchedule'].id, widget.bookingDetails['doctorSchedule'], 'Bearer $accessToken');
+
                       Navigator.push(
                         context,
                         MaterialPageRoute
                         (
-                          builder: (context) 
+                          builder: (context)
                           {
                             return MainApp(responseBody: widget.responseBody, indexNavbar: 2, profileId: widget.profileId,);
                           }

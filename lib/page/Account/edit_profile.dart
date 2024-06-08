@@ -25,7 +25,8 @@ class _EditProfileState extends State<EditProfilePage>
     alamat: "",
     noTelepon: "",
     email: "",
-    userPhoto: ""
+    userPhoto: "",
+    isMainProfile: ""
   );
 
   late String accessToken;

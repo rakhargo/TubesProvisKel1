@@ -19,8 +19,10 @@ class AppointmentAPI with ChangeNotifier {
     facilityId: "",
     status: "",
     waktu: "",
-    formattedTime: "",
     metodePembayaran: "",
+    medicalRecordId: "",
+    antrian: 0,
+    judul: "",
   );
   Appointment get appointment => _appointment;
 
@@ -34,8 +36,10 @@ class AppointmentAPI with ChangeNotifier {
               facilityId: e["facilityId"].toString(),
               status: e["status"],
               waktu: e["waktu"],
-              formattedTime: e["waktu"],
               metodePembayaran: e["metodePembayaran"],
+              medicalRecordId: e["medicalRecordId"],
+              antrian: e["antrian"],
+              judul: e["judul"],
               // formattedTime: formatter.format(DateTime.parse(e["waktu"])),
             ))
         .toList();
@@ -53,8 +57,10 @@ class AppointmentAPI with ChangeNotifier {
         facilityId: json["facilityId"].toString(),
         status: json["status"],
         waktu: json["waktu"],
-        formattedTime: json["waktu"],
         metodePembayaran: json["metodePembayaran"],
+        medicalRecordId: json["medicalRecordId"],
+        antrian: json["antrian"],
+        judul: json["judul"],
         // formattedTime: formatter.format(DateTime.parse(e["waktu"])),
       )
     ;
@@ -71,9 +77,9 @@ class AppointmentAPI with ChangeNotifier {
         'Authorization': 'Bearer $accessToken',
       },
     );
-    // print("DATA BY USER");
+    print("DATA BY PROFILE");
     if (response.statusCode == 200) {
-      // print(jsonDecode(response.body));
+      print(jsonDecode(response.body));
       // print(response.body);
       return setFromJsonList(jsonDecode(response.body));
     } else {
@@ -99,30 +105,34 @@ class AppointmentAPI with ChangeNotifier {
     }
   }
 
-  Future<Appointment> addAppointment(int patientId, int doctorId, int facilityId, String status, String waktu, String metodePembayaran, String token) async {
-    // print("yes1");
-    final response = await http.post(Uri.parse('$url/create_appointment/'), headers: {
+  Future<Appointment> addAppointment(Map<String, dynamic> bookingDetails, String token) async {
+    final response = await http.post(Uri.parse('$url/create_appointment/'), 
+    headers:
+    {
       'Content-Type': 'application/json',
       'Authorization': token,
     }, 
     body: jsonEncode({
-      "patientId": patientId, 
-      "doctorId": doctorId, 
-      "facilityId": facilityId,
-      "status": status,
-      "waktu": waktu,
-      "metodePembayaran": metodePembayaran,
+      "patientId": bookingDetails['patientId'], 
+      "doctorId": bookingDetails['doctorId'], 
+      "facilityId": bookingDetails['facilityId'],
+      "status": bookingDetails['status'],
+      "waktu": bookingDetails['waktu'],
+      "metodePembayaran": bookingDetails['metodePembayaran'],
+      "medicalRecordId": bookingDetails['medicalRecordId'],
+      "antrian": bookingDetails['antrian'],
+      "judul": bookingDetails['judul'],
     })
     // body: {
     //   {"item_id": item_id, "user_id": user_id, "quantity": quantity}
     // }
     );
-    // print("yes2");
+    print("yes2");
     if (response.statusCode == 200) {
       print('appointment added successfully');
       return setFromJson(jsonDecode(response.body));
     } else {
-      print('Failed to add appointmenr: ${response.reasonPhrase}');
+      print('Failed to add appointment: ${response.reasonPhrase}');
       throw Exception(response.reasonPhrase);
     }
   }

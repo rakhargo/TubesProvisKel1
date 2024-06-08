@@ -44,6 +44,25 @@ class SpecialistAndPolyclinicAPI with ChangeNotifier {
     return _specialistAndPoliclinic;
   }
 
+  Future<List<JudulPoli>> fetchRelasiJudulPoliByPoliId(String poliId, String accessToken) async {
+    final response = await http.get(
+      Uri.parse('$url/relasi_judul_poli_id/$poliId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      List<JudulPoli> relasiJudulList = data.map((e) => JudulPoli.fromJson(e)).toList();
+      // print("INI LIST RELASI");
+      // print(inspect(relasiDoctorList));
+      return relasiJudulList;
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
   Future<List> fetchData(String accessToken) async {
     final response = await http.get(
       Uri.parse('$url/specialist_and_polyclinic/'),

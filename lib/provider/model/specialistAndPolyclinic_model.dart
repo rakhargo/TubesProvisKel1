@@ -17,3 +17,23 @@ class SpecialistAndPolyclinic {
     );
   }
 }
+
+class JudulPoli {
+  final String id;
+  final String polyclinicId;
+  final String judul;
+
+  JudulPoli({
+  required this.id,
+  required this.polyclinicId,
+  required this.judul,
+  }); 
+
+  factory JudulPoli.fromJson(Map<String, dynamic> json) {
+    return JudulPoli(
+      id: json['id'].toString(),
+      polyclinicId: json['polyclinicId'].toString(),
+      judul: json['judul'],
+    );
+  }
+}
