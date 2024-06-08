@@ -248,7 +248,7 @@ class _HomeState extends State<HomePage> {
                                 // Navigate to the page containing the create profile form
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => CreateProfilePage(responseBody: widget.responseBody,)),
+                                  MaterialPageRoute(builder: (context) => CreateProfilePage(responseBody: widget.responseBody, profileId: widget.profileId)),
                                 );
                               },
                             );
