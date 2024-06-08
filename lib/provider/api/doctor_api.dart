@@ -108,6 +108,25 @@ class DoctorAPI with ChangeNotifier {
     }
   }
 
+  Future<List<DoctorSchedule>> fetchDoctorScheduleByDoctorId(String doctorId, String accessToken) async {
+    final response = await http.get(
+      Uri.parse('$url/doctor_schedule_doctor_id/$doctorId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      List<DoctorSchedule> doctorScheduleList = data.map((e) => DoctorSchedule.fromJson(e)).toList();
+      // print("INI LIST jadwal");
+      // print(inspect(doctorScheduleList));
+      return doctorScheduleList;
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
   // Future<List> fetchDoctorsByPoliId(int poliId, String accessToken) async {
   //   final response = await http.get(
   //     Uri.parse('$url/dokter_rs_poli?poliId=$poliId'),
