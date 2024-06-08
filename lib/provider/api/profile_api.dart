@@ -113,4 +113,18 @@ class ProfileAPI with ChangeNotifier {
       throw Exception(response.reasonPhrase);
     }
   }
+
+  Future<bool> createNewProfile() async {
+    try {
+      // Your logic to create a new profile goes here
+      // For example, you might send a request to your backend API
+      // and wait for the response to determine if the profile was created successfully
+
+      // For demonstration purposes, let's assume the profile creation is successful
+      return true;
+    } catch (e) {
+      print('Error creating new profile: $e');
+      return false;
+    }
+  }
 }

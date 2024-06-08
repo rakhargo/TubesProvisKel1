@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:medimate/bottomNavBar.dart';
+import 'package:medimate/page/CreateProfilePage.dart';
 import 'package:medimate/page/qrCodeScanner.dart';
 
 class HomePage extends StatefulWidget {
@@ -232,65 +233,73 @@ class _HomeState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  Consumer<ProfileAPI>
-                  (
-                    builder: (context, item, child) 
-                    {
+                  Consumer<ProfileAPI>(
+                    builder: (context, item, child) {
                       return ListView.builder(
                         shrinkWrap: true,
-                        itemCount: profileList.length,
+                        itemCount: profileList.length + 1, // Add 1 for the "Create New Profile" button
                         itemBuilder: (context, index) {
-                          final profile = profileList[index];
-                          return ListTile(
-                            leading: CircleAvatar(
-                              radius: 20,
-                              // backgroundImage: AssetImage("images/orang/${profile['profilePicture']}"),
-                              child: FutureBuilder<dynamic>
-                              (
-                                
-                              future: item.fetchImage(profile.id, accessToken),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return const CircularProgressIndicator();
-                                } else if (snapshot.hasError) {
-                                  return const Icon(Icons.error);
-                                } else if (snapshot.hasData) {
-                                  return Image.memory(
-                                    snapshot.data!.bodyBytes,
-                                    // width: 50,
-                                    // height: 50,
-                                    // fit: BoxFit.cover,
-                                  );
-                                } else {
-                                  // Show a placeholder if no data is available
-                                  return const Placeholder();
-                                }
+                          if (index == profileList.length) {
+                            // Render the "Create New Profile" button as the last item
+                            return ListTile(
+                              leading: Icon(Icons.add), // You can change the icon as per your design
+                              title: Text("Create New Profile"),
+                              onTap: () {
+                                // Navigate to the page containing the create profile form
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => CreateProfilePage(responseBody: widget.responseBody,)),
+                                );
                               },
-                            ),
-                            ),
-                            title: Text(profile.nama),
-                            onTap: () {
-                              // setState(() {
-                              //   idxProfiles = index;
-                              // });
-                              _fetchProfile(profile.id);
-                              Navigator.of(context).pop();
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => MainApp(responseBody: widget.responseBody, indexNavbar: 0, profileId: profile.id,)),
-                              );
-                            },
-                          );
+                            );
+                          } else {
+                            final profile = profileList[index];
+                            return ListTile(
+                              leading: CircleAvatar(
+                                radius: 20,
+                                // backgroundImage: AssetImage("images/orang/${profile['profilePicture']}"),
+                                child: FutureBuilder<dynamic>(
+                                  future: item.fetchImage(profile.id, accessToken),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return const CircularProgressIndicator();
+                                    } else if (snapshot.hasError) {
+                                      return const Icon(Icons.error);
+                                    } else if (snapshot.hasData) {
+                                      return Image.memory(
+                                        snapshot.data!.bodyBytes,
+                                        // width: 50,
+                                        // height: 50,
+                                        // fit: BoxFit.cover,
+                                      );
+                                    } else {
+                                      // Show a placeholder if no data is available
+                                      return const Placeholder();
+                                    }
+                                  },
+                                ),
+                              ),
+                              title: Text(profile.nama),
+                              onTap: () {
+                                _fetchProfile(profile.id);
+                                Navigator.of(context).pop();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => MainApp(responseBody: widget.responseBody, indexNavbar: 0, profileId: profile.id,)),
+                                );
+                              },
+                            );
+                          }
                         },
                       );
-                    }
-                  ),
+                    },
+                  )
                 ],
               ),
             );
           },
         ),
+        
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(top: 20, bottom: 20, left: 30, right: 30),
