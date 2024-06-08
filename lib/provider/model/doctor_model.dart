@@ -54,3 +54,36 @@ class RelasiRsPoliDoctor
     );
   }
 }
+
+class DoctorSchedule 
+{
+  final String id;
+  final String tanggal;
+  final String mulai;
+  final String selesai;
+  final int maxBooking;
+  final int currentBooking;
+  final String doctorId;
+
+  DoctorSchedule({
+    required this.id,
+    required this.tanggal,
+    required this.mulai,
+    required this.selesai,
+    required this.maxBooking,
+    required this.currentBooking,
+    required this.doctorId,
+    });
+
+  factory DoctorSchedule.fromJson(Map<String, dynamic> json) {
+    return DoctorSchedule(
+      id: json['id'].toString(),
+      tanggal: json['tanggal'],
+      mulai: json['mulai'],
+      selesai: json['selesai'],
+      maxBooking: json['maxBooking'],
+      currentBooking: json['currentBooking'],
+      doctorId: json['doctorId'].toString(),
+    );
+  }
+}

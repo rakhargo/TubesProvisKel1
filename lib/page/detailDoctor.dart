@@ -53,7 +53,7 @@ class _DetailDoctorState extends State<DetailDoctorPage>
     foto: "",
   );
 
-  List<Map<String, dynamic>> judulList = [];
+  List<DoctorSchedule> doctorScheduleList = [];
 
   late String accessToken;
   late String userId;
@@ -65,6 +65,7 @@ class _DetailDoctorState extends State<DetailDoctorPage>
     _initializeAccessToken();
     _fetchHealthFacility(widget.healthFacilityId);
     _fetchDoctor(widget.doctorId);
+    _fetchDoctorSchedule(widget.doctorId);
   }
 
   void _initializeUserId() {
@@ -101,47 +102,70 @@ class _DetailDoctorState extends State<DetailDoctorPage>
     });
   }
 
+  Future<void> _fetchDoctorSchedule(String doctorId) async {
+    
+    // print("SEBELUM RESPONSE DOCTOR");
+    final doctorScheduleResponse =
+        await Provider.of<DoctorAPI>(context, listen: false)
+            .fetchDoctorScheduleByDoctorId(doctorId, accessToken); // Pass the access token here
+    // print("SETELAH RESPONSE DOCTOR");
+            // print(doctorResponse);
+    setState(() {
+      doctorScheduleList = doctorScheduleResponse;
+      print(inspect(doctorScheduleList));
+    });
+  }
 
-  List<Map<dynamic, dynamic>> jadwalDokter = 
-  [
-    {
-      "hari": "Thu", 
-      "tanggal": "18",
-      "availableTime": ["09:00", "10:00"],
-    },
+  String parseHari(String tanggal) {
+    final DateTime dateTime = DateTime.parse(tanggal);
+    final String hari = DateFormat('EEEE').format(dateTime);
+    return hari;
+  }
+  
+  String parseTanggal(String tanggal) {
+    final DateTime dateTime = DateTime.parse(tanggal);
+    final String formattedTanggal = DateFormat('dd').format(dateTime);
+    return formattedTanggal;
+  }
 
-    {
-      "hari": "Fri", 
-      "tanggal": "19",
-      "availableTime": ["10:00", "11:00", "16:00"],
-    },
 
-    {
-      "hari": "Sat", 
-      "tanggal": "20",
-      "availableTime": ["08:00", "10:00", "14:00"],
-    },
+  // List<Map<dynamic, dynamic>> jadwalDokter = 
+  // [
+  //   {
+  //     "hari": "Thu", 
+  //     "tanggal": "18",
+  //     "availableTime": ["09:00", "10:00"],
+  //   },
 
-    {
-      "hari": "Sun", 
-      "tanggal": "21",
-      "availableTime": ["11:00", "13:00", "14:00", "15:00"],
-    },
-  ];
+  //   {
+  //     "hari": "Fri", 
+  //     "tanggal": "19",
+  //     "availableTime": ["10:00", "11:00", "16:00"],
+  //   },
 
-  Map<dynamic, dynamic> selectedJadwalDokter = 
-  {
-    "hari": "Thu", 
-    "tanggal": "18",
-    "availableTime": ["09:00", "10:00"],
-  };
+  //   {
+  //     "hari": "Sat", 
+  //     "tanggal": "20",
+  //     "availableTime": ["08:00", "10:00", "14:00"],
+  //   },
 
-  Map<dynamic, dynamic> defaultSelectedJadwal = 
-  {
-    "hari": "Thu", 
-    "tanggal": "18",
-    "availableTime": ["09:00", "10:00"],
-  };
+  //   {
+  //     "hari": "Sun", 
+  //     "tanggal": "21",
+  //     "availableTime": ["11:00", "13:00", "14:00", "15:00"],
+  //   },
+  // ];
+
+  // String selectedJadwalDokter = '';
+  String selectedJadwalDokter = '';
+
+  String defaultSelectedJadwal = '';
+  // Map<dynamic, dynamic> defaultSelectedJadwal = 
+  // {
+  //   "hari": "Thu", 
+  //   "tanggal": "18",
+  //   "availableTime": ["09:00", "10:00"],
+  // };
 
   // String thisMonth = "April";
 
@@ -551,7 +575,8 @@ class _DetailDoctorState extends State<DetailDoctorPage>
                         scrollDirection: Axis.horizontal,
                         child: Row
                         (
-                          children: jadwalDokter.map<Widget>
+                          // children: jadwalDokter.map<Widget>
+                          children: doctorScheduleList.map<Widget>
                           (
                             (itemJadwal) 
                             {
@@ -563,10 +588,10 @@ class _DetailDoctorState extends State<DetailDoctorPage>
                                   showCheckmark: false,
                                   label: Text
                                   (
-                                    '${itemJadwal["hari"]} | ${itemJadwal["tanggal"]}',
+                                    '${parseHari(itemJadwal.tanggal)} | ${parseTanggal(itemJadwal.tanggal)}',
                                     style: TextStyle
                                     (
-                                      color: itemJadwal == selectedJadwalDokter
+                                      color: itemJadwal.tanggal == selectedJadwalDokter
                                           ? Colors.white
                                           : const Color.fromARGB(255, 53, 55, 121),
                                     ),
@@ -575,21 +600,22 @@ class _DetailDoctorState extends State<DetailDoctorPage>
                                   (
                                     borderRadius: BorderRadius.circular(13),
                                   ),
-                                  selected: itemJadwal == selectedJadwalDokter,
+                                  selected: itemJadwal.tanggal == selectedJadwalDokter,
                                   selectedColor: const Color.fromARGB(255, 53, 55, 121),
                                   backgroundColor: const Color.fromARGB(255, 235, 235, 255),
                                   onSelected: (selected) 
                                   {
                                     // Tambahkan fungsi untuk menangani pemilihan chip
                                     setState(() {
-                                      selectedJadwalDokter = selected ? itemJadwal : defaultSelectedJadwal;
+                                      selectedJadwalDokter = selected ? itemJadwal.tanggal : defaultSelectedJadwal;
+                                      // print(selectedJadwalDokter);
                                     });
                                 
                                     if (selected) 
                                     {
-                                      selectedForAppointment["hari"] = itemJadwal["hari"];
-                                      selectedForAppointment["tanggal"] = itemJadwal["tanggal"];
-                                      selectedForAppointment["selectedTime"] = "";
+                                      // selectedForAppointment["hari"] = itemJadwal["hari"];
+                                      // selectedForAppointment["tanggal"] = itemJadwal["tanggal"];
+                                      // selectedForAppointment["selectedTime"] = "";
                                     }
                                   },
                                 ),
@@ -621,46 +647,46 @@ class _DetailDoctorState extends State<DetailDoctorPage>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: 
                                 [
-                                  const Text
-                                  (
-                                    "Available Time",
-                                    style: TextStyle(color: Color.fromARGB(255, 62, 62, 62)),
-                                  ),
+                                  // const Text
+                                  // (
+                                  //   "Available Time",
+                                  //   style: TextStyle(color: Color.fromARGB(255, 62, 62, 62)),
+                                  // ),
                                   const SizedBox(height: 5),
-                                  Row
-                                  (
-                                    children: selectedJadwalDokter['availableTime'].map<Widget>((time) {
-                                      return Padding(
-                                        padding: const EdgeInsets.only(right: 20),
-                                        child: ChoiceChip
-                                        (
-                                          label: Text
-                                          (
-                                            time,
-                                            style: TextStyle(color: Color.fromARGB(255, 62, 62, 62))
-                                          ),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(13),
-                                          ),
-                                          // showCheckmark: false,
-                                          selected: time == selectedForAppointment["selectedTime"],
-                                          selectedColor: const Color.fromARGB(255, 221, 222, 255),
-                                          backgroundColor: const Color.fromARGB(255, 217, 217, 217),
-                                          onSelected: (selected) {
-                                            // Tambahkan fungsi untuk menangani pemilihan chip
-                                            setState(() {
-                                              selectedForAppointment["selectedTime"] = time;
-                                            });
+                                  // Row
+                                  // (
+                                  //   children: selectedJadwalDokter['availableTime'].map<Widget>((time) {
+                                  //     return Padding(
+                                  //       padding: const EdgeInsets.only(right: 20),
+                                  //       child: ChoiceChip
+                                  //       (
+                                  //         label: Text
+                                  //         (
+                                  //           time,
+                                  //           style: TextStyle(color: Color.fromARGB(255, 62, 62, 62))
+                                  //         ),
+                                  //         shape: RoundedRectangleBorder(
+                                  //           borderRadius: BorderRadius.circular(13),
+                                  //         ),
+                                  //         // showCheckmark: false,
+                                  //         selected: time == selectedForAppointment["selectedTime"],
+                                  //         selectedColor: const Color.fromARGB(255, 221, 222, 255),
+                                  //         backgroundColor: const Color.fromARGB(255, 217, 217, 217),
+                                  //         onSelected: (selected) {
+                                  //           // Tambahkan fungsi untuk menangani pemilihan chip
+                                  //           setState(() {
+                                  //             selectedForAppointment["selectedTime"] = time;
+                                  //           });
                                         
-                                            if (selected) 
-                                            {
-                                              // print(selectedForAppointment);
-                                            }
-                                          },
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ),
+                                  //           if (selected) 
+                                  //           {
+                                  //             // print(selectedForAppointment);
+                                  //           }
+                                  //         },
+                                  //       ),
+                                  //     );
+                                  //   }).toList(),
+                                  // ),
                                 ],
                               ),
                             ),
