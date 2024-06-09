@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:medimate/page/Account/edit_profile.dart';
-import 'package:medimate/page/Account/add_family.dart';
+import 'package:medimate/page/CreateProfilePage.dart';
 import 'package:medimate/page/Account/orders.dart';
 import 'package:medimate/page/Account/settings.dart';
 import 'package:medimate/page/Account/support.dart';
 import 'package:medimate/page/Screens/Login/login_screen.dart';
-import 'package:medimate/bottomNavBar.dart';
 import 'package:medimate/provider/model/profile_model.dart';
 import 'package:medimate/provider/api/profile_api.dart';
 import 'dart:convert';
@@ -208,10 +207,10 @@ class _AccountState extends State<AccountPage> {
                       route: SettingsPage(),
                     ),
                     const SizedBox(height: 15),
-                    const InkWellButtonWithIcon(
+                    InkWellButtonWithIcon(
                       icon: Icons.group_outlined,
                       text: "Add Family Member",
-                      route: AddFamilyMemberPage(),
+                      route: CreateProfilePage(responseBody: widget.responseBody, profileId: widget.profileId,),
                     ),
                     const SizedBox(height: 15),
                     InkWellButtonWithIcon(

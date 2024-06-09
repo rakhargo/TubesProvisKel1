@@ -145,6 +145,7 @@ class ProfileAPI with ChangeNotifier {
   }
 
   Future<http.Response> fetchRelations (String accessToken) async{
+    
     final response = await http.get(
       Uri.parse('$url/profile_relation/'),
       headers: {
@@ -158,5 +159,23 @@ class ProfileAPI with ChangeNotifier {
     } else {
       throw Exception(response.reasonPhrase);
     }
+  }
+
+  Future<http.Response> updateProfile(Map<String, dynamic> profileUpdate, String accessToken, String profileId) async {
+      final response = await http.put(
+        Uri.parse('$url/update_profile/$profileId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+        },
+        body: jsonEncode(profileUpdate),
+      );
+
+      if (response.statusCode == 200) {
+        // Profile updated successfully
+        return response;
+      } else {
+        throw Exception(response.reasonPhrase);
+      }
   }
 }
