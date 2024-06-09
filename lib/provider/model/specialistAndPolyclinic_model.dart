@@ -22,11 +22,13 @@ class JudulPoli {
   final String id;
   final String polyclinicId;
   final String judul;
+  final String tindakan;
 
   JudulPoli({
   required this.id,
   required this.polyclinicId,
   required this.judul,
+  required this.tindakan,
   }); 
 
   factory JudulPoli.fromJson(Map<String, dynamic> json) {
@@ -34,6 +36,7 @@ class JudulPoli {
       id: json['id'].toString(),
       polyclinicId: json['polyclinicId'].toString(),
       judul: json['judul'],
+      tindakan: json['tindakan'],
     );
   }
 }

@@ -6,7 +6,6 @@ class Appointment {
   final String status;
   final String waktu;
   final String metodePembayaran;
-  final String medicalRecordId;
   final int antrian;
   final String judul;
 
@@ -18,7 +17,6 @@ class Appointment {
   required this.status,
   required this.waktu,
   required this.metodePembayaran,
-  required this.medicalRecordId,
   required this.antrian,
   required this.judul
   }); 
@@ -31,10 +29,39 @@ class Appointment {
       status: json['status'],
       waktu: json['waktu'],
       metodePembayaran: json['metodePembayaran'],
-      medicalRecordId: json['medicalRecordId'],
       antrian: json['antrian'],
       id: json['id'],
       judul: json['judul'],
+    );
+  }
+}
+
+class MedicalRecord {
+  final String id;
+  final String patientId;
+  final String date;
+  final String jenisTes;
+  final String hasilTes;
+  final String appointmentId;
+  
+
+  MedicalRecord({
+  required this.id,
+  required this.patientId,
+  required this.date,
+  required this.jenisTes,
+  required this.hasilTes,
+  required this.appointmentId,
+  }); 
+
+  factory MedicalRecord.fromJson(Map<String, dynamic> json) {
+    return MedicalRecord(
+      id: json['id'],
+      patientId: json['patientId'],
+      date: json['date'],
+      jenisTes: json['jenisTes'],
+      hasilTes: json['hasilTes'],
+      appointmentId: json['appointmentId'],
     );
   }
 }

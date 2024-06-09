@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:developer';
 
 import '/provider/model/specialistAndPolyclinic_model.dart';
 
@@ -56,7 +57,7 @@ class SpecialistAndPolyclinicAPI with ChangeNotifier {
       List<dynamic> data = jsonDecode(response.body);
       List<JudulPoli> relasiJudulList = data.map((e) => JudulPoli.fromJson(e)).toList();
       // print("INI LIST RELASI");
-      // print(inspect(relasiDoctorList));
+      print(inspect(relasiJudulList));
       return relasiJudulList;
     } else {
       throw Exception(response.reasonPhrase);
