@@ -117,17 +117,46 @@ class ProfileAPI with ChangeNotifier {
     }
   }
 
-  Future<bool> createNewProfile() async {
-    try {
-      // Your logic to create a new profile goes here
-      // For example, you might send a request to your backend API
-      // and wait for the response to determine if the profile was created successfully
+  Future<http.Response> createNewProfile(String userId, String nama, String tanggalLahir,  String jenisKelamin, String alamat, String email, String noTelepon, String userPhoto, String isMainProfile, String accessToken) async {
+    final response = await http.post(
+      Uri.parse('$url/create_profile/$userId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+      body: jsonEncode(<String, dynamic>{
+          'userId': userId, // Add userId field
+          'nama': nama,
+          'tanggalLahir': tanggalLahir,
+          'jenisKelamin': jenisKelamin,
+          'alamat': alamat,
+          'email': email,
+          'noTelepon': noTelepon,
+          'userPhoto': userPhoto,
+          'isMainProfile': isMainProfile,
+      }),
+    );
 
-      // For demonstration purposes, let's assume the profile creation is successful
-      return true;
-    } catch (e) {
-      print('Error creating new profile: $e');
-      return false;
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
+  Future<http.Response> fetchRelations (String accessToken) async{
+    final response = await http.get(
+      Uri.parse('$url/profile_relation/'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      throw Exception(response.reasonPhrase);
     }
   }
 }

@@ -6,7 +6,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medimate/main.dart';
 import 'package:medimate/provider/api/profile_api.dart';
-import 'package:medimate/provider/model/profile_model.dart';
 import 'package:provider/provider.dart';
 
 class CreateProfilePage extends StatefulWidget {
@@ -32,7 +31,7 @@ class _CreateProfileState extends State<CreateProfilePage> {
   TextEditingController _notelpController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   int? _selectedRelations;
-  Color _CreateProfileButtonColor = Colors.grey;
+  Color _createProfileButtonColor = Colors.grey;
 
   List<dynamic> _relations = [];
   bool _isLoadingRelations = true;
@@ -56,30 +55,19 @@ class _CreateProfileState extends State<CreateProfilePage> {
   }
 
   Future<void> _fetchRelations() async {
-    const String apiUrl = 'http://127.0.0.1:8000/profile_relation/';
-
     try {
-      final response = await http.get(
-        Uri.parse(apiUrl),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Bearer $accessToken',
-        },
-      );
+      final response = await Provider.of<ProfileAPI>(context, listen: false).fetchRelations(accessToken);
 
       if (response.statusCode == 200) {
         final List<dynamic> relations = jsonDecode(response.body);
         setState(() {
-          // Filter out the relation with ID 1
-          _relations =
-              relations.where((relation) => relation['id'] != 1).toList();
+          _relations = relations.where((relation) => relation['id'] != 1).toList();
           _isLoadingRelations = false;
         });
       } else {
         throw Exception('Failed to load relations');
       }
     } catch (e) {
-      print(e);
       setState(() {
         _isLoadingRelations = false;
       });
@@ -118,35 +106,24 @@ class _CreateProfileState extends State<CreateProfilePage> {
                   color: Color(0xFF090F47),
                 ),
               ),
-              Text(
-                widget.profileId,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 28,
-                  color: Color(0xFF090F47),
-                ),
-              ),
               SizedBox(height: 20),
               _buildTextField(_emailController, "Email", size),
               SizedBox(height: 20),
               _buildTextField(_namaController, "Enter your name", size),
               SizedBox(height: 20),
-              _buildDateField(_tanggallahirController, "Enter your birth date",
-                  context, size),
+              _buildDateField(_tanggallahirController, "Enter your birth date", context, size),
               SizedBox(height: 20),
-              _buildDropdownField(
-                  ['Male', 'Female', 'Other'], "Select your gender", size),
+              _buildDropdownField(['Male', 'Female', 'Other'], "Select your gender", size),
               SizedBox(height: 20),
               _buildTextField(_alamatController, "Enter your address", size),
               SizedBox(height: 20),
-              _buildTextField(
-                  _notelpController, "Enter your mobile number", size),
+              _buildTextField(_notelpController, "Enter your mobile number", size),
               SizedBox(height: 20),
               _isLoadingRelations
                   ? CircularProgressIndicator()
                   : _buildRelationsDropdown(size),
               SizedBox(height: 30),
-              _createprofilebutton(size),
+              _createProfileButton(size),
             ],
           ),
         ),
@@ -154,8 +131,7 @@ class _CreateProfileState extends State<CreateProfilePage> {
     );
   }
 
-  Widget _buildTextField(
-      TextEditingController controller, String hint, Size size) {
+  Widget _buildTextField(TextEditingController controller, String hint, Size size) {
     return Container(
       width: size.width * 0.8,
       child: TextField(
@@ -175,8 +151,7 @@ class _CreateProfileState extends State<CreateProfilePage> {
     );
   }
 
-  Widget _buildDateField(TextEditingController controller, String hint,
-      BuildContext context, Size size) {
+  Widget _buildDateField(TextEditingController controller, String hint, BuildContext context, Size size) {
     return Container(
       width: size.width * 0.8,
       child: TextField(
@@ -259,17 +234,16 @@ class _CreateProfileState extends State<CreateProfilePage> {
     );
   }
 
-  Widget _createprofilebutton(Size size) {
+  Widget _createProfileButton(Size size) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 40),
       child: Container(
         width: size.width * 0.8,
         child: ElevatedButton(
-          onPressed:
-              _CreateProfileButtonColor == Colors.grey ? null : _createProfile,
+          onPressed: _createProfileButtonColor == Colors.grey ? null : _createProfile,
           style: ElevatedButton.styleFrom(
             padding: EdgeInsets.symmetric(vertical: 20, horizontal: 60),
-            backgroundColor: _CreateProfileButtonColor,
+            backgroundColor: _createProfileButtonColor,
           ),
           child: Text(
             "CREATE PROFILE",
@@ -308,59 +282,39 @@ class _CreateProfileState extends State<CreateProfilePage> {
         _emailController.text.isNotEmpty &&
         _selectedRelations != null) {
       setState(() {
-        _CreateProfileButtonColor = Color(0xFF202157);
+        _createProfileButtonColor = Color(0xFF202157);
       });
     } else {
       setState(() {
-        _CreateProfileButtonColor = Colors.grey;
+        _createProfileButtonColor = Colors.grey;
       });
     }
   }
 
   void _createProfile() async {
-    final String username = _emailController.text; // Assuming email is used as username
-    final String nama = _namaController.text;
     final String tanggalLahir = _tanggallahirController.text;
     final DateTime parsedDate = DateFormat("dd-MM-yyyy").parse(tanggalLahir);
     final String formattedDate = DateFormat("yyyy-MM-dd").format(parsedDate);
-    final String? jenisKelamin = _selectedGender;
-    final String alamat = _alamatController.text;
-    final String noTelepon = _notelpController.text;
-    const String userPhoto = "dummy.png";
-    final int? isMainProfile = _selectedRelations;
 
-    String apiCreate = 'http://127.0.0.1:8000/create_profile'; // Modified URL
-
-    final Map<String, dynamic> responseBodyLogin =
-        jsonDecode(widget.responseBody);
+    final Map<String, dynamic> responseBodyLogin = jsonDecode(widget.responseBody);
     final String accessToken = responseBodyLogin['access_token'];
     final int userId = responseBodyLogin['user_id'];
 
-    // Modified URL to include userId in the endpoint
-    apiCreate = '$apiCreate/$userId';
-
-    // if login successful, make new profile for the new account
     try {
-      final respCreate = await http.post(
-        Uri.parse(apiCreate),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Bearer $accessToken',
-        },
-        body: jsonEncode(<String, dynamic>{
-          'userId': userId, // Add userId field
-          'nama': nama,
-          'tanggalLahir': formattedDate,
-          'jenisKelamin': jenisKelamin,
-          'alamat': alamat,
-          'email': username,
-          'noTelepon': noTelepon,
-          'userPhoto': userPhoto,
-          'isMainProfile': isMainProfile,
-        }),
+      final response = await Provider.of<ProfileAPI>(context, listen: false).createNewProfile(
+        userId.toString(),
+        _namaController.text,
+        formattedDate,
+        _selectedGender!,
+        _alamatController.text,
+        _emailController.text,
+        _notelpController.text,
+        "dummy.png",
+        _selectedRelations.toString(),
+        accessToken,
       );
 
-      if (respCreate.statusCode == 200) {
+      if (response.statusCode == 200) {
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -372,9 +326,11 @@ class _CreateProfileState extends State<CreateProfilePage> {
                   onPressed: () {
                     Navigator.pop(context); // Close the dialog
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MainApp(responseBody: widget.responseBody, indexNavbar: 0, profileId: widget.profileId.toString()))); // Navigate to login page
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MainApp(responseBody: widget.responseBody, indexNavbar: 0, profileId: widget.profileId.toString()),
+                      ),
+                    ); // Navigate to login page
                   },
                   child: Text('OK'),
                 ),
@@ -383,8 +339,8 @@ class _CreateProfileState extends State<CreateProfilePage> {
           },
         );
       } else {
-        print('Failed to create profile: ${respCreate.reasonPhrase}');
-        print('Response body: ${respCreate.body}');
+        print('Failed to create profile: ${response.reasonPhrase}');
+        print('Response body: ${response.body}');
       }
     } catch (e) {
       print('Exception during making profile: $e');
