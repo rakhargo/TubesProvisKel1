@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medimate/main.dart';
-import 'package:medimate/provider/api/profile_api.dart';
 import 'package:provider/provider.dart';
+import 'package:medimate/provider/api/profile_api.dart';
 
 class CreateProfilePage extends StatefulWidget {
   final String responseBody;
@@ -113,7 +111,7 @@ class _CreateProfileState extends State<CreateProfilePage> {
               SizedBox(height: 20),
               _buildDateField(_tanggallahirController, "Enter your birth date", context, size),
               SizedBox(height: 20),
-              _buildDropdownField(['Male', 'Female', 'Other'], "Select your gender", size),
+              _buildDropdownField(['Male', 'Female'], "Select your gender", size),
               SizedBox(height: 20),
               _buildTextField(_alamatController, "Enter your address", size),
               SizedBox(height: 20),

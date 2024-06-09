@@ -5,6 +5,8 @@ import 'package:flutter/gestures.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:medimate/provider/api/profile_api.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -159,7 +161,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 width: size.width * 0.8,
                 child: DropdownButtonFormField<String>(
                   value: _selectedGender,
-                  items: ['Male', 'Female', 'Other'].map((String value) {
+                  items: ['Male', 'Female'].map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
@@ -342,7 +344,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(1900),
-      lastDate: DateTime(2101),
+      lastDate: DateTime.now(),
     );
     if (picked != null) {
       setState(() {
@@ -353,17 +355,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _signup() async {
-    final String username = _emailController.text; // Assuming email is used as username
+    final String username = _emailController.text;
     final String password = _passwordController.text;
-    final String nama = _namaController.text;
     final String tanggalLahir = _tanggallahirController.text;
     final DateTime parsedDate = DateFormat("dd-MM-yyyy").parse(tanggalLahir);
     final String formattedDate = DateFormat("yyyy-MM-dd").format(parsedDate);
-    final String? jenisKelamin = _selectedGender;
-    final String alamat = _alamatController.text;
-    final String noTelepon = _notelpController.text;
-    const String userPhoto = "dummy.png";
-    const int isMainProfile = 1;
 
     const String apiUrl = 'http://127.0.0.1:8000/users/';
     const String apiLogin = 'http://127.0.0.1:8000/login';
@@ -406,23 +402,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
             // if login successful, make new profile for the new account
             try {
-              final respCreate = await http.post(
-                Uri.parse(apiCreate),
-                headers: <String, String>{
-                  'Content-Type': 'application/json; charset=UTF-8',
-                  'Authorization': 'Bearer $accessToken',
-                },
-                body: jsonEncode(<String, dynamic>{
-                  'userId': userId, // Add userId field
-                  'nama': nama,
-                  'tanggalLahir': formattedDate,
-                  'jenisKelamin': jenisKelamin,
-                  'alamat': alamat,
-                  'email': username,
-                  'noTelepon': noTelepon,
-                  'userPhoto': userPhoto,
-                  'isMainProfile': isMainProfile,
-                }),
+              final respCreate = await Provider.of<ProfileAPI>(context, listen: false).createNewProfile(
+                userId.toString(),
+                _namaController.text,
+                formattedDate,
+                _selectedGender!,
+                _alamatController.text,
+                _emailController.text,
+                _notelpController.text,
+                "dummy.png",
+                "1",
+                accessToken,
               );
 
               if (respCreate.statusCode == 200) {
