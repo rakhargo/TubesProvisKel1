@@ -22,4 +22,19 @@ class Appointment {
   required this.antrian,
   required this.judul
   }); 
+
+  factory Appointment.fromJson(Map<String, dynamic> json) {
+    return Appointment(
+      patientId: json['patientId'],
+      doctorId: json['doctorId'],
+      facilityId: json['facilityId'],
+      status: json['status'],
+      waktu: json['waktu'],
+      metodePembayaran: json['metodePembayaran'],
+      medicalRecordId: json['medicalRecordId'],
+      antrian: json['antrian'],
+      id: json['id'],
+      judul: json['judul'],
+    );
+  }
 }
