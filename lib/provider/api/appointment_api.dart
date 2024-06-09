@@ -69,7 +69,7 @@ class AppointmentAPI with ChangeNotifier {
     return _appointment;
   }
 
-  Future<List<Appointment>> fetchDataAll(String profileId, String accessToken) async {
+  Future<List> fetchDataAll(String profileId, String accessToken) async {
     final response = await http.get(
       Uri.parse('$url/appointment_profile/$profileId'),
       headers: {
@@ -77,12 +77,11 @@ class AppointmentAPI with ChangeNotifier {
         'Authorization': 'Bearer $accessToken',
       },
     );
-    // print("DATA BY PROFILE");
+    print("DATA BY PROFILE");
     if (response.statusCode == 200) {
-      // print(jsonDecode(response.body));
+      print(jsonDecode(response.body));
       // print(response.body);
-      List<dynamic> jsonData = jsonDecode(response.body);
-      return jsonData.map((item) => Appointment.fromJson(item)).toList();
+      return setFromJsonList(jsonDecode(response.body));
     } else {
       throw Exception(response.reasonPhrase);
     }
