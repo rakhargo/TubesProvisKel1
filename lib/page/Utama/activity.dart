@@ -176,11 +176,11 @@ class _ActivityState extends State<ActivityPage>
                 ),
                 SizedBox
                 ( 
-                  // height: appointmentList.length * 150 + 50,
-                  height: onGoingList.length * 150 + 50,
+                  // height: appointmentList.length * 150 + 80,
+                  height: onGoingList.length * 160 + 50,
                   child: ListView.builder
                   (
-                    
+                    physics: NeverScrollableScrollPhysics(),
                     // itemCount: appointmentList.length,
                     itemCount: onGoingList.length,
                     itemBuilder: (context, index)
@@ -293,6 +293,20 @@ class _ActivityState extends State<ActivityPage>
                                               item,
                                               accessToken,
                                             );
+
+                                            // Map<String, dynamic> medRec = 
+                                            // {
+                                            //   "patientId": widget.profileId,
+                                            //   "date": item.waktu,
+                                            //   "jenisTes": item.judul,
+                                            //   "hasilTes": ,
+                                            // };
+
+                                            // await Provider.of<AppointmentAPI>(context, listen: false).addMedicalRecord
+                                            // (
+                                            //   item,
+                                            //   accessToken,
+                                            // );
                                             Navigator.of(context).pushReplacement(
                                               MaterialPageRoute(
                                                 builder: (BuildContext context) => MainApp(responseBody: widget.responseBody, indexNavbar: 2, profileId: widget.profileId,),
@@ -385,13 +399,14 @@ class _ActivityState extends State<ActivityPage>
                 ),
                 SizedBox
                 ( 
-                  height: recentList.length * 120 + 50,
+                  height: recentList.length * 130 + 50,
                   child: Builder
                   (
                     builder: (context) 
                     {
                       return ListView.builder
                       (
+                        physics: NeverScrollableScrollPhysics(),
                         itemCount: recentList.length,
                         itemBuilder: (context, index)
                         {
@@ -461,88 +476,51 @@ class _ActivityState extends State<ActivityPage>
                                         fontSize: 12,
                                       ),
                                     ),
-                                    Padding
+                                    Center
                                     (
-                                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                                      child: LayoutBuilder
+                                      child: Padding
                                       (
-                                        builder: (context, constraints) 
-                                        {
-                                          final boxWidth = constraints.maxWidth;
-                                          return Row
-                                          (
-                                            children: 
-                                            [
-                                              Container
+                                        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                                        child: LayoutBuilder
+                                        (
+                                          builder: (context, constraints) 
+                                          {
+                                            final boxWidth = constraints.maxWidth;
+                                            return Container
+                                            (
+                                              width: boxWidth / 2,
+                                              decoration: BoxDecoration
                                               (
-                                                width: boxWidth / 3,
-                                                decoration: BoxDecoration
-                                                (
-                                                  color: const Color.fromARGB(255, 53, 55, 121),
-                                                  borderRadius: BorderRadius.circular(6),
-                                                ),
-                                                padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
-                                                child: const Row
-                                                (
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: 
-                                                  [
-                                                    Icon
-                                                    (
-                                                      Icons.download,
-                                                      color: Colors.white,
-                                                      size: 14,
-                                                    ),
-                                                    SizedBox(width: 6.0),
-                                                    Text
-                                                    (
-                                                      'Download',
-                                                      style: TextStyle
-                                                      (
-                                                        color: Colors.white,
-                                                        fontSize: 12,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
+                                                color: const Color.fromARGB(255, 53, 55, 121),
+                                                borderRadius: BorderRadius.circular(6),
                                               ),
-                                              const SizedBox(width: 18),
-                                              Container
+                                              padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
+                                              child: const Row
                                               (
-                                                width: boxWidth / 3,
-                                                decoration: BoxDecoration
-                                                (
-                                                  color: const Color.fromARGB(255, 53, 55, 121),
-                                                  borderRadius: BorderRadius.circular(6),
-                                                ),
-                                                padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
-                                                child: const Row
-                                                (
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: 
-                                                  [
-                                                    Icon
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: 
+                                                [
+                                                  Icon
+                                                  (
+                                                    Icons.visibility_outlined,
+                                                    color: Colors.white,
+                                                    size: 14,
+                                                  ),
+                                                  SizedBox(width: 6.0),
+                                                  Text
+                                                  (
+                                                    'View Report',
+                                                    style: TextStyle
                                                     (
-                                                      Icons.visibility_outlined,
                                                       color: Colors.white,
-                                                      size: 14,
+                                                      fontSize: 12,
                                                     ),
-                                                    SizedBox(width: 6.0),
-                                                    Text
-                                                    (
-                                                      'View Report',
-                                                      style: TextStyle
-                                                      (
-                                                        color: Colors.white,
-                                                        fontSize: 12,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          );
-                                        },
+                                            );
+                                          },
+                                        ),
                                       ),
                                     ),
                                   ],

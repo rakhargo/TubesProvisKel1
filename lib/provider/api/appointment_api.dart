@@ -91,7 +91,7 @@ class AppointmentAPI with ChangeNotifier {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken',
-      },
+      },  
     );
     // print("DATA BY PROFILE");
     if (response.statusCode == 200) {
@@ -162,26 +162,8 @@ class AppointmentAPI with ChangeNotifier {
     }
   }
 
-  Future<dynamic> fetchDataRecordByAppointmentId(String appointmentId, String accessToken) async {
-    final response = await http.get(
-      Uri.parse('$url/medical-record/$appointmentId'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken',
-      },
-    );
-    // print("DATA BY PROFILE");
-    if (response.statusCode == 200) {
-      // print(jsonDecode(response.body));
-      // print(response.body);
-      return MedicalRecord.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception(response.reasonPhrase);
-    }
-  }
-
-  // Future<MedicalRecord> addMedicalRecord(Map<String, dynamic> bookingDetails, String token) async {
-  //   final response = await http.post(Uri.parse('$url/create_appointment/'), 
+  // Future<MedicalRecord> addMedicalRecord(Map<String, dynamic> medRec, String token) async {
+  //   final response = await http.post(Uri.parse('$url/create_medical_record/'), 
   //   headers:
   //   {
   //     'Content-Type': 'application/json',
@@ -214,5 +196,23 @@ class AppointmentAPI with ChangeNotifier {
   //     throw Exception(response.reasonPhrase);
   //   }
   // }
+
+  Future<dynamic> fetchDataRecordByAppointmentId(String appointmentId, String accessToken) async {
+    final response = await http.get(
+      Uri.parse('$url/medical-record/$appointmentId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    // print("DATA BY PROFILE");
+    if (response.statusCode == 200) {
+      // print(jsonDecode(response.body));
+      // print(response.body);
+      return MedicalRecord.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
 
 }
