@@ -57,22 +57,23 @@ class _ActivityState extends State<ActivityPage>
   }
 
   Future<void> _fetchDataAll() async {
-    final appointmentListResponse =
-        await Provider.of<AppointmentAPI>(context, listen: false)
-            .fetchDataAll(widget.profileId, accessToken); // Pass the access token here
+    try {
+      final appointmentListResponse =
+          await Provider.of<AppointmentAPI>(context, listen: false)
+              .fetchDataAll(widget.profileId, accessToken); // Pass the access token here
     setState(() {
       appointmentList = appointmentListResponse;
       // print("INI APPOINTMENT");
       // print(inspect(appointmentList));
 
-    for (var appointment in appointmentList) 
-    {
-      if (appointment.status == "recent") {
-        recentList.add(appointment);
-      } else if (appointment.status == "ongoing") {
-        onGoingList.add(appointment);
+      for (var appointment in appointmentList) 
+      {
+        if (appointment.status == "recent") {
+          recentList.add(appointment);
+        } else if (appointment.status == "ongoing") {
+          onGoingList.add(appointment);
+        }
       }
-    }
 
       // print(inspect(recentAppointments));
       // print(inspect(activityAppointments));
@@ -82,16 +83,11 @@ class _ActivityState extends State<ActivityPage>
       print(recentList);
       print(recentList.length);
 
-
-      
-      // ongoingList = appointmentList.where((apjpointment) => appointment['status'] == 'ongoing').toList();
-      // recentList = appointmentList.where((appointment) => appointment['status'] == 'recent').toList();
-      // print("INI ONGOING");
-      // print(ongoingList);
-      // print(appointmentListResponse);
-      // print("INI PROFILE LIST");
-      // print(profileList);
     });
+      
+    } catch (e) {
+      print("Error: $e");
+    }
   }
 
   String formatDateHour(String dateTimeStr) {
@@ -216,7 +212,7 @@ class _ActivityState extends State<ActivityPage>
                                   child: Text
                                   (
                                     // item["title"],
-                                    item["judul"],
+                                    item.judul,
                                     style: const TextStyle
                                     (
                                       color: Color.fromARGB(255, 32, 33, 87),
@@ -259,7 +255,7 @@ class _ActivityState extends State<ActivityPage>
                                 Text
                                 (
                                   // item["lokasi"],
-                                  "Antrian ${item["antrian"].toString()}",
+                                  "Antrian ${item.antrian.toString()}",
                                   style: const TextStyle
                                   (
                                     color: Color.fromARGB(216, 53, 55, 121),
@@ -410,7 +406,7 @@ class _ActivityState extends State<ActivityPage>
                                           Text
                                           (
                                             // item["title"],
-                                            "Swab COVID-19",
+                                            item.judul,
                                             style: const TextStyle
                                             (
                                               color: Color.fromARGB(255, 32, 33, 87),

@@ -636,6 +636,7 @@ class _DetailDoctorState extends State<DetailDoctorPage>
                                         antrian = itemJadwal.currentBooking + 1;
                                         // doctorScheduleId = itemJadwal.id;
                                         doctorSchedule = itemJadwal;
+                                        
                                         isPilih = false;
                                         // print(selectedJadwalDokter);
                                       });

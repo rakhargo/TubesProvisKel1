@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -529,55 +530,99 @@ class _BookingSummaryState extends State<BookingSummaryPage>
 
                   const SizedBox(height: 20,),
 
-                  GestureDetector
-                  (
-                    onTap: () async{
-                      // Dapatkan waktu saat ini dan format menjadi string
-                      // DateTime now = DateTime.now();
-                      // final DateFormat formatter = DateFormat('yyyy-MM-ddTHH:mm:ss.SSSZ'); // Sesuaikan format sesuai kebutuhan
-                      // String formattedTime = formatter.format(now);
-                      
-                      await Provider.of<AppointmentAPI>(context, listen: false)
-                      .addAppointment(widget.bookingDetails , 'Bearer $accessToken');
-
-                      await Provider.of<DoctorAPI>(context, listen: false)
-                      .updateDoctorSchedule(widget.bookingDetails['doctorSchedule'].id, widget.bookingDetails['doctorSchedule'], 'Bearer $accessToken');
-
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute
-                        (
-                          builder: (context)
-                          {
-                            return MainApp(responseBody: widget.responseBody, indexNavbar: 2, profileId: widget.profileId,);
-                          }
-                        ),
-                      );
-                    },
-                    child: Container
-                    (
-                      padding: const EdgeInsets.all(8),
+                  Container(
+                      width: 150,
                       height: 40,
-                      width: 200,
-                      decoration: BoxDecoration
-                      (
-                        borderRadius: BorderRadius.circular(20),
-                        color: const Color.fromARGB(255, 32, 33, 87),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: const Color(0xFF091547),
                       ),
-                      child: const Center
-                      (
-                        child: Text
-                        (
-                          'CONFIRM',
-                          style: TextStyle
-                          (
+                      child: TextButton(
+                        child: const Text(
+                          'Confirm',
+                          style: TextStyle(
                             color: Colors.white,
-                            fontWeight: FontWeight.bold
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
+                        onPressed: () async {
+                          try {
+                            await Provider.of<AppointmentAPI>(context, listen: false).addAppointment
+                            (
+                              widget.bookingDetails, 
+                              'Bearer $accessToken'
+                            );
+
+                            // print('INI INSPECT FLUTTER SCHEDULE');
+                            // print(inspect(widget.bookingDetails['doctorSchedule']));
+                            await Provider.of<DoctorAPI>(context, listen: false).updateDoctorSchedule
+                            (
+                              widget.bookingDetails['doctorSchedule'].id,
+                              widget.bookingDetails['doctorSchedule'],
+                              // widget.bookingDetails['antrian'],
+                              accessToken,
+                            );
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) => MainApp(responseBody: widget.responseBody, indexNavbar: 2, profileId: widget.profileId,),
+                                
+                              ),
+                            );
+                          } catch (error) {
+                            print('Error occurred during API call: $error');
+                          }
+                        },
                       ),
                     ),
-                  ),
+                  // GestureDetector
+                  // (
+                  //   onTap: () async {
+                  //     // Dapatkan waktu saat ini dan format menjadi string
+                  //     // DateTime now = DateTime.now();
+                  //     // final DateFormat formatter = DateFormat('yyyy-MM-ddTHH:mm:ss.SSSZ'); // Sesuaikan format sesuai kebutuhan
+                  //     // String formattedTime = formatter.format(now);
+                      
+                  //     await Provider.of<AppointmentAPI>(context, listen: false)
+                  //     .addAppointment(widget.bookingDetails , 'Bearer $accessToken');
+
+                  //     await Provider.of<DoctorAPI>(context, listen: false)
+                  //     .updateDoctorSchedule(widget.bookingDetails['doctorSchedule'].id, widget.bookingDetails['doctorSchedule'], 'Bearer $accessToken');
+
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute
+                  //       (
+                  //         builder: (context)
+                  //         {
+                  //           return MainApp(responseBody: widget.responseBody, indexNavbar: 2, profileId: widget.profileId,);
+                  //         }
+                  //       ),
+                  //     );
+                  //   },
+                  //   child: Container
+                  //   (
+                  //     padding: const EdgeInsets.all(8),
+                  //     height: 40,
+                  //     width: 200,
+                  //     decoration: BoxDecoration
+                  //     (
+                  //       borderRadius: BorderRadius.circular(20),
+                  //       color: const Color.fromARGB(255, 32, 33, 87),
+                  //     ),
+                  //     child: const Center
+                  //     (
+                  //       child: Text
+                  //       (
+                  //         'CONFIRM',
+                  //         style: TextStyle
+                  //         (
+                  //           color: Colors.white,
+                  //           fontWeight: FontWeight.bold
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   const SizedBox(height: 8,),
                   GestureDetector
                   (

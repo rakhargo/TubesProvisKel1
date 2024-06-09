@@ -127,7 +127,19 @@ class DoctorAPI with ChangeNotifier {
     }
   }
 
-  Future<DoctorSchedule> updateDoctorSchedule(String doctorScheduleId, Map<String, dynamic> doctorSchedule, String accessToken) async {
+  Future<DoctorSchedule> updateDoctorSchedule(String doctorScheduleId, DoctorSchedule doctorSchedule, String accessToken) async {
+    print("SEBELUM PUT");
+    // print("INI ARGUMEN");
+    // print(inspect(doctorSchedule));
+    // print("INI JSONENCODE");
+    // print(jsonEncode({
+    //     "tanggal": doctorSchedule.tanggal,
+    //     "mulai": doctorSchedule.mulai,
+    //     "selesai": doctorSchedule.selesai,
+    //     "maxBooking": doctorSchedule.maxBooking,
+    //     "currentBooking": doctorSchedule.currentBooking + 1,
+    //     "doctorId": int.parse(doctorSchedule.doctorId),
+    //   }));
     final response = await http.put(
       Uri.parse('$url/doctor_schedule/$doctorScheduleId'),
       headers: {
@@ -135,20 +147,17 @@ class DoctorAPI with ChangeNotifier {
         'Authorization': 'Bearer $accessToken',
       },
       body: jsonEncode({
-        "tanggal": doctorSchedule['tanggal'],
-        "mulai": doctorSchedule['mulai'],
-        "selesai": doctorSchedule['selesai'],
-        "maxBooking": doctorSchedule['maxBooking'],
-        "currentBooking": doctorSchedule['currentBooking'],
-        "doctorId": int.parse(doctorSchedule['doctorId']),
+        "tanggal": doctorSchedule.tanggal,
+        "mulai": doctorSchedule.mulai,
+        "selesai": doctorSchedule.selesai,
+        "maxBooking": doctorSchedule.maxBooking,
+        "currentBooking": doctorSchedule.currentBooking + 1,
+        "doctorId": int.parse(doctorSchedule.doctorId),
       })
     );
+    print("SETELAH PUT");
     if (response.statusCode == 200) {
-      // List<dynamic> data = jsonDecode(response.body);
-      // DoctorSchedule.fromJson(jsonDecode(response.body));
-      // List<DoctorSchedule> doctorScheduleList = data.map((e) => DoctorSchedule.fromJson(e)).toList();
-      // print("INI LIST jadwal");
-      // print(inspect(doctorScheduleList));
+      // print(inspect(DoctorSchedule.fromJson(jsonDecode(response.body))));
       print('Schedule updated successfully');
       return DoctorSchedule.fromJson(jsonDecode(response.body));
     } else {

@@ -37,7 +37,7 @@ class AppointmentAPI with ChangeNotifier {
               status: e["status"],
               waktu: e["waktu"],
               metodePembayaran: e["metodePembayaran"],
-              medicalRecordId: e["medicalRecordId"],
+              medicalRecordId: e["medicalRecordId"].toString(),
               antrian: e["antrian"],
               judul: e["judul"],
               // formattedTime: formatter.format(DateTime.parse(e["waktu"])),
@@ -58,7 +58,7 @@ class AppointmentAPI with ChangeNotifier {
         status: json["status"],
         waktu: json["waktu"],
         metodePembayaran: json["metodePembayaran"],
-        medicalRecordId: json["medicalRecordId"],
+        medicalRecordId: json["medicalRecordId"].toString(),
         antrian: json["antrian"],
         judul: json["judul"],
         // formattedTime: formatter.format(DateTime.parse(e["waktu"])),
@@ -106,6 +106,21 @@ class AppointmentAPI with ChangeNotifier {
   }
 
   Future<Appointment> addAppointment(Map<String, dynamic> bookingDetails, String token) async {
+    // print("INI BOOKING DETAILS");
+    // print(bookingDetails);
+
+    // print("INI JSONENCODE");
+    // print(jsonEncode({
+    //   "patientId": bookingDetails['patientId'], 
+    //   "doctorId": bookingDetails['doctorId'], 
+    //   "facilityId": bookingDetails['facilityId'],
+    //   "status": bookingDetails['status'],
+    //   "waktu": bookingDetails['waktu'],
+    //   "metodePembayaran": bookingDetails['metodePembayaran'],
+    //   "medicalRecordId": bookingDetails['medicalRecordId'],
+    //   "antrian": bookingDetails['antrian'],
+    //   "judul": bookingDetails['judul'],
+    // }));
     final response = await http.post(Uri.parse('$url/create_appointment/'), 
     headers:
     {
@@ -129,7 +144,10 @@ class AppointmentAPI with ChangeNotifier {
     );
     print("yes2");
     if (response.statusCode == 200) {
-      print('appointment added successfully');
+      // print('appointment added successfully');
+      // print('INI JSONDECODE');
+      // print(jsonDecode(response.body));
+      
       return setFromJson(jsonDecode(response.body));
     } else {
       print('Failed to add appointment: ${response.reasonPhrase}');
