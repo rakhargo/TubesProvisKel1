@@ -97,7 +97,7 @@ class _CreateProfileState extends State<CreateProfilePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                "Create new profile",
+                "Add Family Member",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 28,

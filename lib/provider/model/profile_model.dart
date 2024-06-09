@@ -22,7 +22,37 @@ class Profile {
   required this.email,
   required this.userPhoto,
   required this.isMainProfile
-  }); 
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'userId': userId,
+      'nama': nama,
+      'tanggalLahir': tanggalLahir,
+      'jenisKelamin': jenisKelamin,
+      'email': email,
+      'alamat': alamat,
+      'noTelepon': noTelepon,
+      'userPhoto': userPhoto,
+      'isMainProfile': isMainProfile,
+    };
+  }
+
+  factory Profile.fromJson(Map<String, dynamic> json) {
+    return Profile(
+      id: json['id'],
+      userId: json['userId'],
+      nama: json['nama'],
+      tanggalLahir: json['tanggalLahir'],
+      jenisKelamin: json['jenisKelamin'],
+      email: json['email'],
+      alamat: json['alamat'],
+      noTelepon: json['noTelepon'],
+      userPhoto: json['userPhoto'],
+      isMainProfile: json['isMainProfile'],
+    );
+  }
 }
 
 class ProfileRelation {
