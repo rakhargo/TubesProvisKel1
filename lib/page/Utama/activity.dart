@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:intl/date_symbol_data_file.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:medimate/main.dart';
 import 'package:medimate/page/Account/orders.dart';
 import 'package:provider/provider.dart';
 import 'package:medimate/bottomNavBar.dart';
@@ -77,10 +78,10 @@ class _ActivityState extends State<ActivityPage>
 
       // print(inspect(recentAppointments));
       // print(inspect(activityAppointments));
-      print(onGoingList);
+      // print(onGoingList);
       print(onGoingList.length);
 
-      print(recentList);
+      // print(recentList);
       print(recentList.length);
 
     });
@@ -283,38 +284,55 @@ class _ActivityState extends State<ActivityPage>
                                       builder: (context, constraints) 
                                       {
                                         final boxWidth = constraints.maxWidth;
-                                        return Container
+                                        return GestureDetector
                                         (
-                                          width: boxWidth / 2, // set the width to half of the parent container
-                                          decoration: BoxDecoration
-                                          (
-                                            color: const Color.fromARGB(204, 53, 55, 121),
-                                            borderRadius: BorderRadius.circular(6),
-                                          ),
-                                          padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
-                                          child: const Row
-                                          (
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: 
-                                            [
-                                              Icon
-                                              (
-                                                Icons.pin_drop_outlined,
-                                                color: Colors.white,
-                                                size: 14,
+                                          onTap: () async
+                                          {
+                                            await Provider.of<AppointmentAPI>(context, listen: false).updateAppointment
+                                            (
+                                              item,
+                                              accessToken,
+                                            );
+                                            Navigator.of(context).pushReplacement(
+                                              MaterialPageRoute(
+                                                builder: (BuildContext context) => MainApp(responseBody: widget.responseBody, indexNavbar: 2, profileId: widget.profileId,),
+                                                
                                               ),
-                                              SizedBox(width: 6.0),
-                                              Text
-                                              (
-                                                // 'View on maps',
-                                                'Done',
-                                                style: TextStyle
+                                            );
+                                          },
+                                          child: Container
+                                          (
+                                            width: boxWidth / 2, // set the width to half of the parent container
+                                            decoration: BoxDecoration
+                                            (
+                                              color: const Color.fromARGB(204, 53, 55, 121),
+                                              borderRadius: BorderRadius.circular(6),
+                                            ),
+                                            padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
+                                            child: const Row
+                                            (
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: 
+                                              [
+                                                Icon
                                                 (
+                                                  Icons.pin_drop_outlined,
                                                   color: Colors.white,
-                                                  fontSize: 10,
+                                                  size: 14,
                                                 ),
-                                              ),
-                                            ],
+                                                SizedBox(width: 6.0),
+                                                Text
+                                                (
+                                                  // 'View on maps',
+                                                  'Done',
+                                                  style: TextStyle
+                                                  (
+                                                    color: Colors.white,
+                                                    fontSize: 10,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         );
                                       },
