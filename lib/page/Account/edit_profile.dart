@@ -61,8 +61,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Future<void> _fetchProfile(String profileId) async {
     try {
-      final profileResponse = await Provider.of<ProfileAPI>(context, listen: false)
-          .fetchDataByProfileId(profileId, accessToken);
+      final profileResponse =
+          await Provider.of<ProfileAPI>(context, listen: false)
+              .fetchDataByProfileId(profileId, accessToken);
 
       setState(() {
         chosenProfile = profileResponse;
@@ -88,7 +89,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
       if (response.statusCode == 200) {
         final List<dynamic> relations = jsonDecode(response.body);
         setState(() {
-          _relations = relations.where((relation) => relation['id'] != 1).toList();
+          _relations =
+              relations.where((relation) => relation['id'] != 1).toList();
           _isLoadingRelations = false;
         });
       } else {
@@ -143,7 +145,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -180,9 +181,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           ),
                           child: ClipOval(
                             child: FutureBuilder<dynamic>(
-                              future: item.fetchImage(widget.profileId, accessToken),
+                              future: item.fetchImage(
+                                  widget.profileId, accessToken),
                               builder: (context, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
                                   return const CircularProgressIndicator();
                                 } else if (snapshot.hasError) {
                                   return const Icon(Icons.error);
@@ -208,19 +211,26 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         const SizedBox(height: 20),
                         _buildTextField(_emailController, "Email", size),
                         SizedBox(height: 20),
-                        _buildTextField(_namaController, "Enter your name", size),
+                        _buildTextField(
+                            _namaController, "Enter your name", size),
                         SizedBox(height: 20),
-                        _buildDateField(_tanggallahirController, "Enter your birth date", context, size),
+                        _buildDateField(_tanggallahirController,
+                            "Enter your birth date", context, size),
                         SizedBox(height: 20),
-                        _buildDropdownField(['Male', 'Female'], "Select your gender", size),
+                        _buildDropdownField(
+                            ['Male', 'Female'], "Select your gender", size),
                         SizedBox(height: 20),
-                        _buildTextField(_alamatController, "Enter your address", size),
+                        _buildTextField(
+                            _alamatController, "Enter your address", size),
                         SizedBox(height: 20),
-                        _buildTextField(_notelpController, "Enter your mobile number", size),
-                        SizedBox(height: 20),
-                        _isLoadingRelations
-                            ? CircularProgressIndicator()
-                            : _buildRelationsDropdown(size),
+                        _buildTextField(_notelpController,
+                            "Enter your mobile number", size),
+                        if (chosenProfile!.isMainProfile != 1.toString()) ...[
+                          SizedBox(height: 20),
+                          _isLoadingRelations
+                              ? CircularProgressIndicator()
+                              : _buildRelationsDropdown(size),
+                        ],
                         SizedBox(height: 30),
                         _updateProfileButton(size),
                       ],
@@ -232,7 +242,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String hint, Size size) {
+  Widget _buildTextField(
+      TextEditingController controller, String hint, Size size) {
     return Container(
       width: size.width * 0.8,
       child: TextField(
@@ -252,7 +263,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget _buildDateField(TextEditingController controller, String hint, BuildContext context, Size size) {
+  Widget _buildDateField(TextEditingController controller, String hint,
+      BuildContext context, Size size) {
     return Container(
       width: size.width * 0.8,
       child: TextField(
@@ -341,7 +353,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
       child: Container(
         width: size.width * 0.8,
         child: ElevatedButton(
-          onPressed: _updateProfileButtonColor == Colors.grey ? null : _updateProfile,
+          onPressed:
+              _updateProfileButtonColor == Colors.grey ? null : _updateProfile,
           style: ElevatedButton.styleFrom(
             padding: EdgeInsets.symmetric(vertical: 20, horizontal: 60),
             backgroundColor: _updateProfileButtonColor,
@@ -398,9 +411,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
 
     try {
-      String? userPhoto =  await _uploadImage(); // Upload the image and get the file name
+      String? userPhoto =
+          await _uploadImage(); // Upload the image and get the file name
 
       final userPhotoFirst = chosenProfile!.userPhoto;
+
+      _selectedRelations ??= 1;
 
       final profileToUpdate = Profile(
         id: widget.profileId,
@@ -416,7 +432,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
       );
 
       final response = await Provider.of<ProfileAPI>(context, listen: false)
-          .updateProfile(profileToUpdate.toJson(), accessToken, widget.profileId);
+          .updateProfile(
+              profileToUpdate.toJson(), accessToken, widget.profileId);
 
       if (response.statusCode == 200) {
         _showSuccessDialog();
