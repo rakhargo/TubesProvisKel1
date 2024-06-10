@@ -64,6 +64,38 @@ class SpecialistAndPolyclinicAPI with ChangeNotifier {
     }
   }
 
+  Future<List<JudulPoli>> fetchAllJudulPoli(String accessToken) async {
+    final response = await http.get(
+      Uri.parse('$url/relasi_judul_poli/'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      List<JudulPoli> judulPoliList = data.map((e) => JudulPoli.fromJson(e)).toList();
+      return judulPoliList;
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
+  Future<JudulPoli> fetchJudulPoliById(String relasiJudulPoliId, String accessToken) async {
+    final response = await http.get(
+      Uri.parse('$url/relasi_judul_poli/$relasiJudulPoliId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      return JudulPoli.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
   Future<List> fetchData(String accessToken) async {
     final response = await http.get(
       Uri.parse('$url/specialist_and_polyclinic/'),

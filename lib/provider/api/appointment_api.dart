@@ -9,8 +9,8 @@ import '/provider/model/appointment_model.dart';
 
 class AppointmentAPI with ChangeNotifier {
   final String url = 'http://127.0.0.1:8000';
-  List<dynamic> _appointmentList = [];
-  List<dynamic> get appointmentList => _appointmentList;
+  List<Appointment> _appointmentList = [];
+  List<Appointment> get appointmentList => _appointmentList;
 
   Appointment _appointment = Appointment
   (
@@ -22,11 +22,11 @@ class AppointmentAPI with ChangeNotifier {
     waktu: "",
     metodePembayaran: "",
     antrian: 0,
-    judul: "",
+    relasiJudulPoliId: "",
   );
   Appointment get appointment => _appointment;
 
-  List<dynamic> setFromJsonList(List<dynamic> json) {
+  List<Appointment> setFromJsonList(List<dynamic> json) {
     _appointmentList = json
         .map((e) => Appointment
         (
@@ -38,7 +38,7 @@ class AppointmentAPI with ChangeNotifier {
               waktu: e["waktu"],
               metodePembayaran: e["metodePembayaran"],
               antrian: e["antrian"],
-              judul: e["judul"],
+              relasiJudulPoliId: e["relasiJudulPoliId"].toString(),
               // formattedTime: formatter.format(DateTime.parse(e["waktu"])),
             ))
         .toList();
@@ -58,7 +58,7 @@ class AppointmentAPI with ChangeNotifier {
         waktu: json["waktu"],
         metodePembayaran: json["metodePembayaran"],
         antrian: json["antrian"],
-        judul: json["judul"],
+        relasiJudulPoliId: json["relasiJudulPoliId"].toString(),
         // formattedTime: formatter.format(DateTime.parse(e["waktu"])),
       )
     ;
@@ -67,7 +67,7 @@ class AppointmentAPI with ChangeNotifier {
     return _appointment;
   }
 
-  Future<List> fetchDataAll(String profileId, String accessToken) async {
+  Future<List<Appointment>> fetchDataAll(String profileId, String accessToken) async {
     final response = await http.get(
       Uri.parse('$url/appointment_profile/$profileId'),
       headers: {
@@ -119,7 +119,7 @@ class AppointmentAPI with ChangeNotifier {
       "metodePembayaran": bookingDetails['metodePembayaran'],
       "medicalRecordId": bookingDetails['medicalRecordId'],
       "antrian": bookingDetails['antrian'],
-      "judul": bookingDetails['judul'],
+      "relasiJudulPoliId": bookingDetails['relasiJudulPoliId'],
     })
     );
     // print("yes2");
@@ -135,21 +135,21 @@ class AppointmentAPI with ChangeNotifier {
     }
   }
 
-  Future<Appointment> updateAppointment(Appointment appointment, String token) async {
+  Future<Appointment> updateAppointment(Map<String, dynamic> appointment, String token) async {
     // print(inspect(appointment));
-    final response = await http.put(Uri.parse('$url/appointment_update/${appointment.id}'), headers: {
+    final response = await http.put(Uri.parse('$url/appointment_update/${int.parse(appointment['id'])}'), headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     }, 
     body: jsonEncode({
-      "patientId": int.parse(appointment.patientId), 
-      "doctorId": int.parse(appointment.doctorId), 
-      "facilityId": int.parse(appointment.facilityId),
+      "patientId": int.parse(appointment['patientId']), 
+      "doctorId": int.parse(appointment['doctor'].id), 
+      "facilityId": int.parse(appointment['faskes'].id),
       "status": "recent",
-      "waktu": appointment.waktu,
-      "metodePembayaran": appointment.metodePembayaran,
-      "antrian": appointment.antrian,
-      "judul": appointment.judul,
+      "waktu": appointment['waktu'],
+      "metodePembayaran": appointment['metodePembayaran'],
+      "antrian": appointment['antrian'],
+      "relasiJudulPoliId": int.parse(appointment['judulPoli'].id),
     })
     );
     // print("yes2");
@@ -162,44 +162,36 @@ class AppointmentAPI with ChangeNotifier {
     }
   }
 
-  // Future<MedicalRecord> addMedicalRecord(Map<String, dynamic> medRec, String token) async {
-  //   final response = await http.post(Uri.parse('$url/create_medical_record/'), 
-  //   headers:
-  //   {
-  //     'Content-Type': 'application/json',
-  //     'Authorization': token,
-  //   }, 
-  //   body: jsonEncode({
-  //     "patientId": bookingDetails['patientId'], 
-  //     "doctorId": bookingDetails['doctorId'], 
-  //     "facilityId": bookingDetails['facilityId'],
-  //     "status": bookingDetails['status'],
-  //     "waktu": bookingDetails['waktu'],
-  //     "metodePembayaran": bookingDetails['metodePembayaran'],
-  //     "medicalRecordId": bookingDetails['medicalRecordId'],
-  //     "antrian": bookingDetails['antrian'],
-  //     "judul": bookingDetails['judul'],
-  //   })
-  //   // body: {
-  //   //   {"item_id": item_id, "user_id": user_id, "quantity": quantity}
-  //   // }
-  //   );
-  //   print("yes2");
-  //   if (response.statusCode == 200) {
-  //     // print('appointment added successfully');
-  //     // print('INI JSONDECODE');
-  //     // print(jsonDecode(response.body));
+  Future<MedicalRecord> addMedicalRecord(Map<String, dynamic> medRec, String token) async {
+    final response = await http.post(Uri.parse('$url/create_medical_record/'), 
+    headers:
+    {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    }, 
+    body: jsonEncode({
+      "patientId": medRec['patientId'], 
+      "date": medRec['date'], 
+      "appointmentId": medRec['appointmentId'], 
+      "relasiJudulPoliId": medRec['relasiJudulPoliId'], 
+    })
+    );
+    print("yes2");
+    if (response.statusCode == 200) {
+      // print('appointment added successfully');
+      // print('INI JSONDECODE');
+      // print(jsonDecode(response.body));
       
-  //     return setFromJson(jsonDecode(response.body));
-  //   } else {
-  //     print('Failed to add appointment: ${response.reasonPhrase}');
-  //     throw Exception(response.reasonPhrase);
-  //   }
-  // }
+      return MedicalRecord.fromJson(jsonDecode(response.body));
+    } else {
+      print('Failed to add medrec: ${response.reasonPhrase}');
+      throw Exception(response.reasonPhrase);
+    }
+  }
 
-  Future<dynamic> fetchDataRecordByAppointmentId(String appointmentId, String accessToken) async {
+  Future<MedicalRecord> fetchMedicalRecordByAppointmentId(String appointmentId, String accessToken) async {
     final response = await http.get(
-      Uri.parse('$url/medical-record/$appointmentId'),
+      Uri.parse('$url/medical_record_appointment/$appointmentId'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken',

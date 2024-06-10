@@ -7,25 +7,25 @@ import '/provider/model/doctor_model.dart';
 
 class DoctorAPI with ChangeNotifier {
   final String url = 'http://127.0.0.1:8000';
-  List<dynamic> _doctorList = [];
-  List<dynamic> get doctorList => _doctorList;
+  List<Doctor> _doctorList = [];
+  List<Doctor> get doctorList => _doctorList;
 
   Doctor _doctor = Doctor
   (
     id: "",
     nama: "",
-    spesialisasi: "",
+    polyId: "",
     pengalaman: 0,
     foto: "",
   );
   Doctor get doctor => _doctor;
 
-  List<dynamic> setFromJsonDoctorList(List<dynamic> json) {
+  List<Doctor> setFromJsonDoctorList(List<dynamic> json) {
     _doctorList = json
         .map((e) => Doctor(
               id: e["id"].toString(),
               nama: e["nama"],
-              spesialisasi: e["spesialisasi"],
+              polyId: e["polyId"].toString(),
               pengalaman: e["pengalaman"],
               foto: e["foto"],
             ))
@@ -42,7 +42,7 @@ class DoctorAPI with ChangeNotifier {
       Doctor(
         id: json["id"].toString(),
         nama: json["nama"],
-        spesialisasi: json["spesialisasi"],
+        polyId: json["polyId"].toString(),
         pengalaman: json["pengalaman"],
         foto: json["foto"],
       );
@@ -53,7 +53,7 @@ class DoctorAPI with ChangeNotifier {
     return _doctor;
   }
 
-  Future<List> fetchDataAllDoctor(String accessToken) async {
+  Future<List<Doctor>> fetchDataAllDoctor(String accessToken) async {
     final response = await http.get(
       Uri.parse('$url/doctor/'),
       headers: {

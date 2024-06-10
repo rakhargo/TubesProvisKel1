@@ -28,17 +28,6 @@ class BookingSummaryPage extends StatefulWidget {
 
 class _BookingSummaryState extends State<BookingSummaryPage>
 {
-  // Appointment appointment = Appointment
-  // (
-  //   id: "",
-  //   patientId: "",
-  //   doctorId: "",
-  //   facilityId: "",
-  //   status: "",
-  //   waktu: "",
-  //   metodePembayaran: ""
-  //   medicalRecordId: ,
-  // );
 
   late String accessToken;
   late String userId;
@@ -142,7 +131,7 @@ class _BookingSummaryState extends State<BookingSummaryPage>
                             ),
                             Text
                             (
-                              widget.bookingDetails['judul'], 
+                              widget.bookingDetails['judulPoli'], 
                               style: const TextStyle
                               (
                                 color: Color.fromARGB(204, 32, 33, 87),

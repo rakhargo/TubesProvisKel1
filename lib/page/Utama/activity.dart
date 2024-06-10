@@ -1,14 +1,25 @@
 import 'dart:convert';
+import 'package:flutter/widgets.dart';
 import 'package:intl/date_symbol_data_file.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:medimate/main.dart';
 import 'package:medimate/page/Account/orders.dart';
+import 'package:medimate/page/medicalRecord.dart';
 import 'package:provider/provider.dart';
 import 'package:medimate/bottomNavBar.dart';
 
 import 'package:medimate/provider/api/appointment_api.dart';
 import 'package:medimate/provider/model/appointment_model.dart';
+
+import 'package:medimate/provider/api/specialistAndPoliclinic_api.dart';
+import 'package:medimate/provider/model/specialistAndPolyclinic_model.dart';
+
+import 'package:medimate/provider/api/doctor_api.dart';
+import 'package:medimate/provider/model/doctor_model.dart';
+
+import 'package:medimate/provider/api/healthFacility_api.dart';
+import 'package:medimate/provider/model/healthFacility_model.dart';
 
 import 'dart:developer';
 
@@ -26,10 +37,18 @@ class ActivityPage extends StatefulWidget {
 
 class _ActivityState extends State<ActivityPage>
 {
-  List<dynamic> appointmentList = [];
+  List<Map<String, dynamic>> appointmentList = [];
 
-  List<dynamic> onGoingList = [];
-  List<dynamic> recentList = [];
+  List<Map<String, dynamic>> onGoingList = [];
+  List<Map<String, dynamic>> recentList = [];
+
+  // JudulPoli judulPoli =
+  // JudulPoli(
+  //     id: "",
+  //     polyclinicId: "",
+  //     judul: "",
+  //     tindakan: "",
+  //   );
 
   late String accessToken;
   late String userId;
@@ -40,7 +59,7 @@ class _ActivityState extends State<ActivityPage>
     // _initializeLocale();
     _initializeUserId();
     _initializeAccessToken();
-    _fetchDataAll();
+    _fetchDataAllAppointment();
   }
 
   // Future<void>_initializeLocale() async {
@@ -57,35 +76,54 @@ class _ActivityState extends State<ActivityPage>
     accessToken = responseBodyMap['access_token'];
   }
 
-  Future<void> _fetchDataAll() async {
+  Future<void> _fetchDataAllAppointment() async {
     try {
-      final appointmentListResponse =
-          await Provider.of<AppointmentAPI>(context, listen: false)
-              .fetchDataAll(widget.profileId, accessToken); // Pass the access token here
-    setState(() {
-      appointmentList = appointmentListResponse;
-      // print("INI APPOINTMENT");
-      // print(inspect(appointmentList));
-
-      for (var appointment in appointmentList) 
-      {
-        if (appointment.status == "recent") {
-          recentList.add(appointment);
-        } else if (appointment.status == "ongoing") {
-          onGoingList.add(appointment);
-        }
+      final _doctorList = await Provider.of<DoctorAPI>(context, listen: false).fetchDataAllDoctor(accessToken);
+      final _judulPoliList = await Provider.of<SpecialistAndPolyclinicAPI>(context, listen: false).fetchAllJudulPoli(accessToken);
+      final _faskesList = await Provider.of<HealthFacilityAPI>(context, listen: false).fetchDataAll(accessToken);
+      List<Appointment> _appointmentList = await Provider.of<AppointmentAPI>(context, listen: false).fetchDataAll(widget.profileId, accessToken);
+      List<Map<String, dynamic>> result = [];
+      // print("SEBELUM PROSES JOIN");
+      for (var relasi in _appointmentList) {
+        // print("RELASI-JOIN-FOR");
+        var combinedData = {
+          'doctor': _doctorList.firstWhere((d) => d.id == relasi.doctorId),
+          'judulPoli': _judulPoliList.firstWhere((jp) => jp.id == relasi.relasiJudulPoliId),
+          'faskes': _faskesList.firstWhere((f) => f.id == relasi.facilityId),
+          // 'rsId': relasi.rsId,
+          // 'poliId': relasi.poliId,
+          'antrian': relasi.antrian,
+          'metodePembayaran': relasi.metodePembayaran,
+          'waktu': relasi.waktu,
+          'patientId': relasi.patientId,
+          'status': relasi.status,
+          'id': relasi.id,
+        };
+        // print("ABIS BIKIN COMBINED");
+        result.add(combinedData);
       }
+      // print("INI LIST JOIN");
+      //   print(result);
+      setState(() {
+        appointmentList = result;
+        print("INI INSPECT appointment");
+        print(inspect(appointmentList));
+        // print(specialistAndPolyclinicListResponse);
+        for (var appointment in appointmentList) 
+        {
+          if (appointment['status'] == "recent") {
+            recentList.add(appointment);
+          } else if (appointment['status'] == "ongoing") {
+            onGoingList.add(appointment);
+          }
+        }
 
-      // print(inspect(recentAppointments));
-      // print(inspect(activityAppointments));
-      // print(onGoingList);
-      print(onGoingList.length);
+        // print(inspect(onGoingList));
+        // print(onGoingList.length);
 
-      // print(recentList);
-      print(recentList.length);
-
-    });
-      
+        // print(inspect(recentList));
+        // print(recentList.length);
+      });
     } catch (e) {
       print("Error: $e");
     }
@@ -187,6 +225,9 @@ class _ActivityState extends State<ActivityPage>
                     {
                       // var item = appointmentList[index];
                       var item = onGoingList[index];
+                      // judulPoli =
+                      // await Provider.of<SpecialistAndPolyclinicAPI>(context, listen: false)
+                      //       .fetchJudulPoliById(item.relasiJudulPoliId, accessToken);
                       // print("INI ITEM");
                       // print(item);
                       return Column
@@ -213,7 +254,7 @@ class _ActivityState extends State<ActivityPage>
                                   child: Text
                                   (
                                     // item["title"],
-                                    item.judul,
+                                    item['judulPoli'].judul,
                                     style: const TextStyle
                                     (
                                       color: Color.fromARGB(255, 32, 33, 87),
@@ -224,7 +265,7 @@ class _ActivityState extends State<ActivityPage>
                                 ),
                                 Text
                                 (
-                                  formatDateTime(item.waktu),
+                                  formatDateTime(item['waktu']),
                                   style: const TextStyle
                                   (
                                     color: Color.fromARGB(216, 53, 55, 121),
@@ -234,7 +275,8 @@ class _ActivityState extends State<ActivityPage>
                                 const SizedBox(height: 3),
                                 Text
                                 (
-                                  item.doctorId,
+                                  // item.doctorId,
+                                  item['doctor'].nama,
                                   style: const TextStyle
                                   (
                                     color: Color.fromARGB(216, 53, 55, 121),
@@ -256,7 +298,7 @@ class _ActivityState extends State<ActivityPage>
                                 Text
                                 (
                                   // item["lokasi"],
-                                  "Antrian ${item.antrian.toString()}",
+                                  "Antrian ${item['antrian'].toString()}",
                                   style: const TextStyle
                                   (
                                     color: Color.fromARGB(216, 53, 55, 121),
@@ -266,7 +308,7 @@ class _ActivityState extends State<ActivityPage>
                                 const SizedBox(height: 3),
                                 Text
                                 (
-                                  item.facilityId,
+                                  item['faskes'].namaFasilitas,
                                   // item["rs"],
                                   style: const TextStyle
                                   (
@@ -294,19 +336,19 @@ class _ActivityState extends State<ActivityPage>
                                               accessToken,
                                             );
 
-                                            // Map<String, dynamic> medRec = 
-                                            // {
-                                            //   "patientId": widget.profileId,
-                                            //   "date": item.waktu,
-                                            //   "jenisTes": item.judul,
-                                            //   "hasilTes": ,
-                                            // };
+                                            Map<String, dynamic> medRec = 
+                                            {
+                                              "patientId": int.parse(widget.profileId),
+                                              "date": item['waktu'],
+                                              "appointmentId": int.parse(item['id']),
+                                              "relasiJudulPoliId": int.parse(item['judulPoli'].id),
+                                            };
 
-                                            // await Provider.of<AppointmentAPI>(context, listen: false).addMedicalRecord
-                                            // (
-                                            //   item,
-                                            //   accessToken,
-                                            // );
+                                            await Provider.of<AppointmentAPI>(context, listen: false).addMedicalRecord
+                                            (
+                                              medRec,
+                                              accessToken,
+                                            );
                                             Navigator.of(context).pushReplacement(
                                               MaterialPageRoute(
                                                 builder: (BuildContext context) => MainApp(responseBody: widget.responseBody, indexNavbar: 2, profileId: widget.profileId,),
@@ -439,7 +481,7 @@ class _ActivityState extends State<ActivityPage>
                                           Text
                                           (
                                             // item["title"],
-                                            item.judul,
+                                            item['judulPoli'].judul,
                                             style: const TextStyle
                                             (
                                               color: Color.fromARGB(255, 32, 33, 87),
@@ -458,7 +500,7 @@ class _ActivityState extends State<ActivityPage>
                                     ),
                                     Text
                                     (
-                                      formatDateTime(item.waktu),
+                                      formatDateTime(item['waktu']),
                                       style: const TextStyle
                                       (
                                         color: Color.fromARGB(216, 53, 55, 121),
@@ -469,57 +511,70 @@ class _ActivityState extends State<ActivityPage>
                                     Text
                                     (
                                       // item["rs"],
-                                      item.facilityId,
+                                      item['faskes'].namaFasilitas,
                                       style: const TextStyle
                                       (
                                         color: Color.fromARGB(255, 53, 55, 121),
                                         fontSize: 12,
                                       ),
                                     ),
-                                    Center
+                                    GestureDetector
                                     (
-                                      child: Padding
+                                      onTap: ()
+                                      {
+
+
+                                        Navigator.of(context).push(MaterialPageRoute(builder: (context) 
+                                        {
+                                          return (MedicalRecordPage(responseBody: widget.responseBody, profileId: widget.profileId, appointmentId: item['id'], relasiJudulPoliId: item['judulPoli'].id));
+                                        }
+                                        ));
+                                      },
+                                      child: Center
                                       (
-                                        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                                        child: LayoutBuilder
+                                        child: Padding
                                         (
-                                          builder: (context, constraints) 
-                                          {
-                                            final boxWidth = constraints.maxWidth;
-                                            return Container
-                                            (
-                                              width: boxWidth / 2,
-                                              decoration: BoxDecoration
+                                          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                                          child: LayoutBuilder
+                                          (
+                                            builder: (context, constraints) 
+                                            {
+                                              final boxWidth = constraints.maxWidth;
+                                              return Container
                                               (
-                                                color: const Color.fromARGB(255, 53, 55, 121),
-                                                borderRadius: BorderRadius.circular(6),
-                                              ),
-                                              padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
-                                              child: const Row
-                                              (
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: 
-                                                [
-                                                  Icon
-                                                  (
-                                                    Icons.visibility_outlined,
-                                                    color: Colors.white,
-                                                    size: 14,
-                                                  ),
-                                                  SizedBox(width: 6.0),
-                                                  Text
-                                                  (
-                                                    'View Report',
-                                                    style: TextStyle
+                                                width: boxWidth / 2,
+                                                decoration: BoxDecoration
+                                                (
+                                                  color: const Color.fromARGB(255, 53, 55, 121),
+                                                  borderRadius: BorderRadius.circular(6),
+                                                ),
+                                                padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
+                                                child: const Row
+                                                (
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: 
+                                                  [
+                                                    Icon
                                                     (
+                                                      Icons.visibility_outlined,
                                                       color: Colors.white,
-                                                      fontSize: 12,
+                                                      size: 14,
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          },
+                                                    SizedBox(width: 6.0),
+                                                    Text
+                                                    (
+                                                      'View Report',
+                                                      style: TextStyle
+                                                      (
+                                                        color: Colors.white,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          ),
                                         ),
                                       ),
                                     ),

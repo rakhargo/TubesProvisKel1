@@ -49,9 +49,16 @@ class _DetailDoctorState extends State<DetailDoctorPage>
   (
     id: "",
     nama: "",
-    spesialisasi: "",
+    polyId: "",
     pengalaman: 0,
     foto: "",
+  );
+
+  SpecialistAndPolyclinic poli = SpecialistAndPolyclinic
+  (
+    id: "",
+    name: "",
+    icon: "",
   );
 
   List<DoctorSchedule> doctorScheduleList = [];
@@ -63,6 +70,9 @@ class _DetailDoctorState extends State<DetailDoctorPage>
   late String userId;
 
   String? dropdownValue;
+  String judulPoliSelected = '';
+  String idJudulPoliSelected = '';
+
   @override
   void initState() {
     super.initState();
@@ -70,6 +80,7 @@ class _DetailDoctorState extends State<DetailDoctorPage>
     _initializeAccessToken();
     _fetchHealthFacility(widget.healthFacilityId);
     _fetchDoctor(widget.doctorId);
+    _fetchPoli(widget.poliId);
     _fetchDoctorSchedule(widget.doctorId);
     _fetchJudulPoli(widget.poliId);
   }
@@ -82,6 +93,17 @@ class _DetailDoctorState extends State<DetailDoctorPage>
   void _initializeAccessToken() {
     final responseBodyMap = jsonDecode(widget.responseBody);
     accessToken = responseBodyMap['access_token'];
+  }
+
+  Future<void> _fetchPoli(String poliId) async {
+    final poliResponse =
+        await Provider.of<SpecialistAndPolyclinicAPI>(context, listen: false)
+            .fetchDataById(poliId, accessToken); // Pass the access token here
+            // print(poliResponse);
+    setState(() {
+      poli = poliResponse;
+      // print(inspect(healthFacility));
+    });
   }
 
   Future<void> _fetchHealthFacility(String healthFacilityId) async {
@@ -118,7 +140,9 @@ class _DetailDoctorState extends State<DetailDoctorPage>
             // print(doctorResponse);
     setState(() {
       judulPoliList = judulPoliResponse;
-      dropdownValue = judulPoliList.first.judul;
+      dropdownValue = judulPoliList.first.id;
+      idJudulPoliSelected = judulPoliList.first.id;
+      judulPoliSelected = judulPoliList.first.judul;
       // print(inspect(judulPoliList));
     });
   }
@@ -194,18 +218,24 @@ class _DetailDoctorState extends State<DetailDoctorPage>
     {
       // String? dropdownValue = judulPoliList.first.judul;
       return DropdownButton<String>(
-        // hint: Text("Pilih keperluan"),
+        hint: Text("Pilih keperluan"),
         value: dropdownValue,
         style: const TextStyle(color: Color.fromARGB(255, 9, 15, 71)),
         onChanged: (String? value) {
           setState(() {
             dropdownValue = value;
             isPilih = true;
+
+            final selectedItem = judulPoliList.firstWhere((item) => item.id == value);
+            idJudulPoliSelected = selectedItem.id;
+            judulPoliSelected = selectedItem.judul;
+            // print(idJudulPoliSelected);
+            // print(judulPoliSelected);
           });
         },
         items: judulPoliList.map<DropdownMenuItem<String>>((item) {
           return DropdownMenuItem<String>(
-            value: item.judul,
+            value: item.id,
             child: Text(item.judul),
           );
         }).toList(),
@@ -374,7 +404,8 @@ class _DetailDoctorState extends State<DetailDoctorPage>
           
                 Text // specialist
                 (
-                  doctor.spesialisasi,
+                  // doctor.polyId,
+                  poli.name,
                   style: const TextStyle
                   (
                     color: Color.fromARGB(255, 143, 143, 143)
@@ -698,7 +729,7 @@ class _DetailDoctorState extends State<DetailDoctorPage>
               (
                 child: Text
                 (
-                  isPilih == false ? "Pilih jadwal dan keperluan untuk melanjutkan" : "$dropdownValue - ${parseHari(selectedJadwalDokter)}, $selectedJadwalDokter",
+                  isPilih == false ? "Pilih jadwal dan keperluan untuk melanjutkan" : "$judulPoliSelected - ${parseHari(selectedJadwalDokter)}, $selectedJadwalDokter",
                   style: const TextStyle
                   (
                     color: Color.fromARGB(255, 62, 62, 62),
@@ -722,20 +753,20 @@ class _DetailDoctorState extends State<DetailDoctorPage>
                             "patientId": int.parse(widget.profileId), 
                             "doctorId": int.parse(widget.doctorId),
                             "doctorName": doctor.nama,
-                            "specialist": doctor.spesialisasi,
+                            "polyId": doctor.polyId,
                             "facilityId": int.parse(widget.healthFacilityId),
                             "facilityName": healthFacility.namaFasilitas,
                             "status": "ongoing",
                             "waktu": selectedJadwalDokter,
                             "price": "Rp200.000",
                             "metodePembayaran": "On The Site",
-                            "medicalRecordId": 1,
                             "antrian": antrian,
-                            "judul": dropdownValue,
+                            "relasiJudulPoliId": int.parse(idJudulPoliSelected),
+                            "judulPoli": judulPoliSelected,
                             // "doctorScheduleId": doctorScheduleId,
                             "doctorSchedule": doctorSchedule,
                             // "doctorName": widget.doctorDetails['name'],
-                            // "specialist": widget.doctorDetails['category'],
+                            "specialist": poli.name,
                             // // "hospital": hospitalDetails['nama'],
                             // "patientId": int.parse(widget.profileId),
                             // "doctorId": 1,

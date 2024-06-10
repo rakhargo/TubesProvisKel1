@@ -10,8 +10,8 @@ import '/provider/api/specialistAndPoliclinic_api.dart';
 
 class HealthFacilityAPI with ChangeNotifier {
   final String url = 'http://127.0.0.1:8000';
-  List<dynamic> _healthFacilityList = [];
-  List<dynamic> get healthFacilityList => _healthFacilityList;
+  List<HealthFacility> _healthFacilityList = [];
+  List<HealthFacility> get healthFacilityList => _healthFacilityList;
 
   HealthFacility _healthFacility = HealthFacility
   (
@@ -29,7 +29,7 @@ class HealthFacilityAPI with ChangeNotifier {
   );
   HealthFacility get healthFacility => _healthFacility;
 
-  List<dynamic> setFromJsonList(List<dynamic> json) {
+  List<HealthFacility> setFromJsonList(List<dynamic> json) {
     _healthFacilityList = json
         .map((e) => HealthFacility(
               id: e["id"].toString(),
@@ -71,7 +71,7 @@ class HealthFacilityAPI with ChangeNotifier {
     return _healthFacility;
   }
 
-  Future<List> fetchDataAll(String accessToken) async {
+  Future<List<HealthFacility>> fetchDataAll(String accessToken) async {
     final response = await http.get(
       Uri.parse('$url/health_facility/'),
       headers: {
@@ -89,7 +89,7 @@ class HealthFacilityAPI with ChangeNotifier {
     }
   }
 
-  Future<dynamic> fetchDataById(String health_facility_id, String accessToken) async {
+  Future<HealthFacility> fetchDataById(String health_facility_id, String accessToken) async {
     final response = await http.get(
       Uri.parse('$url/health_facility_id/$health_facility_id'),
       headers: {

@@ -52,6 +52,7 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
   Future<void> _fetchDoctorByRelasiId(String relasiRsPoliId) async {
     
     final _doctorList = await Provider.of<DoctorAPI>(context, listen: false).fetchDataAllDoctor(accessToken);
+    // final _judulPoliList = await Provider.of<SpecialistAndPolyclinicAPI>(context, listen: false).fetchRelasiJudulPoliByPoliId(widget.poliId, accessToken);
     final _poli = await Provider.of<SpecialistAndPolyclinicAPI>(context, listen: false).fetchDataById(widget.poliId, accessToken);
     List<RelasiRsPoliDoctor> relasiRsPoliDoctorList = await Provider.of<DoctorAPI>(context, listen: false).fetchRelasiRsPoliDoctorByRelasiId(relasiRsPoliId, accessToken);
     List<Map<String, dynamic>> result = [];
@@ -62,6 +63,7 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
         // 'healthFacility': _healthFacilityList.firstWhere((hf) => hf.id == relasi.rsId),
         'doctor': _doctorList.firstWhere((d) => d.id == relasi.doctorId),
         // 'rsId': relasi.rsId,
+        // 'poli': _poli,
         'poli': _poli,
         // 'poliId': widget.poliId,
         'id': relasi.id
@@ -73,8 +75,8 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
     //   print(result);
     setState(() {
       doctorList = result;
-      // print("INI INSPECT DOCTOR");
-      // print(inspect(doctorList));
+      print("INI INSPECT DOCTOR");
+      print(inspect(doctorList));
       // print(specialistAndPolyclinicListResponse);
     });
   }
@@ -155,7 +157,8 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
                                 ),
                               ),
                               Text(
-                                item['doctor'].spesialisasi,
+                                // "Spesialisasi",
+                                item['poli'].name,
                                 style: const TextStyle(
                                   color: Color(0xFF828282),
                                   fontSize: 12,
