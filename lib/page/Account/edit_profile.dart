@@ -3,9 +3,13 @@ import 'package:medimate/main.dart';
 import 'package:provider/provider.dart';
 import 'package:medimate/provider/api/profile_api.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:medimate/provider/model/profile_model.dart';
+import 'package:http/http.dart' as http;
+import 'package:file_picker/file_picker.dart';
 
 class EditProfilePage extends StatefulWidget {
   final String responseBody;
@@ -24,7 +28,9 @@ class EditProfilePage extends StatefulWidget {
 class _EditProfilePageState extends State<EditProfilePage> {
   late String accessToken;
   late String userId;
-  late Profile chosenProfile;
+  Profile? chosenProfile;
+  File? _image;
+  final picker = ImagePicker();
 
   final _namaController = TextEditingController();
   final _tanggallahirController = TextEditingController();
@@ -60,14 +66,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
       setState(() {
         chosenProfile = profileResponse;
-        _namaController.text = chosenProfile.nama;
+        _namaController.text = chosenProfile!.nama;
         _tanggallahirController.text = DateFormat('dd-MM-yyyy').format(
-            DateFormat('yyyy-MM-dd').parse(chosenProfile.tanggalLahir));
-        _selectedGender = chosenProfile.jenisKelamin;
-        _alamatController.text = chosenProfile.alamat;
-        _notelpController.text = chosenProfile.noTelepon;
-        _emailController.text = chosenProfile.email;
-        _selectedRelations = int.parse(chosenProfile.isMainProfile);
+            DateFormat('yyyy-MM-dd').parse(chosenProfile!.tanggalLahir));
+        _selectedGender = chosenProfile!.jenisKelamin;
+        _alamatController.text = chosenProfile!.alamat;
+        _notelpController.text = chosenProfile!.noTelepon;
+        _emailController.text = chosenProfile!.email;
+        _selectedRelations = int.parse(chosenProfile!.isMainProfile);
       });
     } catch (e) {
       // Handle exception
@@ -95,6 +101,49 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+  Future<String?> _uploadImage() async {
+    if (_image == null) return null;
+
+    final request = http.MultipartRequest(
+      'POST',
+      Uri.parse('http://127.0.0.1:8000/upload_profile_image'),
+    );
+
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        'file',
+        _image!.path,
+      ),
+    );
+
+    final response = await request.send();
+
+    if (response.statusCode == 200) {
+      final responseData = await response.stream.bytesToString();
+      final json = jsonDecode(responseData);
+      print("image upload success");
+      return json['image_name'];
+    } else {
+      print('Image upload failed');
+      return null;
+    }
+  }
+
+  Future<void> _pickImage() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+    );
+
+    if (result != null) {
+      setState(() {
+        _image = File(result.files.single.path!);
+      });
+    } else {
+      print('No image selected.');
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -113,39 +162,70 @@ class _EditProfilePageState extends State<EditProfilePage> {
         elevation: 0,
       ),
       body: SingleChildScrollView(
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: 34, vertical: 30),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                "Update profile",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 28,
-                  color: Color(0xFF090F47),
-                ),
-              ),
-              SizedBox(height: 20),
-              _buildTextField(_emailController, "Email", size),
-              SizedBox(height: 20),
-              _buildTextField(_namaController, "Enter your name", size),
-              SizedBox(height: 20),
-              _buildDateField(_tanggallahirController, "Enter your birth date", context, size),
-              SizedBox(height: 20),
-              _buildDropdownField(['Male', 'Female'], "Select your gender", size),
-              SizedBox(height: 20),
-              _buildTextField(_alamatController, "Enter your address", size),
-              SizedBox(height: 20),
-              _buildTextField(_notelpController, "Enter your mobile number", size),
-              SizedBox(height: 20),
-              _isLoadingRelations
-                  ? CircularProgressIndicator()
-                  : _buildRelationsDropdown(size),
-              SizedBox(height: 30),
-              _updateProfileButton(size),
-            ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 35),
+          child: Consumer<ProfileAPI>(
+            builder: (context, item, child) {
+              return chosenProfile == null
+                  ? Center(child: CircularProgressIndicator())
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 130,
+                          height: 130,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.blue, // Change color as needed
+                          ),
+                          child: ClipOval(
+                            child: FutureBuilder<dynamic>(
+                              future: item.fetchImage(widget.profileId, accessToken),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return const CircularProgressIndicator();
+                                } else if (snapshot.hasError) {
+                                  return const Icon(Icons.error);
+                                } else if (snapshot.hasData) {
+                                  return Image.memory(
+                                    snapshot.data!.bodyBytes,
+                                    width: 130,
+                                    height: 130,
+                                    fit: BoxFit.cover,
+                                  );
+                                } else {
+                                  return const Placeholder();
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        ElevatedButton(
+                          onPressed: _pickImage,
+                          child: Text('Pick Image'),
+                        ),
+                        const SizedBox(height: 20),
+                        _buildTextField(_emailController, "Email", size),
+                        SizedBox(height: 20),
+                        _buildTextField(_namaController, "Enter your name", size),
+                        SizedBox(height: 20),
+                        _buildDateField(_tanggallahirController, "Enter your birth date", context, size),
+                        SizedBox(height: 20),
+                        _buildDropdownField(['Male', 'Female'], "Select your gender", size),
+                        SizedBox(height: 20),
+                        _buildTextField(_alamatController, "Enter your address", size),
+                        SizedBox(height: 20),
+                        _buildTextField(_notelpController, "Enter your mobile number", size),
+                        SizedBox(height: 20),
+                        _isLoadingRelations
+                            ? CircularProgressIndicator()
+                            : _buildRelationsDropdown(size),
+                        SizedBox(height: 30),
+                        _updateProfileButton(size),
+                      ],
+                    );
+            },
           ),
         ),
       ),
@@ -318,6 +398,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
 
     try {
+      String? userPhoto =  await _uploadImage(); // Upload the image and get the file name
+
+      final userPhotoFirst = chosenProfile!.userPhoto;
+
       final profileToUpdate = Profile(
         id: widget.profileId,
         userId: userId,
@@ -327,7 +411,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         email: _emailController.text,
         alamat: _alamatController.text,
         noTelepon: _notelpController.text,
-        userPhoto: "dummy.png",
+        userPhoto: userPhoto ??= userPhotoFirst,
         isMainProfile: _selectedRelations!.toString(),
       );
 
