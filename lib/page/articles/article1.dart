@@ -6,7 +6,7 @@ class Article1 extends StatelessWidget {
     return MaterialApp(
       title: 'Health Article',
       theme: ThemeData(
-        primarySwatch: Color(0xFF202157),
+        primarySwatch: Colors.blue,
       ),
       home: HealthArticlePage(),
     );
