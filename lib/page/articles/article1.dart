@@ -19,20 +19,41 @@ class HealthArticlePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // leading: IconButton(
-        //   icon: const Icon(
-        //     Icons.arrow_back_ios,
-        //     color: Color.fromARGB(255, 54, 84, 134),
-        //   ),
-        //   onPressed: () {
-        //     Navigator.pop(context); // Kembali ke layar sebelumnya
-        //   },
-        // ),
         title: const Text(
           'Article',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: Color(0xFF091547),
+            color: Color.fromARGB(255, 9, 15, 71),
+          ),
+        ),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+            color: Color(0xFF202157),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(2.0),
+          child: Container(
+            decoration: const BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Colors.grey,
+                  width: 0.5,
+                ),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey,
+                  blurRadius: 2.0,
+                  offset: Offset(0.0, 2.0),
+                ),
+              ],
+            ),
           ),
         ),
       ),
