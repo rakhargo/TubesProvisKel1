@@ -71,7 +71,7 @@ class _HospitalState extends State<HospitalPage>
     
     final _healthFacilityList = await Provider.of<HealthFacilityAPI>(context, listen: false).fetchDataAll(accessToken);
     final _poliList = await Provider.of<SpecialistAndPolyclinicAPI>(context, listen: false).fetchData(accessToken);
-    List<RelasiRsPoli> relasiRsPoliList = await Provider.of<HealthFacilityAPI>(context, listen: false).fetchRelasiRsPoli(faskesId, accessToken);
+    List<RelasiRsPoli> relasiRsPoliList = await Provider.of<HealthFacilityAPI>(context, listen: false).fetchRelasiRsPoliByRsId(faskesId, accessToken);
     List<Map<String, dynamic>> result = [];
     // print("SEBELUM PROSES JOIN");
     for (var relasi in relasiRsPoliList) {

@@ -109,7 +109,26 @@ class HealthFacilityAPI with ChangeNotifier {
     }
   }
 
-  Future<List<RelasiRsPoli>> fetchRelasiRsPoli(String rsId, String accessToken) async {
+  Future<List<RelasiRsPoli>> fetchRelasiRsPoliByPoliId(String poliId, String accessToken) async {
+    final response = await http.get(
+      Uri.parse('$url/relasi_rs_poli_id/$poliId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      List<RelasiRsPoli> relasiList = data.map((e) => RelasiRsPoli.fromJson(e)).toList();
+      // print("INI LIST RELASI");
+      // print(relasiList);
+      return relasiList;
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
+  Future<List<RelasiRsPoli>> fetchRelasiRsPoliByRsId(String rsId, String accessToken) async {
     final response = await http.get(
       Uri.parse('$url/relasi_rs_poli_rs_id/$rsId'),
       headers: {

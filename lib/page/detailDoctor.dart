@@ -96,10 +96,12 @@ class _DetailDoctorState extends State<DetailDoctorPage>
   }
 
   Future<void> _fetchPoli(String poliId) async {
+    print("SEBELUM RESPONSE POLI");
     final poliResponse =
         await Provider.of<SpecialistAndPolyclinicAPI>(context, listen: false)
             .fetchDataById(poliId, accessToken); // Pass the access token here
             // print(poliResponse);
+    print("SETELAH RESPONSE POLI");
     setState(() {
       poli = poliResponse;
       // print(inspect(healthFacility));
@@ -107,10 +109,12 @@ class _DetailDoctorState extends State<DetailDoctorPage>
   }
 
   Future<void> _fetchHealthFacility(String healthFacilityId) async {
+    print("SEBELUM RESPONSE FASKES");
     final healthFacilityResponse =
         await Provider.of<HealthFacilityAPI>(context, listen: false)
             .fetchDataById(healthFacilityId, accessToken); // Pass the access token here
             // print(healthFacilityResponse);
+    print("SETELAH RESPONSE FASKES");
     setState(() {
       healthFacility = healthFacilityResponse;
       // print(inspect(healthFacility));
@@ -118,11 +122,11 @@ class _DetailDoctorState extends State<DetailDoctorPage>
   }
 
   Future<void> _fetchDoctor(String doctorId) async {
-    // print("SEBELUM RESPONSE DOCTOR");
+    print("SEBELUM RESPONSE DOCTOR");
     final doctorResponse =
         await Provider.of<DoctorAPI>(context, listen: false)
             .fetchDataDoctorById(doctorId, accessToken); // Pass the access token here
-    // print("SETELAH RESPONSE DOCTOR");
+    print("SETELAH RESPONSE DOCTOR");
             // print(doctorResponse);
     setState(() {
       doctor = doctorResponse;
@@ -138,6 +142,7 @@ class _DetailDoctorState extends State<DetailDoctorPage>
             .fetchRelasiJudulPoliByPoliId(poliId, accessToken); // Pass the access token here
     // print("SETELAH RESPONSE DOCTOR");
             // print(doctorResponse);
+            print("SBELUM SETSTATE");
     setState(() {
       judulPoliList = judulPoliResponse;
       dropdownValue = judulPoliList.first.id;
@@ -145,6 +150,7 @@ class _DetailDoctorState extends State<DetailDoctorPage>
       judulPoliSelected = judulPoliList.first.judul;
       // print(inspect(judulPoliList));
     });
+            print("SEETALH SETSTATE");
   }
 
   Future<void> _fetchDoctorSchedule(String doctorId) async {

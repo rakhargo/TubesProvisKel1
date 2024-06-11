@@ -70,7 +70,7 @@ class DoctorAPI with ChangeNotifier {
     }
   }
 
-  Future<dynamic> fetchDataDoctorById(String doctor_id, String accessToken) async {
+  Future<Doctor> fetchDataDoctorById(String doctor_id, String accessToken) async {
     final response = await http.get(
       Uri.parse('$url/doctor_id/$doctor_id'),
       headers: {
@@ -84,6 +84,39 @@ class DoctorAPI with ChangeNotifier {
       print("SEBELUM SETJSON");
       print(setFromJsonDoctor(jsonDecode(response.body)));
       return setFromJsonDoctor(jsonDecode(response.body));
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
+  Future<List<Doctor>> fetchDataDoctorByPolyId(String polyId, String accessToken) async {
+    final response = await http.get(
+      Uri.parse('$url/doctor_poly_id/$polyId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      return setFromJsonDoctorList(jsonDecode(response.body));
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
+  Future<List<RelasiRsPoliDoctor>> fetchAllRelasiRsPoliDoctor(String accessToken) async {
+    final response = await http.get(
+      Uri.parse('$url/relasi_dokter_rs_poli/'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      List<RelasiRsPoliDoctor> relasiDoctorList = data.map((e) => RelasiRsPoliDoctor.fromJson(e)).toList();
+      // print("INI LIST RELASI");
+      // print(inspect(relasiDoctorList));
+      return relasiDoctorList;
     } else {
       throw Exception(response.reasonPhrase);
     }
@@ -105,6 +138,25 @@ class DoctorAPI with ChangeNotifier {
       return relasiDoctorList;
     } else {
       throw Exception(response.reasonPhrase);
+    }
+  }
+
+  Future<RelasiRsPoliDoctor> fetchRelasiRsPoliDoctorByIdId(String relasiRsPoliId, String doctor_id, String accessToken) async {
+    // print("diaats RESPONSE");
+    final response = await http.get(
+      Uri.parse('$url/relasi_dokter_rs_poli_id_id/$relasiRsPoliId/$doctor_id'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    // print("DIBAWAGH RESPONSE");
+    // print(inspect(response));
+    if (response.statusCode == 200) {
+      return RelasiRsPoliDoctor.fromJson(jsonDecode(response.body));
+    } 
+    else {
+      return RelasiRsPoliDoctor(doctorId: '0', relasiRsPoliId: '0', id: '0');
     }
   }
 

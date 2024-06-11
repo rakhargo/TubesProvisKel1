@@ -9,6 +9,8 @@ import 'package:medimate/page/detailDoctor.dart';
 import 'package:medimate/provider/api/doctor_api.dart';
 import 'package:medimate/provider/api/specialistAndPoliclinic_api.dart';
 import 'package:medimate/provider/model/doctor_model.dart';
+import 'package:medimate/provider/model/healthFacility_model.dart';
+import 'package:medimate/provider/api/healthFacility_api.dart';
 
 class DoctorProfilePage extends StatefulWidget {
   final String responseBody;
@@ -17,7 +19,7 @@ class DoctorProfilePage extends StatefulWidget {
   final String rsId;
   final String poliId;
 
-  const DoctorProfilePage({Key? key, required this.responseBody, required this.profileId, required this.relasiRsPoliId, required this.poliId, required this.rsId}) : super(key: key);
+  const DoctorProfilePage({Key? key, required this.responseBody, required this.profileId, this.relasiRsPoliId = '', this.poliId = '', this.rsId = ''}) : super(key: key);
 
   @override
   State<DoctorProfilePage> createState() => _DoctorProfileState();
@@ -35,13 +37,27 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
   // );
 
   List<Map<String, dynamic>> doctorList = [];
+
+  List<Map<String, dynamic>> relasiDoctorRsPoliList = [];
+  
+  List<RelasiRsPoli> relasiRsPoli = [];
+  RelasiRsPoliDoctor relasiDoctorRsPoli = RelasiRsPoliDoctor(
+      doctorId: "",
+      relasiRsPoliId: "",
+      id: "",
+    );
+
+  List<Doctor> doctorListPoliId = [];
   late String accessToken;
 
   @override
   void initState() {
     super.initState();
     _initializeAccessToken();
-    _fetchDoctorByRelasiId(widget.relasiRsPoliId);
+    // _fetchDoctorByRelasiId(widget.relasiRsPoliId, widget.poliId);
+    // fetchDoctorPolyId(widget.poliId);
+    // fetchRsPolyId(widget.poliId);
+    jalaninAjaDulu(widget.poliId);
   }
 
   void _initializeAccessToken() {
@@ -49,40 +65,158 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
     accessToken = responseBodyMap['access_token'];
   }
 
-  Future<void> _fetchDoctorByRelasiId(String relasiRsPoliId) async {
-    
-    final _doctorList = await Provider.of<DoctorAPI>(context, listen: false).fetchDataAllDoctor(accessToken);
-    // final _judulPoliList = await Provider.of<SpecialistAndPolyclinicAPI>(context, listen: false).fetchRelasiJudulPoliByPoliId(widget.poliId, accessToken);
-    final _poli = await Provider.of<SpecialistAndPolyclinicAPI>(context, listen: false).fetchDataById(widget.poliId, accessToken);
-    List<RelasiRsPoliDoctor> relasiRsPoliDoctorList = await Provider.of<DoctorAPI>(context, listen: false).fetchRelasiRsPoliDoctorByRelasiId(relasiRsPoliId, accessToken);
-    List<Map<String, dynamic>> result = [];
-    // print("SEBELUM PROSES JOIN");
-    for (var relasi in relasiRsPoliDoctorList) {
-      // print("RELASI-JOIN-FOR");
-      var combinedData = {
-        // 'healthFacility': _healthFacilityList.firstWhere((hf) => hf.id == relasi.rsId),
-        'doctor': _doctorList.firstWhere((d) => d.id == relasi.doctorId),
-        // 'rsId': relasi.rsId,
-        // 'poli': _poli,
-        'poli': _poli,
-        // 'poliId': widget.poliId,
-        'id': relasi.id
-      };
-      // print("ABIS BIKIN COMBINED");
-      result.add(combinedData);
+  void fetchDoctorPolyId(String poliId) async {
+    try {
+      doctorListPoliId = await Provider.of<DoctorAPI>(context, listen: false).fetchDataDoctorByPolyId(poliId, accessToken);
+      // print(doctorListPoliId);
+        // Use the doctorList as needed
+    } catch (e) {
+      // Handle any exceptions
+      print('Error fetching doctor data: $e');
     }
-    // print("INI LIST JOIN");
-    //   print(result);
-    setState(() {
-      doctorList = result;
-      print("INI INSPECT DOCTOR");
-      print(inspect(doctorList));
-      // print(specialistAndPolyclinicListResponse);
-    });
   }
+
+  void fetchRsPolyId(String poliId) async {
+    try {
+      relasiRsPoli = await Provider.of<HealthFacilityAPI>(context, listen: false).fetchRelasiRsPoliByPoliId(poliId, accessToken);
+    } catch (e) {
+      print('Error fetching relasiRsPoli : $e');
+    }
+  }
+
+  void fetchDrRsPoliId(String relasiRsPoliId, String doctor_id) async {
+    try {
+      relasiDoctorRsPoli = await Provider.of<DoctorAPI>(context, listen: false)
+      .fetchRelasiRsPoliDoctorByIdId(relasiRsPoliId, doctor_id, accessToken);
+      // relasiDoctorRsPoliList.add(relasiDoctorRsPoli);
+      // print("masuk sini woy\n");
+    } catch (e) {
+      print('Error fetching relasiRsPoli : $e');
+    }
+  }
+
+  void jalaninAjaDulu(String poliId) async {
+    if (widget.relasiRsPoliId == '') {
+      doctorListPoliId = await Provider.of<DoctorAPI>(context, listen: false).fetchDataDoctorByPolyId(poliId, accessToken);
+      relasiRsPoli = await Provider.of<HealthFacilityAPI>(context, listen: false).fetchRelasiRsPoliByPoliId(poliId, accessToken);
+      for (var relasi1 in doctorListPoliId) {
+        for (var relasi2 in relasiRsPoli) {
+            relasiDoctorRsPoli = await Provider.of<DoctorAPI>(context, listen: false)
+          .fetchRelasiRsPoliDoctorByIdId(relasi2.id, relasi1.id, accessToken);
+          if (relasiDoctorRsPoli.id != '0') {
+            var combinedData = {
+              'doctor': await Provider.of<DoctorAPI>(context, listen: false).fetchDataDoctorById(relasiDoctorRsPoli.doctorId, accessToken),
+              'poli': await Provider.of<SpecialistAndPolyclinicAPI>(context, listen: false).fetchDataById(widget.poliId, accessToken),
+              'healthFacility': await Provider.of<HealthFacilityAPI>(context, listen: false).fetchDataById(relasi2.rsId, accessToken),
+            };
+            relasiDoctorRsPoliList.add(combinedData);
+          }
+        }
+      }
+      setState(() {
+        doctorList = relasiDoctorRsPoliList;
+        print(inspect(doctorList));
+      });
+    }
+    else {
+      final _doctorList = await Provider.of<DoctorAPI>(context, listen: false).fetchDataAllDoctor(accessToken);
+      final _poli = await Provider.of<SpecialistAndPolyclinicAPI>(context, listen: false).fetchDataById(poliId, accessToken);
+      
+      List<RelasiRsPoliDoctor> relasiRsPoliDoctorList = await Provider.of<DoctorAPI>(context, listen: false).fetchRelasiRsPoliDoctorByRelasiId(widget.relasiRsPoliId, accessToken);
+      List<Map<String, dynamic>> result = [];
+
+      for (var relasi in relasiRsPoliDoctorList) {
+        var combinedData = {
+          'doctor': _doctorList.firstWhere((d) => d.id == relasi.doctorId),
+          'poli': _poli,
+          'id': relasi.id
+        };
+        result.add(combinedData);
+      }
+      setState(() {
+        doctorList = result;
+        print(inspect(doctorList));
+      });
+    }
+  }
+
+  // Future<void> _fetchDoctorByRelasiId(String relasiRsPoliId, String poliId) async {
+  //   // List<Map<String, dynamic>> result1 = [];
+  //   // List<Map<String, dynamic>> relasiRsPoli = [];
+  //   // // if (relasiRsPoliId == '') 
+  //   // // {
+  //   // //   final _healthFacilityList = await Provider.of<HealthFacilityAPI>(context, listen: false).fetchDataAll(accessToken);
+  //   // //   List<RelasiRsPoli> relasiRsPoliList = await Provider.of<HealthFacilityAPI>(context, listen: false).fetchRelasiRsPoliByPoliId(poliId, accessToken);
+
+  //   // //   for (var relasi in relasiRsPoliList) {
+  //   // //     var combinedData = {
+  //   // //       'healthFacility': _healthFacilityList.firstWhere((hf) => hf.id == relasi.rsId),
+  //   // //       'id': relasi.id
+  //   // //     };
+  //   // //     result1.add(combinedData);
+  //   // //   }
+  //   // //   setState(() {
+  //   // //     relasiRsPoli = result1;
+  //   // //   });
+  //   // // }
+  //   // // else
+  //   // // {
+  //   //   final _healthFacilityList = await Provider.of<HealthFacilityAPI>(context, listen: false).fetchDataAll(accessToken);
+  //   //   List<RelasiRsPoli> relasiRsPoliList = await Provider.of<HealthFacilityAPI>(context, listen: false).fetchRelasiRsPoliByPoliId(poliId, accessToken);
+
+  //   //   for (var relasi in relasiRsPoliList) {
+  //   //     var combinedData = {
+  //   //       'healthFacility': _healthFacilityList.firstWhere((hf) => hf.id == relasi.rsId),
+  //   //       'id': relasi.id
+  //   //     };
+        
+  //   //     result1.add(combinedData);
+  //   //   }
+  //   //   setState(() {
+  //   //     relasiRsPoli = result1;
+  //   //   });
+  //   // // }
+
+  //   // print("INI INSPECT relasiRsPoli");
+  //   // print(inspect(relasiRsPoli));
+  //   final _doctorList = await Provider.of<DoctorAPI>(context, listen: false).fetchDataAllDoctor(accessToken);
+  //   final _poli = await Provider.of<SpecialistAndPolyclinicAPI>(context, listen: false).fetchDataById(poliId, accessToken);
+    
+  //   // List<RelasiRsPoliDoctor> relasiRsPoliDoctorList = await Provider.of<DoctorAPI>(context, listen: false).fetchAllRelasiRsPoliDoctor(accessToken);
+  //   List<RelasiRsPoliDoctor> relasiRsPoliDoctorList = await Provider.of<DoctorAPI>(context, listen: false).fetchRelasiRsPoliDoctorByRelasiId(relasiRsPoliId, accessToken);
+  //   List<Map<String, dynamic>> result = [];
+
+  //   for (var relasi in relasiRsPoliDoctorList) {
+  //       // print("INI RELASI DI FOR");
+  //       // print(relasi);
+  //     var combinedData = {
+  //       // 'healthFacilityId': relasiRsPoli,
+  //       'doctor': _doctorList.firstWhere((d) => d.id == relasi.doctorId),
+  //       // 'rsId': relasi.rsId,
+  //       // 'poli': _poli,
+  //       'poli': _poli,
+  //       // 'poliId': widget.poliId,
+  //       'id': relasi.id
+  //     };
+  //     print("ABIS BIKIN COMBINED");
+  //     result.add(combinedData);
+  //   }
+  //   // print("INI LIST JOIN");
+  //   //   print(result);
+  //   setState(() {
+  //     doctorList = result;
+  //     print("INI INSPECT DOCTOR");
+  //     print(inspect(doctorList));
+  //     // print(specialistAndPolyclinicListResponse);
+  //   });
+  // }
+
+  
 
   @override
   Widget build(BuildContext context) {
+    // fetchDoctorPolyId(widget.poliId);
+    // fetchRsPolyId(widget.poliId);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Doctor Page',
@@ -229,10 +363,23 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
                                   // ),                
                                 ],
                               ),
-
+                              widget.relasiRsPoliId == '' ?
                               Text(
                                 // item["schedule"],
-                                "Jadwal Dokter (?)",
+                                // "Health Facility(?)",
+                                item['healthFacility'].namaFasilitas,
+                                // item['healthFacility']['healthFacility'].namaFasilitas,
+                                style: const TextStyle(
+                                  color: Color(0xFF828282),
+                                  fontSize: 12,
+                                ),
+                              )
+                              :
+                              Text(
+                                // item["schedule"],
+                                // "Health Facility(?)",
+                                "Schedule (?)",
+                                // item['healthFacility']['healthFacility'].namaFasilitas,
                                 style: const TextStyle(
                                   color: Color(0xFF828282),
                                   fontSize: 12,
@@ -263,7 +410,9 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
                                       // );
                                       Navigator.of(context).push(MaterialPageRoute(builder: (context) 
                                       {
-                                        return (DetailDoctorPage(responseBody: widget.responseBody, profileId: widget.profileId, healthFacilityId: widget.rsId, doctorId: item['doctor'].id, poliId: widget.poliId,));
+                                        return (widget.relasiRsPoliId == '')
+                                        ? (DetailDoctorPage(responseBody: widget.responseBody, profileId: widget.profileId, healthFacilityId: item['healthFacility'].id, doctorId: item['doctor'].id, poliId: widget.poliId,))
+                                        : (DetailDoctorPage(responseBody: widget.responseBody, profileId: widget.profileId, healthFacilityId: widget.rsId, doctorId: item['doctor'].id, poliId: widget.poliId));
                                       }
                                       ));
                                     },
