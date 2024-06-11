@@ -1,10 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
-void main() {
-  runApp(const HelpSupportPage());
-}
 
 class HelpSupportPage extends StatefulWidget {
   const HelpSupportPage({super.key});

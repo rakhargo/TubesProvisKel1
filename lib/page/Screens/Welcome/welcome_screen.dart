@@ -89,29 +89,6 @@ class WelcomeScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 40),
                 child: Column(
                   children: [
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton.icon(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 60),
-                          backgroundColor: Colors.white,
-                        ),
-                        icon: SvgPicture.asset(
-                          "assets/icons/google.svg",
-                          height: 18,
-                          width: 18,
-                        ),
-                        label: Text(
-                          "CONTINUE WITH GMAIL",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF090F47),
-                          ),
-                        ),
-                      ),
-                    ),
                     SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),

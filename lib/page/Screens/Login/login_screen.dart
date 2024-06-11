@@ -20,8 +20,6 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _passwordController = TextEditingController();
   Color _loginButtonColor = Colors.grey;
 
-
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -39,12 +37,14 @@ class _LoginScreenState extends State<LoginScreen> {
               onChanged: (_) => _updateLoginButtonColor(),
               decoration: InputDecoration(
                 hintText: "Enter your email",
-                hintStyle: TextStyle(color: Color(0xFF202157).withOpacity(0.45)),
+                hintStyle:
+                    TextStyle(color: Color(0xFF202157).withOpacity(0.45)),
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Color(0xFF202157)),
                 ),
                 enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFF202157).withOpacity(0.45)),
+                  borderSide:
+                      BorderSide(color: Color(0xFF202157).withOpacity(0.45)),
                 ),
               ),
             ),
@@ -55,7 +55,8 @@ class _LoginScreenState extends State<LoginScreen> {
               onChanged: (_) => _updateLoginButtonColor(),
               decoration: InputDecoration(
                 hintText: "Enter your password",
-                hintStyle: TextStyle(color: Color(0xFF202157).withOpacity(0.45)),
+                hintStyle:
+                    TextStyle(color: Color(0xFF202157).withOpacity(0.45)),
                 suffixIcon: GestureDetector(
                   onTap: () {
                     setState(() {
@@ -63,7 +64,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     });
                   },
                   child: Icon(
-                    _isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                    _isPasswordVisible
+                        ? Icons.visibility_outlined
+                        : Icons.visibility_off_outlined,
                     color: const Color(0xFF090F47).withOpacity(0.45),
                     size: 24,
                   ),
@@ -72,7 +75,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   borderSide: BorderSide(color: Color(0xFF202157)),
                 ),
                 enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFF202157).withOpacity(0.45)),
+                  borderSide:
+                      BorderSide(color: Color(0xFF202157).withOpacity(0.45)),
                 ),
               ),
             ),
@@ -85,17 +89,21 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               child: Text(
                 "LOG IN",
-                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
               ),
             ),
             SizedBox(height: 20),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignUpScreen()));
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => SignUpScreen()));
               },
               child: Text(
                 'Don\'t have an account? Sign Up',
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color: Color(0xFF202157).withOpacity(0.45)),
               ),
             ),
           ],
@@ -106,7 +114,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _updateLoginButtonColor() {
     setState(() {
-      if (_emailController.text.isNotEmpty && _passwordController.text.isNotEmpty) {
+      if (_emailController.text.isNotEmpty &&
+          _passwordController.text.isNotEmpty) {
         _loginButtonColor = Color(0xFF202157);
       } else {
         _loginButtonColor = Colors.grey;
@@ -140,8 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
         final userId = responseBodyMap['user_id'].toString();
         final accessToken = responseBodyMap['access_token'].toString();
 
-        final responseBaru = await http.get
-        (
+        final responseBaru = await http.get(
           Uri.parse('http://127.0.0.1:8000/profile_user_id/$userId'),
           headers: {
             'Content-Type': 'application/json',
@@ -151,16 +159,22 @@ class _LoginScreenState extends State<LoginScreen> {
         final responseBaruBodyMap = jsonDecode(responseBaru.body);
         // print(responseBaruBodyMap);
 
-        final mainProfile = responseBaruBodyMap.firstWhere(
-          (profile) => profile['isMainProfile'] == 1);
+        final mainProfile = responseBaruBodyMap
+            .firstWhere((profile) => profile['isMainProfile'] == 1);
         // print(mainProfile);
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => MainApp(responseBody: responseBody, indexNavbar: 0, profileId: mainProfile['id'].toString(),)),
+          MaterialPageRoute(
+              builder: (context) => MainApp(
+                    responseBody: responseBody,
+                    indexNavbar: 0,
+                    profileId: mainProfile['id'].toString(),
+                  )),
         );
       } else {
         if (response.body.isNotEmpty) {
-          final errorResponse = jsonDecode(response.body) as Map<String, dynamic>;
+          final errorResponse =
+              jsonDecode(response.body) as Map<String, dynamic>;
           showDialog(
             context: context,
             builder: (BuildContext context) {

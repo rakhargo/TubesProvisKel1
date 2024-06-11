@@ -121,7 +121,7 @@ class _OnboardingViewState extends State<OnboardingView> {
   Widget getStarted() {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(50),
         color: Color(0xFF202157),
       ),
       width: MediaQuery.of(context).size.width * .9,
