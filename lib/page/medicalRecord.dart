@@ -37,6 +37,8 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
 
   Map<String, dynamic> medRec = {}; 
   Map<String, dynamic> appointment = {}; 
+
+  bool isLoading = true;
   @override
   void initState() {
     super.initState();
@@ -55,46 +57,6 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
     final responseBodyMap = jsonDecode(widget.responseBody);
     accessToken = responseBodyMap['access_token'];
   }
-
-  // Future<void> _fetchDataAppointment(String appointmentId) async 
-  // {
-  //   try {
-  //     List<Doctor> _doctorList = await Provider.of<DoctorAPI>(context, listen: false).fetchDataAllDoctor(accessToken);
-  //     JudulPoli _judulPoli = await Provider.of<SpecialistAndPolyclinicAPI>(context, listen: false).fetchJudulPoliById(widget.relasiJudulPoliId, accessToken);
-  //     List<HealthFacility> _faskesList = await Provider.of<HealthFacilityAPI>(context, listen: false).fetchDataAll(accessToken);
-  //     Appointment _appointment = await Provider.of<AppointmentAPI>(context, listen: false).fetchDataById(widget.appointmentId, accessToken);
-  //     Map<String, dynamic> result = {};
-  //     // print("SEBELUM PROSES JOIN");
-
-  //     // print("RELASI-JOIN-FOR");
-  //     var combinedData = {
-  //       'doctor': _doctorList.firstWhere((d) => d.id == _appointment.doctorId),
-  //       'judulPoli': _judulPoli,
-  //       'faskes': _faskesList.firstWhere((f) => f.id == _appointment.facilityId),
-  //       // 'rsId': relasi.rsId,
-  //       // 'poliId': relasi.poliId,
-  //       'antrian': _appointment.antrian,
-  //       'metodePembayaran': _appointment.metodePembayaran,
-  //       'waktu': _appointment.waktu,
-  //       'patientId': _appointment.patientId,
-  //       'status': _appointment.status,
-  //       'id': _appointment.id,
-  //     };
-  //     // print("ABIS BIKIN COMBINED");
-  //     result = combinedData;
-      
-  //     // print("INI LIST JOIN");
-  //     //   print(result);
-  //     setState(() {
-  //       appointment = result;
-  //       // print("INI INSPECT appointment");
-  //       // print(inspect(appointment));
-  //       // print(specialistAndPolyclinicListResponse);
-  //     });
-  //   } catch (e) {
-  //     print("Error: $e");
-  //   }
-  // }
 
   Future<void> _fetchDataMedicalRecord(String appointmentId) async 
   {
@@ -133,7 +95,6 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
       });
 
       final _patient = await Provider.of<ProfileAPI>(context, listen: false).fetchDataByProfileId(widget.profileId, accessToken);
-      // final _appointment = await Provider.of<AppointmentAPI>(context, listen: false).fetchDataById(widget.appointmentId, accessToken);
       final _relasiJudulPoli = await Provider.of<SpecialistAndPolyclinicAPI>(context, listen: false).fetchJudulPoliById(widget.relasiJudulPoliId, accessToken);
       MedicalRecord _medicalRecord = await Provider.of<AppointmentAPI>(context, listen: false).fetchMedicalRecordByAppointmentId(widget.appointmentId, accessToken);
       Map<String, dynamic> result2 = {};
@@ -153,7 +114,8 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
       //   print(result);
       setState(() {
         medRec = result2;
-        print(inspect(medRec));
+        isLoading = false;
+        // print(inspect(medRec));
       });
     } catch (e) {
       print("Error: $e");
@@ -208,198 +170,202 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
             ),
           ),
         ),
-        body: SingleChildScrollView
+        body: isLoading ? Center(child: CircularProgressIndicator()) 
+        : SingleChildScrollView
         (
-          child: Padding
+          child: Center
           (
-            padding: const EdgeInsets.all(15.0),
-            child: Column
+            child: Padding
             (
-              children: 
-              [
-                const Text
-                (
-                  "Data Pasien",
-                  style: TextStyle
+              padding: const EdgeInsets.all(15.0),
+              child: Column
+              (
+                children: 
+                [
+                  const Text
                   (
-                    color: Color.fromARGB(255, 32, 33, 87),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
+                    "Data Pasien",
+                    style: TextStyle
+                    (
+                      color: Color.fromARGB(255, 32, 33, 87),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
                   ),
-                ),
-                Text
-                (
-                  "Nama: ${medRec['patient'].nama}",
-                  style: const TextStyle
+                  Text
                   (
-                    color: Color.fromARGB(216, 53, 55, 121),
-                    fontSize: 12,
+                    "Nama: ${medRec['patient'].nama}",
+                    style: const TextStyle
+                    (
+                      color: Color.fromARGB(216, 53, 55, 121),
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-                Text
-                (
-                  "Email: ${medRec['patient'].email}",
-                  style: const TextStyle
+                  Text
                   (
-                    color: Color.fromARGB(216, 53, 55, 121),
-                    fontSize: 12,
+                    "Email: ${medRec['patient'].email}",
+                    style: const TextStyle
+                    (
+                      color: Color.fromARGB(216, 53, 55, 121),
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-                Text
-                (
-                  "Alamat: ${medRec['patient'].alamat}",
-                  style: const TextStyle
+                  Text
                   (
-                    color: Color.fromARGB(216, 53, 55, 121),
-                    fontSize: 12,
+                    "Alamat: ${medRec['patient'].alamat}",
+                    style: const TextStyle
+                    (
+                      color: Color.fromARGB(216, 53, 55, 121),
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-                Text
-                (
-                  "JenisKelamin: ${medRec['patient'].jenisKelamin}",
-                  style: const TextStyle
+                  Text
                   (
-                    color: Color.fromARGB(216, 53, 55, 121),
-                    fontSize: 12,
+                    "JenisKelamin: ${medRec['patient'].jenisKelamin}",
+                    style: const TextStyle
+                    (
+                      color: Color.fromARGB(216, 53, 55, 121),
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-                Text
-                (
-                  "tanggalLahir: ${medRec['patient'].tanggalLahir}",
-                  style: const TextStyle
+                  Text
                   (
-                    color: Color.fromARGB(216, 53, 55, 121),
-                    fontSize: 12,
+                    "tanggalLahir: ${medRec['patient'].tanggalLahir}",
+                    style: const TextStyle
+                    (
+                      color: Color.fromARGB(216, 53, 55, 121),
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-                Text
-                (
-                  "noTelepon: ${medRec['patient'].noTelepon}",
-                  style: const TextStyle
+                  Text
                   (
-                    color: Color.fromARGB(216, 53, 55, 121),
-                    fontSize: 12,
+                    "noTelepon: ${medRec['patient'].noTelepon}",
+                    style: const TextStyle
+                    (
+                      color: Color.fromARGB(216, 53, 55, 121),
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-                Text
-                (
-                  "id: ${medRec['patient'].id}",
-                  style: const TextStyle
+                  Text
                   (
-                    color: Color.fromARGB(216, 53, 55, 121),
-                    fontSize: 12,
+                    "id: ${medRec['patient'].id}",
+                    style: const TextStyle
+                    (
+                      color: Color.fromARGB(216, 53, 55, 121),
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-                SizedBox(height: 10,),
-
-                const Text
-                (
-                  "Data Keluhan",
-                  style: TextStyle
+                  SizedBox(height: 10,),
+            
+                  const Text
                   (
-                    color: Color.fromARGB(255, 32, 33, 87),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
+                    "Data Keluhan",
+                    style: TextStyle
+                    (
+                      color: Color.fromARGB(255, 32, 33, 87),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
                   ),
-                ),
-                Text
-                (
-                  "Judul: ${medRec['judulPoli'].judul}",
-                  style: const TextStyle
+                  Text
                   (
-                    color: Color.fromARGB(216, 53, 55, 121),
-                    fontSize: 12,
+                    "Judul: ${medRec['judulPoli'].judul}",
+                    style: const TextStyle
+                    (
+                      color: Color.fromARGB(216, 53, 55, 121),
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-                Text
-                (
-                  "Tindakan: ${medRec['judulPoli'].tindakan}",
-                  style: const TextStyle
+                  Text
                   (
-                    color: Color.fromARGB(216, 53, 55, 121),
-                    fontSize: 12,
+                    "Tindakan: ${medRec['judulPoli'].tindakan}",
+                    style: const TextStyle
+                    (
+                      color: Color.fromARGB(216, 53, 55, 121),
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-                SizedBox(height: 10,),
-
-                const Text
-                (
-                  "Data Pertemuan",
-                  style: TextStyle
+                  SizedBox(height: 10,),
+            
+                  const Text
                   (
-                    color: Color.fromARGB(255, 32, 33, 87),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
+                    "Data Pertemuan",
+                    style: TextStyle
+                    (
+                      color: Color.fromARGB(255, 32, 33, 87),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
                   ),
-                ),
-                Text
-                (
-                  "Judul: ${medRec['appointment']['faskes'].namaFasilitas}",
-                  style: const TextStyle
+                  Text
                   (
-                    color: Color.fromARGB(216, 53, 55, 121),
-                    fontSize: 12,
+                    "Judul: ${medRec['appointment']['faskes'].namaFasilitas}",
+                    style: const TextStyle
+                    (
+                      color: Color.fromARGB(216, 53, 55, 121),
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-                Text
-                (
-                  "alamatFasilitas: ${medRec['appointment']['faskes'].alamatFasilitas}",
-                  style: const TextStyle
+                  Text
                   (
-                    color: Color.fromARGB(216, 53, 55, 121),
-                    fontSize: 12,
+                    "alamatFasilitas: ${medRec['appointment']['faskes'].alamatFasilitas}",
+                    style: const TextStyle
+                    (
+                      color: Color.fromARGB(216, 53, 55, 121),
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-                Text
-                (
-                  "kotaKabFasilitas: ${medRec['appointment']['faskes'].kotaKabFasilitas}",
-                  style: const TextStyle
+                  Text
                   (
-                    color: Color.fromARGB(216, 53, 55, 121),
-                    fontSize: 12,
+                    "kotaKabFasilitas: ${medRec['appointment']['faskes'].kotaKabFasilitas}",
+                    style: const TextStyle
+                    (
+                      color: Color.fromARGB(216, 53, 55, 121),
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-                Text
-                (
-                  "Nama Dokter: ${medRec['appointment']['doctor'].nama}",
-                  style: const TextStyle
+                  Text
                   (
-                    color: Color.fromARGB(216, 53, 55, 121),
-                    fontSize: 12,
+                    "Nama Dokter: ${medRec['appointment']['doctor'].nama}",
+                    style: const TextStyle
+                    (
+                      color: Color.fromARGB(216, 53, 55, 121),
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-                SizedBox(height: 10,),
-
-                const Text
-                (
-                  "Data Record",
-                  style: TextStyle
+                  SizedBox(height: 10,),
+            
+                  const Text
                   (
-                    color: Color.fromARGB(255, 32, 33, 87),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
+                    "Data Record",
+                    style: TextStyle
+                    (
+                      color: Color.fromARGB(255, 32, 33, 87),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
                   ),
-                ),
-                Text
-                (
-                  "Tanggal: ${medRec['appointment']['waktu']}",
-                  style: const TextStyle
+                  Text
                   (
-                    color: Color.fromARGB(216, 53, 55, 121),
-                    fontSize: 12,
+                    "Tanggal: ${medRec['appointment']['waktu']}",
+                    style: const TextStyle
+                    (
+                      color: Color.fromARGB(216, 53, 55, 121),
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-                Text
-                (
-                  "Antrian: ${medRec['appointment']['antrian']}",
-                  style: const TextStyle
+                  Text
                   (
-                    color: Color.fromARGB(216, 53, 55, 121),
-                    fontSize: 12,
+                    "Antrian: ${medRec['appointment']['antrian']}",
+                    style: const TextStyle
+                    (
+                      color: Color.fromARGB(216, 53, 55, 121),
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-                SizedBox(height: 10,),
-              ],
+                  SizedBox(height: 10,),
+                ],
+              ),
             ),
           ),
         ),
