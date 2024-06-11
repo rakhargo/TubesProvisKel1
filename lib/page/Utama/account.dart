@@ -189,10 +189,10 @@ class _AccountState extends State<AccountPage> {
                       route: EditProfilePage(responseBody: widget.responseBody, profileId: widget.profileId,),
                     ),
                     const SizedBox(height: 15),
-                    const InkWellButtonWithIcon(
+                    InkWellButtonWithIcon(
                       icon: Icons.receipt_long_outlined,
                       text: "My Orders",
-                      route: MyOrdersPage(),
+                      route: MyOrdersPage(responseBody: widget.responseBody, profileId: widget.profileId),
                     ),
                     const SizedBox(height: 15),
                     const InkWellButtonWithIcon(

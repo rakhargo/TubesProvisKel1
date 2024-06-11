@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:medimate/main.dart';
 import 'package:medimate/page/Account/orders.dart';
 import 'package:medimate/page/medicalRecord.dart';
+import 'package:medimate/page/Account/orders.dart';
 import 'package:provider/provider.dart';
 import 'package:medimate/bottomNavBar.dart';
 
@@ -41,14 +42,7 @@ class _ActivityState extends State<ActivityPage>
 
   List<Map<String, dynamic>> onGoingList = [];
   List<Map<String, dynamic>> recentList = [];
-
-  // JudulPoli judulPoli =
-  // JudulPoli(
-  //     id: "",
-  //     polyclinicId: "",
-  //     judul: "",
-  //     tindakan: "",
-  //   );
+  List<Map<String, dynamic>> recentListTop3 = [];
 
   late String accessToken;
   late String userId;
@@ -117,7 +111,11 @@ class _ActivityState extends State<ActivityPage>
             onGoingList.add(appointment);
           }
         }
-
+        
+        recentListTop3 = recentList;
+        if (recentList.length > 3) {
+          recentListTop3 = recentList.reversed.toList().sublist(0, 3).reversed.toList();
+        }
         // print(inspect(onGoingList));
         // print(onGoingList.length);
 
@@ -212,6 +210,22 @@ class _ActivityState extends State<ActivityPage>
                 (
                   height: 10,
                 ),
+                onGoingList.isEmpty ? 
+                const Center
+                (
+                  child: Text
+                  (
+                    "No record",
+                    // textAlign: TextAlign.left,
+                    style: TextStyle
+                    (
+                      color: Color.fromARGB(255, 9, 15, 71),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.0
+                    ),
+                  ),
+                )
+                : 
                 SizedBox
                 ( 
                   // height: appointmentList.length * 150 + 80,
@@ -430,7 +444,14 @@ class _ActivityState extends State<ActivityPage>
                       (
                         foregroundColor: const Color.fromARGB(255, 9, 15, 71),
                       ),
-                      onPressed: (){}, // ke laman see more
+                      onPressed: ()
+                      {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) 
+                        {
+                          return (MyOrdersPage(responseBody: widget.responseBody, profileId: widget.profileId));
+                        }
+                        ));
+                      }, // ke laman see more
                       child: const Text("See More"),
                     )
                   ],
@@ -439,9 +460,25 @@ class _ActivityState extends State<ActivityPage>
                 (
                   height: 10,
                 ),
+                recentListTop3.isEmpty ? 
+                const Center
+                (
+                  child: Text
+                  (
+                    "No record",
+                    // textAlign: TextAlign.left,
+                    style: TextStyle
+                    (
+                      color: Color.fromARGB(255, 9, 15, 71),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.0
+                    ),
+                  ),
+                )
+                :
                 SizedBox
                 ( 
-                  height: recentList.length * 130 + 50,
+                  height: recentListTop3.length * 130 + 50,
                   child: Builder
                   (
                     builder: (context) 
@@ -449,10 +486,10 @@ class _ActivityState extends State<ActivityPage>
                       return ListView.builder
                       (
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: recentList.length,
+                        itemCount: recentListTop3.length,
                         itemBuilder: (context, index)
                         {
-                          var item = recentList[index];
+                          var item = recentListTop3[index];
                           return Column
                           (
                             children: 
@@ -522,8 +559,6 @@ class _ActivityState extends State<ActivityPage>
                                     (
                                       onTap: ()
                                       {
-
-
                                         Navigator.of(context).push(MaterialPageRoute(builder: (context) 
                                         {
                                           return (MedicalRecordPage(responseBody: widget.responseBody, profileId: widget.profileId, appointmentId: item['id'], relasiJudulPoliId: item['judulPoli'].id));
