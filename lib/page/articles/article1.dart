@@ -4,6 +4,7 @@ class Article1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Health Article',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -18,11 +19,22 @@ class HealthArticlePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Health Article',
-            style: TextStyle(
-                fontSize: 25,
-                color: Color(0xFF202157),
-                fontWeight: FontWeight.bold)),
+        // leading: IconButton(
+        //   icon: const Icon(
+        //     Icons.arrow_back_ios,
+        //     color: Color.fromARGB(255, 54, 84, 134),
+        //   ),
+        //   onPressed: () {
+        //     Navigator.pop(context); // Kembali ke layar sebelumnya
+        //   },
+        // ),
+        title: const Text(
+          'Article',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF091547),
+          ),
+        ),
       ),
       body: ListView(
         padding: EdgeInsets.all(25),
@@ -162,13 +174,21 @@ class HealthArticlePage extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF202157)),
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF202157),
+            ),
           ),
-          Text(
-            description,
-            style: TextStyle(fontSize: 16, color: Color(0xFF202157)),
+          Padding(
+            padding: const EdgeInsets.only(
+                left: 20.0), // Adjust the padding as needed
+            child: Text(
+              description,
+              style: TextStyle(
+                fontSize: 16,
+                color: Color(0xFF202157),
+              ),
+            ),
           ),
         ],
       ),
@@ -181,7 +201,7 @@ class HealthArticlePage extends StatelessWidget {
       padding: EdgeInsets.all(16),
       margin: EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: Color(0xFF353779), width: 2),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(

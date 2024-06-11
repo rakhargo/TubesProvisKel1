@@ -477,12 +477,16 @@ class _HomeState extends State<HomePage> {
                               children: [
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              article['link']),
-                                    );
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(builder: (context) {
+                                      return article['link'];
+                                    }));
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //       builder: (context) =>
+                                    //           article['link']),
+                                    // );
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
