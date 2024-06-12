@@ -156,7 +156,7 @@ class DoctorAPI with ChangeNotifier {
       return RelasiRsPoliDoctor.fromJson(jsonDecode(response.body));
     } 
     else {
-      return RelasiRsPoliDoctor(doctorId: '0', relasiRsPoliId: '0', id: '0');
+      return RelasiRsPoliDoctor(doctorId: '0', relasiRsPoliId: '0', id: '0', harga: 0);
     }
   }
 
