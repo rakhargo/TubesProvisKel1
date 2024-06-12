@@ -20,3 +20,10 @@ Sebelum menjalankan aplikasi, kami menggunakan beberapa library tambahan untuk m
 6. os (using operating system dependent functionality)
 7. fastapi (web framework for building API)
 8. uvicorn (web server implementation)
+9. python jose (signing of tokens using various cryptographic algorithms)
+
+## Webservice
+
+Webservice yang kami gunakan dapat dilihat pada tautan berikut ini:
+
+[Tautan webservice](https://github.com/rakhargo/WebServiceTubesProvisKel1)
