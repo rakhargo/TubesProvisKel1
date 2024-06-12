@@ -402,20 +402,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
             // if login successful, make new profile for the new account
             try {
-              final respCreate = await Provider.of<ProfileAPI>(context, listen: false).createNewProfile(
-                userId.toString(),
-                _namaController.text,
-                formattedDate,
-                _selectedGender!,
-                _alamatController.text,
-                _emailController.text,
-                _notelpController.text,
-                "dummy.png",
-                "1",
-                accessToken,
+              final responseProfile = await http.post(
+                Uri.parse('http://127.0.0.1:8000/create_profile/$userId'),
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': 'Bearer $accessToken',
+                },
+                body: jsonEncode(<String, dynamic>{
+                    'userId': userId.toString(), // Add userId field
+                    'nama': _namaController.text,
+                    'tanggalLahir': formattedDate,
+                    'jenisKelamin': _selectedGender!,
+                    'alamat': _alamatController.text,
+                    'email': _emailController.text,
+                    'noTelepon': _notelpController.text,
+                    'userPhoto': "dummy.png",
+                    'isMainProfile': "1",
+                }),
               );
 
-              if (respCreate.statusCode == 200) {
+              if (responseProfile.statusCode == 200) {
+                print (responseProfile);
+              } else {
+                throw Exception(response.reasonPhrase);
+              }
+
+              if (responseProfile.statusCode == 200) {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -435,8 +447,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   },
                 );
               } else {
-                print('Failed to create profile: ${respCreate.reasonPhrase}');
-                print('Response body: ${respCreate.body}');
+                print('Failed to create profile: ${responseProfile.reasonPhrase}');
+                print('Response body: ${responseProfile.body}');
               }
             } catch (e) {
               print('Exception during making profile: $e');
