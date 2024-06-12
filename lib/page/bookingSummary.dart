@@ -387,7 +387,7 @@ class _BookingSummaryState extends State<BookingSummaryPage>
                             ),
                             Text
                             (
-                              widget.bookingDetails['price'], 
+                              NumberFormat.currency(locale: 'id_ID', symbol: 'Rp').format(widget.bookingDetails['harga']), 
                               style: const TextStyle
                               (
                                 color: Color.fromARGB(204, 32, 33, 87),

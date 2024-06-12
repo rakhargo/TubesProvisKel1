@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:intl/intl.dart';
 import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +46,7 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
       doctorId: "",
       relasiRsPoliId: "",
       id: "",
+      harga: 0,
     );
 
   List<Doctor> doctorListPoliId = [];
@@ -105,6 +107,7 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
           .fetchRelasiRsPoliDoctorByIdId(relasi2.id, relasi1.id, accessToken);
           if (relasiDoctorRsPoli.id != '0') {
             var combinedData = {
+              'harga': relasiDoctorRsPoli.harga,
               'doctor': await Provider.of<DoctorAPI>(context, listen: false).fetchDataDoctorById(relasiDoctorRsPoli.doctorId, accessToken),
               'poli': await Provider.of<SpecialistAndPolyclinicAPI>(context, listen: false).fetchDataById(widget.poliId, accessToken),
               'healthFacility': await Provider.of<HealthFacilityAPI>(context, listen: false).fetchDataById(relasi2.rsId, accessToken),
@@ -127,6 +130,7 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
 
       for (var relasi in relasiRsPoliDoctorList) {
         var combinedData = {
+          'harga': relasi.harga,
           'doctor': _doctorList.firstWhere((d) => d.id == relasi.doctorId),
           'poli': _poli,
           'id': relasi.id
@@ -268,6 +272,7 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
             itemCount: doctorList.length,
             itemBuilder: (context, index) {
               var item = doctorList[index];
+              print(inspect(item));
               return Column(
                 children: [
                   Row(
@@ -375,24 +380,25 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
                                 ),
                               )
                               :
-                              Text(
-                                // item["schedule"],
-                                // "Health Facility(?)",
-                                "Schedule (?)",
-                                // item['healthFacility']['healthFacility'].namaFasilitas,
-                                style: const TextStyle(
-                                  color: Color(0xFF828282),
-                                  fontSize: 12,
-                                ),
-                              ),
+                              
+                              // Text(
+                              //   // item["schedule"],
+                              //   // "Health Facility(?)",
+                              //   "Schedule (?)",
+                              //   // item['healthFacility']['healthFacility'].namaFasilitas,
+                              //   style: const TextStyle(
+                              //     color: Color(0xFF828282),
+                              //     fontSize: 12,
+                              //   ),
+                              // ),
                               const SizedBox(height: 3),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      // item["price"],
-                                      "Harga (?)",
+                                      NumberFormat.currency(locale: 'id_ID', symbol: 'Rp').format(item["harga"]),
+                                      // "Harga (?)",
                                       style: const TextStyle(
                                         color: Color(0xFF3E3E3E),
                                         fontSize: 15,
@@ -411,8 +417,8 @@ class _DoctorProfileState extends State<DoctorProfilePage> {
                                       Navigator.of(context).push(MaterialPageRoute(builder: (context) 
                                       {
                                         return (widget.relasiRsPoliId == '')
-                                        ? (DetailDoctorPage(responseBody: widget.responseBody, profileId: widget.profileId, healthFacilityId: item['healthFacility'].id, doctorId: item['doctor'].id, poliId: widget.poliId,))
-                                        : (DetailDoctorPage(responseBody: widget.responseBody, profileId: widget.profileId, healthFacilityId: widget.rsId, doctorId: item['doctor'].id, poliId: widget.poliId));
+                                        ? (DetailDoctorPage(responseBody: widget.responseBody, profileId: widget.profileId, healthFacilityId: item['healthFacility'].id, doctorId: item['doctor'].id, poliId: widget.poliId, harga: item["harga"]))
+                                        : (DetailDoctorPage(responseBody: widget.responseBody, profileId: widget.profileId, healthFacilityId: widget.rsId, doctorId: item['doctor'].id, poliId: widget.poliId, harga: item["harga"]));
                                       }
                                       ));
                                     },

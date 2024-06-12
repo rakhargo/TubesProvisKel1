@@ -52,11 +52,13 @@ class RelasiRsPoliDoctor
   final String doctorId;
   final String relasiRsPoliId;
   final String id;
+  final int harga;
 
   RelasiRsPoliDoctor({
     required this.doctorId, 
     required this.relasiRsPoliId, 
     required this.id,
+    required this.harga,
     });
 
   factory RelasiRsPoliDoctor.fromJson(Map<String, dynamic> json) {
@@ -64,6 +66,7 @@ class RelasiRsPoliDoctor
       doctorId: json['doctorId'].toString(),
       relasiRsPoliId: json['relasiRsPoliId'].toString(),
       id: json['id'].toString(),
+      harga: json['harga'],
     );
   }
 }

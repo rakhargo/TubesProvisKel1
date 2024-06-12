@@ -265,16 +265,53 @@ class _ActivityState extends State<ActivityPage>
                                 Padding
                                 (
                                   padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-                                  child: Text
+                                  child: Row
                                   (
-                                    // item["title"],
-                                    item['judulPoli'].judul,
-                                    style: const TextStyle
-                                    (
-                                      color: Color.fromARGB(255, 32, 33, 87),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                    ),
+                                    children: 
+                                    [
+                                      Expanded
+                                      (
+                                        child: Text
+                                        (
+                                          // item["title"],
+                                          item['judulPoli'].judul,
+                                          style: const TextStyle
+                                          (
+                                            color: Color.fromARGB(255, 32, 33, 87),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      ),
+                                      Column
+                                      (
+                                        children: 
+                                        [
+                                          Text
+                                          (
+                                            // item["lokasi"],
+                                            "Antrian",
+                                            style: const TextStyle
+                                            (
+                                              color: Color.fromARGB(216, 53, 55, 121),
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 3),
+                                          Text
+                                          (
+                                            "${item['antrian'].toString()}",
+                                            style: const TextStyle
+                                            (
+                                              color: Color.fromARGB(216, 53, 55, 121),
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 Text
@@ -309,17 +346,6 @@ class _ActivityState extends State<ActivityPage>
                                 //   ),
                                 // ),
                                 // const SizedBox(height: 3),
-                                Text
-                                (
-                                  // item["lokasi"],
-                                  "Antrian ${item['antrian'].toString()}",
-                                  style: const TextStyle
-                                  (
-                                    color: Color.fromARGB(216, 53, 55, 121),
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                const SizedBox(height: 3),
                                 Text
                                 (
                                   item['faskes'].namaFasilitas,

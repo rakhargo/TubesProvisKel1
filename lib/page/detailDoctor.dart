@@ -21,8 +21,9 @@ class DetailDoctorPage extends StatefulWidget {
   final String healthFacilityId;
   final String doctorId;
   final String poliId;
+  final int harga;
 
-  const DetailDoctorPage({Key? key, required this.responseBody, required this.profileId, required this.healthFacilityId, required this.doctorId, required this.poliId}) : super(key: key);
+  const DetailDoctorPage({Key? key, required this.responseBody, required this.profileId, required this.healthFacilityId, required this.doctorId, required this.poliId, required this.harga}) : super(key: key);
 
   @override
   State<DetailDoctorPage> createState() => _DetailDoctorState();
@@ -592,10 +593,11 @@ class _DetailDoctorState extends State<DetailDoctorPage>
                   ),
                 ),
           
-                const Text
+                Text
                 (
-                  "Rp. 200.000",
-                  style: TextStyle
+                  // "Rp. 200.000",
+                  NumberFormat.currency(locale: 'id_ID', symbol: 'Rp').format(widget.harga),
+                  style: const TextStyle
                   (
                     color: Color.fromARGB(255, 62, 62, 62),
                     fontSize: 15,
@@ -764,7 +766,7 @@ class _DetailDoctorState extends State<DetailDoctorPage>
                             "facilityName": healthFacility.namaFasilitas,
                             "status": "ongoing",
                             "waktu": selectedJadwalDokter,
-                            "price": "Rp200.000",
+                            "harga": widget.harga,
                             "metodePembayaran": "On The Site",
                             "antrian": antrian,
                             "relasiJudulPoliId": int.parse(idJudulPoliSelected),
